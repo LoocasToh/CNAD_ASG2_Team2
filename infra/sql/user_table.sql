@@ -11,7 +11,7 @@ CREATE TABLE IF NOT EXISTS users (
 );
 
 INSERT INTO users (name, email, password, userType)
-VALUES ('admin', 'admin@example.com', '$2a$10$Stc3hhatnvc45ZqolKrz1O1zRdrT.J28loausQzU2ImdTDDD0509e', 'staff');
+VALUES ('admin', 'admin@example.com', '$2a$10$Stc3hhatnvc45ZqolKrz1O1zRdrT.J28loausQzU2ImdTDDD0509e', 'admin');
 
 INSERT INTO users (name, email, password, userType)
 VALUES ('caregiver', 'care@example.com', '$2a$10$Stc3hhatnvc45ZqolKrz1O1zRdrT.J28loausQzU2ImdTDDD0509e', 'caregiver');
