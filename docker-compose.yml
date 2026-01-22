@@ -1,0 +1,59 @@
+services:
+  auth-db:
+    image: mysql:8
+    restart: always
+    environment:
+      MYSQL_ROOT_PASSWORD: root123
+      MYSQL_DATABASE: authdb
+      MYSQL_USER: authuser
+      MYSQL_PASSWORD: authpass
+    volumes:
+      - auth_db_data:/var/lib/mysql
+      - ./infra/sql/user_table.sql:/docker-entrypoint-initdb.d/user_table.sql
+    healthcheck:
+      test: ["CMD", "mysqladmin", "ping", "-h", "localhost", "-proot123"]
+      interval: 5s
+      timeout: 5s
+      retries: 10
+    networks:
+      - appnet
+    ports:
+      - "3306:3306" # remove in production if you don't want external MySQL access
+
+  auth:
+    build: ./auth-service
+    container_name: auth-service
+    restart: always
+    env_file:
+      - ./infra/secrets/env/auth.env
+    depends_on:
+      auth-db:
+        condition: service_healthy
+    networks:
+      - appnet
+    ports:
+      - "8080:8080" # exposed to local machine
+    volumes:
+      - ./auth-service:/app
+      - /app/node_modules
+
+  frontend:
+    build: ./frontend-service
+    container_name: frontend-service
+    restart: always
+    depends_on:
+      - auth
+    networks:
+      - appnet
+    ports:
+      - "80:80" # website accessible at http://localhost
+    volumes:
+      - ./frontend-service/public:/usr/share/nginx/html
+      - /app/node_modules
+
+volumes:
+  auth_db_data:
+
+networks:
+  appnet:
+    driver: bridge
