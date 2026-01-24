@@ -51,8 +51,49 @@ services:
       - ./frontend-service/public:/usr/share/nginx/html
       - /app/node_modules
 
+  task-db:
+    image: mysql:8
+    restart: always
+    environment:
+      MYSQL_ROOT_PASSWORD: root123
+      MYSQL_DATABASE: taskdb
+      MYSQL_USER: taskuser
+      MYSQL_PASSWORD: taskpass
+    volumes:
+      - task_db_data:/var/lib/mysql
+      - ./infra/sql/task_tables.sql:/docker-entrypoint-initdb.d/task_tables.sql
+    healthcheck:
+      test: ["CMD", "mysqladmin", "ping", "-h", "localhost", "-proot123"]
+      interval: 5s
+      timeout: 5s
+      retries: 10
+    networks:
+      - appnet
+    ports:
+      - "3307:3306"  # so it doesn't clash with auth-db's 3306
+
+  task:
+    build: ./task-service
+    container_name: task-service
+    restart: always
+    env_file:
+      - ./infra/secrets/env/task.env
+    depends_on:
+      task-db:
+        condition: service_healthy
+    networks:
+      - appnet
+    ports:
+      - "8081:8081"
+    volumes:
+      - ./task-service:/app
+      - /app/node_modules
+
+  
+
 volumes:
   auth_db_data:
+  task_db_data:
 
 networks:
   appnet:
