@@ -1,0 +1,216 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <link href="../CSS/LoginScreen.css" rel="stylesheet" type="text/css" />
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <title>Login - Care Companion</title>
+  </head>
+  <body class="body" id="body">
+    <!-- Top Navigation -->
+    <div class="header-bar" id="header-bar">
+      <div class="logo">
+        <i class="fas fa-heartbeat"></i>
+        <span>Care Companion</span>
+      </div>
+      
+      <p class="home" id="home">
+        <a href="Index.html"><i class="fas fa-home"></i> Home</a>
+      </p>
+      <p class="caregiving" id="caregiving">
+        <a href="DailyTasks.html"><i class="fas fa-tasks"></i> Caregiving</a>
+      </p>
+      <p class="emergencies" id="emergencies">
+        <a href="Emergencies.html"><i class="fas fa-first-aid"></i> Emergencies</a>
+      </p>
+
+      <div class="Login" id="auth-area">
+        <a href="LoginScreen.html" class="active-nav"><i class="fas fa-sign-in-alt"></i> Login</a>
+      </div>
+    </div>
+
+    <!-- Main Login Content -->
+    <main class="login-main">
+      <!-- Left Side - Welcome Message -->
+      <div class="login-welcome">
+        <div class="welcome-content">
+          <div class="welcome-icon">
+            <i class="fas fa-hands-helping"></i>
+          </div>
+          <h1>Welcome Back</h1>
+          <p class="welcome-subtitle">To Your Care Companion</p>
+          
+          <div class="features-list">
+            <div class="feature-item">
+              <i class="fas fa-check-circle"></i>
+              <span>Daily task management</span>
+            </div>
+            <div class="feature-item">
+              <i class="fas fa-check-circle"></i>
+              <span>Medication reminders</span>
+            </div>
+            <div class="feature-item">
+              <i class="fas fa-check-circle"></i>
+              <span>Emergency contacts</span>
+            </div>
+            <div class="feature-item">
+              <i class="fas fa-check-circle"></i>
+              <span>Progress tracking</span>
+            </div>
+          </div>
+          
+          <div class="testimonial">
+            <div class="quote-icon">
+              <i class="fas fa-quote-left"></i>
+            </div>
+            <p class="quote">"This app has made daily caregiving so much simpler and organized."</p>
+            <p class="quote-author">- Sarah, Caregiver</p>
+          </div>
+        </div>
+      </div>
+
+      <!-- Right Side - Login Form -->
+      <div class="login-container" id="login-container">
+        <div class="login-card">
+          <div class="login-header">
+            <h2><i class="fas fa-user-circle"></i> Account Login</h2>
+            <p>Sign in to access your personalized care dashboard</p>
+          </div>
+          
+          <form id="login-form">
+            <!-- Username Field -->
+            <div class="form-group">
+              <div class="input-with-icon">
+                <i class="fas fa-user"></i>
+                <input
+                  required
+                  placeholder="Username or Email"
+                  class="UsernameInput"
+                  id="UsernameInput"
+                  type="text"
+                />
+              </div>
+              <div class="input-help" id="username-help">
+                <i class="fas fa-info-circle"></i>
+                <span>Enter your username or email address</span>
+              </div>
+            </div>
+
+            <!-- Password Field -->
+            <div class="form-group">
+              <div class="input-with-icon">
+                <i class="fas fa-lock"></i>
+                <input
+                  required
+                  placeholder="Password"
+                  class="PasswordInput"
+                  id="PasswordInput"
+                  type="password"
+                />
+                <button type="button" class="show-password" id="show-password-btn">
+                  <i class="fas fa-eye"></i>
+                </button>
+              </div>
+              <div class="input-help" id="password-help">
+                <i class="fas fa-info-circle"></i>
+                <span>Your password must be at least 8 characters</span>
+              </div>
+            </div>
+
+            <!-- Remember Me & Forgot Password -->
+            <div class="form-options">
+              <label class="checkbox-label">
+                <input type="checkbox" id="remember-me">
+                <span class="checkmark"></span>
+                <span>Remember me</span>
+              </label>
+              <a href="ForgotPassword.html" class="forgot-password">
+                Forgot password?
+              </a>
+            </div>
+
+            <!-- Login Button -->
+            <button class="LoginButton" id="LoginButton" type="submit">
+              <i class="fas fa-sign-in-alt"></i>
+              <span>Sign In</span>
+            </button>
+
+           
+
+            <!-- Sign Up Link -->
+            <div class="signup-section">
+              <p class="SignUp" id="SignUp">
+                New to Care Companion?
+              </p>
+              <a href="SignUp.html" class="SignUpButton" id="SignUpButton">
+                <i class="fas fa-user-plus"></i>
+                Create an Account
+              </a>
+            </div>
+            
+          
+          </form>
+        </div>
+        
+        <!-- Accessibility Options -->
+        <div class="accessibility-options">
+          <button class="accessibility-btn" id="text-size-btn">
+            <i class="fas fa-text-height"></i>
+            <span>Adjust Text Size</span>
+          </button>
+          <button class="accessibility-btn" id="high-contrast-btn">
+            <i class="fas fa-adjust"></i>
+            <span>High Contrast</span>
+          </button>
+          <button class="accessibility-btn" id="read-aloud-btn">
+            <i class="fas fa-volume-up"></i>
+            <span>Read Aloud</span>
+          </button>
+        </div>
+      </div>
+    </main>
+
+    <!-- Toast Notification -->
+    <div class="toast" id="toast">
+      <div class="toast-content">
+        <i class="fas fa-check-circle toast-icon"></i>
+        <div class="toast-message">Login successful!</div>
+      </div>
+    </div>
+
+    <!-- Voice Guidance Modal -->
+    <div class="voice-modal" id="voice-modal">
+      <div class="voice-modal-content">
+        <div class="voice-modal-header">
+          <h3><i class="fas fa-assistive-listening-systems"></i> Voice Guidance</h3>
+          <button class="close-voice-modal" id="close-voice-modal">
+            <i class="fas fa-times"></i>
+          </button>
+        </div>
+        <div class="voice-modal-body">
+          <p>Voice guidance will read the page content aloud. This can help with navigation and form filling.</p>
+          <div class="voice-controls">
+            <button class="voice-control-btn" id="play-voice">
+              <i class="fas fa-play"></i> Start
+            </button>
+            <button class="voice-control-btn" id="pause-voice">
+              <i class="fas fa-pause"></i> Pause
+            </button>
+            <button class="voice-control-btn" id="stop-voice">
+              <i class="fas fa-stop"></i> Stop
+            </button>
+          </div>
+          <div class="voice-speed">
+            <label for="voice-speed">Speed:</label>
+            <input type="range" id="voice-speed" min="0.5" max="2" step="0.1" value="1">
+            <span id="speed-value">Normal</span>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <script src="../js/login.js"></script>
+    <script src="../js/auth.js"></script>
+  </body>
+</html>

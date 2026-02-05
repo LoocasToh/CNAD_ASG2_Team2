@@ -1,0 +1,275 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <link href="../CSS/SignUp.css" rel="stylesheet" type="text/css" />
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <title>Sign Up - Care Companion</title>
+  </head>
+  <body class="body">
+    <!-- Header Bar -->
+    <div class="header-bar">
+      <div class="logo">
+        <i class="fas fa-heartbeat"></i>
+        <span>Care Companion</span>
+      </div>
+      
+      <p class="home"><a href="Index.html"><i class="fas fa-home"></i> Home</a></p>
+      <p class="caregiving"><a href="DailyTasks.html"><i class="fas fa-tasks"></i> Caregiving</a></p>
+      <p class="emergencies"><a href="Emergencies.html"><i class="fas fa-first-aid"></i> Emergencies</a></p>
+      
+      <div class="Login" id="auth-area">
+        <a href="LoginScreen.html" id="login-link"><i class="fas fa-sign-in-alt"></i> Login</a>
+      </div>
+    </div>
+
+    <!-- Main Content -->
+    <main class="signup-main">
+      <!-- Left Side - Benefits -->
+      <div class="signup-benefits">
+        <div class="benefits-content">
+          <div class="benefits-icon">
+            <i class="fas fa-user-plus"></i>
+          </div>
+          <h1>Join Care Companion</h1>
+          <p class="benefits-subtitle">Start your care journey today</p>
+          
+          <div class="benefits-list">
+            <div class="benefit-item">
+              <i class="fas fa-check-circle"></i>
+              <div class="benefit-text">
+                <h4>Personalized Care Plan</h4>
+                <p>Custom tasks and reminders</p>
+              </div>
+            </div>
+            
+            <div class="benefit-item">
+              <i class="fas fa-check-circle"></i>
+              <div class="benefit-text">
+                <h4>Safe & Secure</h4>
+                <p>Your data is protected</p>
+              </div>
+            </div>
+            
+            <div class="benefit-item">
+              <i class="fas fa-check-circle"></i>
+              <div class="benefit-text">
+                <h4>Easy to Use</h4>
+                <p>Designed for everyone</p>
+              </div>
+            </div>
+            
+            <div class="benefit-item">
+              <i class="fas fa-check-circle"></i>
+              <div class="benefit-text">
+                <h4>24/7 Support</h4>
+                <p>Help when you need it</p>
+              </div>
+            </div>
+          </div>
+          
+          <div class="stats-section">
+            <div class="stat">
+              <h3>500+</h3>
+              <p>Happy Users</p>
+            </div>
+            <div class="stat">
+              <h3>99%</h3>
+              <p>Satisfaction</p>
+            </div>
+            <div class="stat">
+              <h3>24/7</h3>
+              <p>Support</p>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Right Side - Sign Up Form -->
+      <div class="signup-container">
+        <div class="signup-card">
+          <div class="signup-header">
+            <h2><i class="fas fa-user-plus"></i> Create Account</h2>
+            <p>Join thousands using Care Companion</p>
+          </div>
+          
+          <form id="signupForm">
+            <!-- Username -->
+            <div class="form-group">
+              <label for="UsernameInput" class="form-label">
+                <i class="fas fa-user"></i> Username
+              </label>
+              <input
+                required
+                placeholder="Choose a username"
+                id="UsernameInput"
+                type="text"
+                class="form-input"
+              />
+              <div class="input-help">
+                <i class="fas fa-info-circle"></i>
+                <span>3-20 characters, letters and numbers only</span>
+              </div>
+            </div>
+
+            <!-- Email -->
+            <div class="form-group">
+              <label for="EmailInput" class="form-label">
+                <i class="fas fa-envelope"></i> Email
+              </label>
+              <input
+                required
+                placeholder="your.email@example.com"
+                id="EmailInput"
+                type="email"
+                class="form-input"
+              />
+              <div class="input-help">
+                <i class="fas fa-info-circle"></i>
+                <span>We'll send a confirmation email</span>
+              </div>
+            </div>
+
+            <!-- Password -->
+            <div class="form-group">
+              <label for="PasswordInput" class="form-label">
+                <i class="fas fa-lock"></i> Password
+              </label>
+              <div class="password-input-group">
+                <input
+                  required
+                  placeholder="Create a strong password"
+                  id="PasswordInput"
+                  type="password"
+                  class="form-input"
+                />
+                <button type="button" class="show-password" id="show-password-btn">
+                  <i class="fas fa-eye"></i>
+                </button>
+              </div>
+              <div class="password-strength" id="password-strength">
+                <div class="strength-bar"></div>
+                <span class="strength-text">Password strength</span>
+              </div>
+              <div class="input-help">
+                <i class="fas fa-info-circle"></i>
+                <span>Minimum 8 characters with letters and numbers</span>
+              </div>
+            </div>
+
+            <!-- Confirm Password -->
+            <div class="form-group">
+              <label for="ConfirmPasswordInput" class="form-label">
+                <i class="fas fa-lock"></i> Confirm Password
+              </label>
+              <input
+                required
+                placeholder="Re-enter your password"
+                id="ConfirmPasswordInput"
+                type="password"
+                class="form-input"
+              />
+              <div class="input-help" id="password-match">
+                <i class="fas fa-info-circle"></i>
+                <span>Passwords must match</span>
+              </div>
+            </div>
+
+            <!-- Role Selection -->
+            <div class="form-group">
+              <label for="RoleSelect" class="form-label">
+                <i class="fas fa-user-tag"></i> I am signing up as:
+              </label>
+              <div class="role-selector">
+                <div class="role-option" data-role="user">
+                  <div class="role-icon">
+                    <i class="fas fa-user"></i>
+                  </div>
+                  <div class="role-info">
+                    <h4>User</h4>
+                    <p>For personal use</p>
+                  </div>
+                  <div class="role-check">
+                    <i class="fas fa-check"></i>
+                  </div>
+                </div>
+                
+                <div class="role-option" data-role="caregiver">
+                  <div class="role-icon">
+                    <i class="fas fa-hands-helping"></i>
+                  </div>
+                  <div class="role-info">
+                    <h4>Caregiver</h4>
+                    <p>Professional or family caregiver</p>
+                  </div>
+                  <div class="role-check">
+                    <i class="fas fa-check"></i>
+                  </div>
+                </div>
+              </div>
+              <input type="hidden" id="RoleSelect" value="user" required />
+            </div>
+
+            <!-- Terms Agreement -->
+            <div class="form-group">
+              <label class="checkbox-label">
+                <input type="checkbox" id="termsAgreement" required />
+                <span class="checkmark"></span>
+                <span>I agree to the <a href="terms.html">Terms of Service</a> and <a href="privacy.html">Privacy Policy</a></span>
+              </label>
+            </div>
+
+            <!-- Newsletter -->
+            <div class="form-group">
+              <label class="checkbox-label">
+                <input type="checkbox" id="newsletterSubscription" />
+                <span class="checkmark"></span>
+                <span>Send me helpful tips and updates (optional)</span>
+              </label>
+            </div>
+
+            <!-- Submit Button -->
+            <button type="submit" class="SignUpButton" id="SignUpButton">
+              <i class="fas fa-user-plus"></i>
+              Create Account
+            </button>
+
+          
+
+            <!-- Login Link -->
+            <div class="login-link">
+              <p class="LoginText">
+                Already have an account? <a href="LoginScreen.html">Login here</a>
+              </p>
+            </div>
+          </form>
+        </div>
+        
+        <!-- Accessibility Options -->
+        <div class="accessibility-options">
+          <button class="accessibility-btn" id="text-size-btn" title="Increase text size">
+            <i class="fas fa-text-height"></i>
+          </button>
+          <button class="accessibility-btn" id="high-contrast-btn" title="High contrast mode">
+            <i class="fas fa-adjust"></i>
+          </button>
+          <button class="accessibility-btn" id="read-aloud-btn" title="Read aloud">
+            <i class="fas fa-volume-up"></i>
+          </button>
+        </div>
+      </div>
+    </main>
+
+    <!-- Toast Notification -->
+    <div class="toast" id="toast">
+      <div class="toast-content">
+        <i class="fas fa-check-circle toast-icon"></i>
+        <div class="toast-message">Account created successfully!</div>
+      </div>
+    </div>
+
+    <script src="../js/signup.js"></script>
+    <script src="../js/auth.js"></script>
+  </body>
+</html>

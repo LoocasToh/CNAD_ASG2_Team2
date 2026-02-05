@@ -22,13 +22,12 @@
       <div class="user-section" id="auth-area">
         <div class="user-info" id="user-info">
           <i class="fas fa-user-circle user-icon"></i>
-          <span class="user-name">Guest</span>
+          <span class="user-name" id="headerUserName">Guest</span>
         </div>
         <div class="user-dropdown">
-          <a href="LoginScreen.html" id="login-link"><i class="fas fa-sign-in-alt"></i> Login</a>
-          <a href="#" id="logout-link" style="display:none"><i class="fas fa-sign-out-alt"></i> Logout</a>
           <a href="#" id="profile-link"><i class="fas fa-user-cog"></i> Profile</a>
           <a href="#" id="help-link"><i class="fas fa-question-circle"></i> Help</a>
+          <a href="#" id="logout-link"><i class="fas fa-sign-out-alt"></i> Logout</a>
         </div>
       </div>
     </div>
@@ -276,6 +275,7 @@
     </div>
 
     <!-- Separate JS file -->
-    <script src="/Javascript/index.js"></script>
+    <script src="../js/dailytask.js"></script> 
+     <script src="../js/auth.js"></script>
   </body>
 </html>

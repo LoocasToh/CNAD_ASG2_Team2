@@ -7,7 +7,7 @@ CREATE TABLE IF NOT EXISTS users (
   email VARCHAR(255) NOT NULL UNIQUE,
   password VARCHAR(255) NOT NULL,
   created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
-  userType ENUM('admin', 'caregiver', 'pwid') NOT NULL
+  userType ENUM('user', 'caregiver') NOT NULL
 );
 
 INSERT INTO users (name, email, password, userType)
