@@ -1,0 +1,98 @@
+body {
+  margin: 0;
+  font-family: Arial, sans-serif;
+  background: #f4f6f8;
+}
+
+/* Top nav */
+.top-nav {
+  background: #1f2a37;
+  color: white;
+  padding: 14px 24px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.top-nav a {
+  color: #60a5fa;
+  text-decoration: none;
+}
+
+/* Layout */
+.layout {
+  display: flex;
+}
+
+/* Sidebar */
+.sidebar {
+  width: 220px;
+  background: #1f2a37;
+  color: white;
+  padding: 20px;
+  min-height: 100vh;
+}
+
+.sidebar button {
+  width: 100%;
+  padding: 10px;
+  background: #3b82f6;
+  color: white;
+  border: none;
+  border-radius: 6px;
+}
+
+/* Main */
+.content {
+  flex: 1;
+  padding: 24px;
+}
+
+/* Cards */
+.card {
+  background: white;
+  border-radius: 12px;
+  padding: 20px;
+  margin-bottom: 20px;
+}
+
+/* Calendar */
+.calendar {
+  display: grid;
+  grid-template-columns: repeat(7, 1fr);
+  gap: 8px;
+}
+
+.calendar div {
+  background: #e5e7eb;
+  padding: 10px;
+  text-align: center;
+  border-radius: 6px;
+  cursor: pointer;
+}
+
+.calendar div.active {
+  background: #3b82f6;
+  color: white;
+}
+
+/* Tasks */
+#taskList li {
+  display: flex;
+  justify-content: space-between;
+  padding: 8px 0;
+}
+
+#taskList button {
+  background: #ef4444;
+  color: white;
+  border: none;
+  border-radius: 4px;
+  padding: 4px 8px;
+}
+
+.add-task {
+  margin-top: 12px;
+  display: flex;
+  gap: 8px;
+}
