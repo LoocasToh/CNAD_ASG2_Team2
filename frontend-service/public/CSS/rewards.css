@@ -1,0 +1,160 @@
+:root {
+    --primary: #6c5ce7;
+    --secondary: #a29bfe;
+    --dark: #2d3436;
+    --light: #f9f9f9;
+    --gold: #fdcb6e;
+}
+
+body {
+    font-family: 'Inter', sans-serif;
+    background-color: #f0f2f5;
+    margin: 0;
+    color: var(--dark);
+}
+
+.rewards-container {
+    max-width: 800px;
+    margin: 20px auto;
+    background: white;
+    border-radius: 20px;
+    padding: 20px;
+    box-shadow: 0 10px 30px rgba(0,0,0,0.05);
+}
+
+/* Header */
+.main-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 20px;
+}
+
+.coin-badge {
+    background: var(--dark);
+    color: var(--gold);
+    padding: 10px 20px;
+    border-radius: 50px;
+    font-weight: bold;
+    font-size: 1.2rem;
+}
+
+/* Cat Stage */
+/* This is the big outer container that holds the scene */
+.cat-section {
+    background: #f9f9f9;
+    border-radius: 15px;
+    padding: 0; /* Remove padding so background goes to edges */
+    overflow: hidden;
+    margin-bottom: 20px;
+}
+
+/* The actual "Stage" with the scenic background */
+.stage-container {
+    position: relative;
+    width: 100%;
+    height: 350px; /* Adjust height as needed */
+    background-image: url('../Images/games_background.jpg'); /* Your scenic image */
+    background-size: cover;
+    background-position: center bottom;
+    display: flex;
+    justify-content: center;
+    align-items: flex-end; /* Keeps the cat on the "ground" */
+    padding-bottom: 20px;
+}
+
+.cat-stage {
+    position: relative;
+    width: 300px; /* Size of your cat assets */
+    height: 300px;
+}
+
+/* Ensure all layers stack perfectly on the cat */
+.layer {
+    position: absolute;
+    bottom: 0;
+    left: 50%;
+    transform: translateX(-50%);
+    width: 100%;
+    height: 100%;
+    object-fit: contain;
+}
+
+.base { z-index: 1; }
+#view-clothing { z-index: 2; }
+#view-hat      { z-index: 3; }
+#view-accessory { z-index: 4; }
+
+/* Tabs */
+.tabs {
+    display: flex;
+    gap: 10px;
+    margin-bottom: 20px;
+}
+
+.tab-btn {
+    flex: 1;
+    padding: 12px;
+    border: none;
+    background: var(--light);
+    cursor: pointer;
+    border-radius: 10px;
+    font-weight: bold;
+}
+
+.tab-btn.active {
+    background: var(--primary);
+    color: white;
+}
+
+.tab-content { display: none; }
+.tab-content.active { display: block; }
+
+/* Grid */
+.item-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(150px, 1fr));
+    gap: 15px;
+}
+
+.item-card {
+    border: 1px solid #eee;
+    padding: 15px;
+    border-radius: 12px;
+    text-align: center;
+}
+
+.item-card img {
+    width: 80px;
+    height: 80px;
+    margin-bottom: 10px;
+}
+
+.buy-btn {
+    background: var(--secondary);
+    border: none;
+    color: white;
+    padding: 8px 15px;
+    border-radius: 5px;
+    cursor: pointer;
+    width: 100%;
+}
+
+/* Modal */
+.modal-overlay {
+    display: none;
+    position: fixed;
+    top:0; left:0; width:100%; height:100%;
+    background: rgba(0,0,0,0.5);
+    z-index: 100;
+    align-items: center;
+    justify-content: center;
+}
+
+.modal-content {
+    background: white;
+    padding: 30px;
+    border-radius: 15px;
+    text-align: center;
+    max-width: 400px;
+}

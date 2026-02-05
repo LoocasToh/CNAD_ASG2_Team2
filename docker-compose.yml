@@ -10,6 +10,7 @@ services:
     volumes:
       - auth_db_data:/var/lib/mysql
       - ./infra/sql/user_table.sql:/docker-entrypoint-initdb.d/user_table.sql
+      - ./infra/sql/rewards.sql:/docker-entrypoint-initdb.d/rewards.sql # rewards page ( using user id)
     healthcheck:
       test: ["CMD", "mysqladmin", "ping", "-h", "localhost", "-proot123"]
       interval: 5s

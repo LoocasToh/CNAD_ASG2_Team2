@@ -1,0 +1,88 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Cat Boutique & Rewards</title>
+    <link rel="stylesheet" href="../CSS/Landing.css" />
+    <link rel="stylesheet" href="../CSS/rewards.css">
+    
+</head>
+<body>
+
+    <!-- Top Navbar -->
+    <div class="header-bar">
+      <p class="home"><a href="Index.html">Home</a></p>
+      <p class="caregiving"><a href="DailyTasks.html">Caregiving</a></p>
+      <p class="emergencies"><a href="Emergencies.html">Emergencies</a></p>
+      <!-- <p class="smartwatch"><a href="#">Smartwatch</a></p> -->
+
+      <div class="Login" id="auth-area">
+        <a href="LoginScreen.html" id="login-link">Login</a>
+      </div>
+    </div>
+
+    <div class="rewards-container">
+        <header class="main-header">
+            <div class="user-info">
+                <h1>Hello, Raeann!</h1>
+                <p>Ready to style your cat today?</p>
+            </div>
+            <div class="coin-badge">
+                <span class="coin-icon">💰</span>
+                <span id="coin-balance">1200</span>
+            </div>
+        </header>
+
+        <section class="cat-section">
+            <div class="stage-container">
+                <div class="cat-stage">
+                    <img src="../Images/CAT.png" class="layer base" alt="My Cat">
+                    <!-- <img id="view-clothing" src="" class="layer" alt="">
+                    <img id="view-hat" src="" class="layer" alt="">
+                    <img id="view-accessory" src="" class="layer" alt=""> -->
+                </div>
+            </div>
+            <div class="stage-controls">
+                <button onclick="resetOutfit()" class="secondary-btn">Remove All</button>
+            </div>
+        </section>
+
+        <div class="tabs">
+            <button class="tab-btn active" onclick="showTab('shop')">Cat Shop</button>
+            <button class="tab-btn" onclick="showTab('perks')">Redeem Perks</button>
+        </div>
+
+        <div id="shop-tab" class="tab-content active">
+            <div class="item-grid" id="items-container">
+                </div>
+        </div>
+
+        <div id="perks-tab" class="tab-content">
+            <div class="perks-list">
+                <div class="perk-item">
+                    <span>🎁 10% Coffee Voucher</span>
+                    <button class="redeem-btn" onclick="redeemPerk(500)">500 Coins</button>
+                </div>
+                <div class="perk-item">
+                    <span>🎟️ Movie Ticket Discount</span>
+                    <button class="redeem-btn" onclick="redeemPerk(800)">800 Coins</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div id="modal" class="modal-overlay">
+        <div class="modal-content">
+            <h2 id="modal-title">Confirm Purchase</h2>
+            <p id="modal-text"></p>
+            <div class="modal-btns">
+                <button onclick="closeModal()" class="cancel-btn">Cancel</button>
+                <button id="confirm-btn" class="confirm-btn">Confirm</button>
+            </div>
+        </div>
+    </div>
+
+    <script src="../js/rewards.js"></script>
+</body>
+</html>
