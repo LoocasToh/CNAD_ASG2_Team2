@@ -11,6 +11,7 @@ let currentMonth = 1; // February (0-based)
 const pwids = {
   alex: {
     name: "Alex",
+    phone: "91234567",
     tasks: {
       "2024-10-05": ["Eat", "Medication"],
       "2024-10-06": ["Shower"]
@@ -18,6 +19,7 @@ const pwids = {
   },
   jamie: {
     name: "Jamie",
+    phone: "98765432",
     tasks: {
       "2024-10-05": ["Exercise"]
     }
@@ -34,6 +36,11 @@ const taskList = document.getElementById("taskList");
 const taskDateTitle = document.getElementById("taskDateTitle");
 const newTaskInput = document.getElementById("newTaskInput");
 const addTaskBtn = document.getElementById("addTaskBtn");
+const callPWIDBtn = document.getElementById("callPWIDBtn");
+const progressBar = document.getElementById("progressBar");
+const progressText = document.getElementById("progressText");
+
+
 
 let selectedPWID = null;
 let selectedDate = null;
@@ -121,6 +128,13 @@ addTaskBtn.addEventListener("click", () => {
   renderTasks();
 });
 
+callPWIDBtn.disabled = false;
+
+callPWIDBtn.onclick = () => {
+  const phone = pwids[selectedPWID].phone;
+  /*window.location.href = `tel:${phone}`;*/
+};
+
 /* =======================
    CALENDAR
    ======================= */
@@ -201,6 +215,24 @@ window.deleteTask = function (index) {
   pwids[selectedPWID].tasks[selectedDate].splice(index, 1);
   renderTasks();
 };
+/* =======================
+   PROGRESS BAR
+   ======================= */
+
+function updateProgress() {
+  if (!selectedPWID) return;
+
+  const today = new Date().toISOString().split("T")[0];
+  const tasks = pwids[selectedPWID].tasks[today] || [];
+
+  const completed = tasks.length; // mock: assume completed
+  const total = tasks.length || 1;
+
+  const percent = Math.round((completed / total) * 100);
+
+  progressBar.style.width = percent + "%";
+  progressText.textContent = `${percent}% completed`;
+}
 
 /* =======================
    START APP

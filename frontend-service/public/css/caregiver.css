@@ -108,6 +108,42 @@ select {
   font-size: 15px;
 }
 
+.pwid-actions {
+  margin-top: 16px;
+}
+
+#callPWIDBtn {
+  background: #10b981;
+  color: white;
+  border: none;
+  padding: 10px 16px;
+  border-radius: 10px;
+  font-weight: 600;
+  cursor: pointer;
+}
+
+#callPWIDBtn:disabled {
+  background: #9ca3af;
+  cursor: not-allowed;
+}
+
+.progress-container {
+  width: 50%;
+  height: 16px;
+  background: #e5e7eb;
+  border-radius: 999px;
+  overflow: hidden;
+  margin: 15px 0;
+}
+
+.progress-bar {
+  height: 100%;
+  width: 0%;
+  background: linear-gradient(90deg, #3b82f6, #60a5fa);
+  transition: width 0.3s ease;
+}
+
+
 /* =====================
    Calendar (pill buttons)
    ===================== */
@@ -278,3 +314,5 @@ select {
   background: white;
   font-size: 14px;
 }
+
+
