@@ -1,0 +1,76 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <link rel="stylesheet" href="../CSS/caregiver.css" />
+  <title>Caregiver Dashboard</title>
+</head>
+
+<body>
+  <!-- Top Navbar -->
+  <div class="header-bar">
+    <p class="home"><a href="Index.html">Home</a></p>
+    <p class="caregiving"><a href="caregiver.html">Caregiving</a></p>
+    <p class="emergencies"><a href="Emergencies.html">Emergencies</a></p>
+    <p class="login"><a href="#" id="logout">Logout</a></p>
+  </div>
+
+  <div class="main-container">
+
+    <!-- Side Menu -->
+    <div class="side-menu">
+      <h3>Caregiver Menu</h3>
+      <button class="active">Task Management</button>
+    </div>
+
+    <!-- Main Content -->
+ <div class="content">
+
+  <div class="card">
+    <h2>Select PWID</h2>
+    <select id="pwidSelect">
+      <option value="">-- Select PWID --</option>
+    </select>
+  </div>
+
+<div class="card">
+  <h2>Calendar</h2>
+
+  <div class="calendar-controls">
+    <select id="monthSelect"></select>
+    <select id="yearSelect"></select>
+  </div>
+
+  <div class="calendar-container">
+    <div class="calendar-header">
+      <span>Sun</span><span>Mon</span><span>Tue</span>
+      <span>Wed</span><span>Thu</span><span>Fri</span><span>Sat</span>
+    </div>
+
+    <div id="calendar" class="calendar-grid"></div>
+  </div>
+</div>
+
+<div class="card">
+  <h2 id="taskDateTitle">Tasks</h2>
+
+  <ul id="taskList"></ul>
+
+  <div class="add-task">
+    <input id="newTaskInput" placeholder="New task name" />
+    <button id="addTaskBtn">Add Task</button>
+  </div>
+</div>
+
+
+
+
+
+</div>
+
+  </div>
+
+  <script src="/js/caregiver.js"></script>
+</body>
+</html>

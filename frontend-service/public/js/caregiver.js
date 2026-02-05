@@ -1,83 +1,211 @@
-// Mock PWID + task data (replace with API later)
-const data = {
+document.addEventListener("DOMContentLoaded", () => {
+
+console.log("Caregiver dashboard loaded");
+
+/* =======================
+   MOCK DATA (Frontend)
+   ======================= */
+let currentYear = 2026;
+let currentMonth = 1; // February (0-based)
+
+const pwids = {
   alex: {
     name: "Alex",
     tasks: {
-      "2024-10-03": ["Eat", "Shower"],
-      "2024-10-04": ["Medication"]
+      "2024-10-05": ["Eat", "Medication"],
+      "2024-10-06": ["Shower"]
     }
   },
   jamie: {
     name: "Jamie",
     tasks: {
-      "2024-10-03": ["Exercise"]
+      "2024-10-05": ["Exercise"]
     }
   }
 };
+
+/* =======================
+   DOM ELEMENTS
+   ======================= */
 
 const pwidSelect = document.getElementById("pwidSelect");
 const calendar = document.getElementById("calendar");
 const taskList = document.getElementById("taskList");
 const taskDateTitle = document.getElementById("taskDateTitle");
+const newTaskInput = document.getElementById("newTaskInput");
+const addTaskBtn = document.getElementById("addTaskBtn");
 
 let selectedPWID = null;
 let selectedDate = null;
 
-// Populate PWIDs
-Object.keys(data).forEach(id => {
-  const opt = document.createElement("option");
-  opt.value = id;
-  opt.textContent = data[id].name;
-  pwidSelect.appendChild(opt);
+const monthSelect = document.getElementById("monthSelect");
+const yearSelect = document.getElementById("yearSelect");
+
+const months = [
+  "January","February","March","April","May","June",
+  "July","August","September","October","November","December"
+];
+
+function populateMonthYear() {
+  months.forEach((m, i) => {
+    const opt = document.createElement("option");
+    opt.value = i;
+    opt.textContent = m;
+    monthSelect.appendChild(opt);
+  });
+
+  for (let y = 2024; y <= 2028; y++) {
+    const opt = document.createElement("option");
+    opt.value = y;
+    opt.textContent = y;
+    yearSelect.appendChild(opt);
+  }
+
+  monthSelect.value = currentMonth;
+  yearSelect.value = currentYear;
+}
+
+monthSelect.addEventListener("change", () => {
+  currentMonth = parseInt(monthSelect.value);
+  renderCalendar();
 });
 
-pwidSelect.onchange = () => {
-  selectedPWID = pwidSelect.value;
+yearSelect.addEventListener("change", () => {
+  currentYear = parseInt(yearSelect.value);
   renderCalendar();
-};
+});
 
-// Render simple calendar (30 days demo)
+/* =======================
+   INIT
+   ======================= */
+
+function init() {
+  populatePWIDs();
+  populateMonthYear();
+  renderCalendar();
+}
+
+
+
+function populatePWIDs() {
+  Object.keys(pwids).forEach(id => {
+    const option = document.createElement("option");
+    option.value = id;
+    option.textContent = pwids[id].name;
+    pwidSelect.appendChild(option);
+  });
+}
+
+/* =======================
+   EVENT LISTENERS
+   ======================= */
+
+pwidSelect.addEventListener("change", () => {
+  selectedPWID = pwidSelect.value;
+  selectedDate = null;
+  renderCalendar();
+  taskList.innerHTML = "";
+  taskDateTitle.textContent = "Tasks";
+});
+
+
+addTaskBtn.addEventListener("click", () => {
+  if (!selectedPWID || !selectedDate) return;
+  const taskName = newTaskInput.value.trim();
+  if (!taskName) return;
+
+  pwids[selectedPWID].tasks[selectedDate] ??= [];
+  pwids[selectedPWID].tasks[selectedDate].push(taskName);
+
+  newTaskInput.value = "";
+  renderTasks();
+});
+
+/* =======================
+   CALENDAR
+   ======================= */
+
 function renderCalendar() {
   calendar.innerHTML = "";
-  for (let d = 1; d <= 30; d++) {
-    const date = `2024-10-${String(d).padStart(2, "0")}`;
+
+  const year = currentYear;
+  const month = currentMonth;
+
+  const firstDay = new Date(year, month, 1).getDay();
+  const daysInMonth = new Date(year, month + 1, 0).getDate();
+
+  // leading empty cells
+  for (let i = 0; i < firstDay; i++) {
+    const empty = document.createElement("div");
+    empty.className = "calendar-day empty";
+    calendar.appendChild(empty);
+  }
+
+  // actual days
+  for (let day = 1; day <= daysInMonth; day++) {
+    const date = `${year}-${String(month + 1).padStart(2, "0")}-${String(day).padStart(2, "0")}`;
     const cell = document.createElement("div");
-    cell.textContent = d;
-    cell.onclick = () => selectDate(date, cell);
+    cell.className = "calendar-day";
+
+    const number = document.createElement("div");
+    number.className = "calendar-day-number";
+    number.textContent = day;
+    cell.appendChild(number);
+
+    if (
+      selectedPWID &&
+      pwids[selectedPWID].tasks[date]?.length
+    ) {
+      const dot = document.createElement("div");
+      dot.className = "calendar-dot";
+      cell.appendChild(dot);
+    }
+
+    cell.addEventListener("click", () => {
+      selectedDate = date;
+      renderCalendar();
+      renderTasks();
+    });
+
+if (date === selectedDate) {
+  cell.classList.add("active");
+}
+
+
     calendar.appendChild(cell);
   }
 }
 
-function selectDate(date, cell) {
-  selectedDate = date;
-  document.querySelectorAll(".calendar div").forEach(c => c.classList.remove("active"));
-  cell.classList.add("active");
-  renderTasks();
-}
+
+/* =======================
+   TASKS
+   ======================= */
 
 function renderTasks() {
   taskList.innerHTML = "";
   taskDateTitle.textContent = `Tasks for ${selectedDate}`;
 
-  const tasks = data[selectedPWID]?.tasks[selectedDate] || [];
-  tasks.forEach((task, idx) => {
+  const tasks = pwids[selectedPWID].tasks[selectedDate] || [];
+
+  tasks.forEach((task, index) => {
     const li = document.createElement("li");
-    li.innerHTML = `${task} <button onclick="deleteTask(${idx})">Delete</button>`;
+    li.innerHTML = `
+      ${task}
+      <button onclick="deleteTask(${index})">Delete</button>
+    `;
     taskList.appendChild(li);
   });
 }
 
-window.deleteTask = (idx) => {
-  data[selectedPWID].tasks[selectedDate].splice(idx, 1);
+window.deleteTask = function (index) {
+  pwids[selectedPWID].tasks[selectedDate].splice(index, 1);
   renderTasks();
 };
 
-document.getElementById("addTaskBtn").onclick = () => {
-  const input = document.getElementById("newTaskInput");
-  if (!input.value || !selectedDate) return;
+/* =======================
+   START APP
+   ======================= */
 
-  data[selectedPWID].tasks[selectedDate] ??= [];
-  data[selectedPWID].tasks[selectedDate].push(input.value);
-  input.value = "";
-  renderTasks();
-};
+init();
+
+});
