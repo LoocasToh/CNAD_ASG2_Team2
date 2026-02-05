@@ -1,0 +1,72 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <link rel="stylesheet" href="/CSS/Emergencies.css" />
+    <title>Emergencies</title>
+  </head>
+  <body>
+    <!-- Top Navbar -->
+    <div class="header-bar">
+      <p><a href="Index.html">Home</a></p>
+      <p><a href="DailyTasks.html">Caregiving</a></p>
+      <p class="active"><a href="Emergencies.html">Emergencies</a></p>
+      <!-- <p><a href="https://Youtube.com">Smartwatch</a></p> -->
+      <div class="Login" id="auth-area">
+        <a href="LoginScreen.html" id="login-link">Login</a>
+      </div>
+    </div>
+
+    <!-- Page Layout -->
+    <div class="layout">
+      <!-- Sidebar -->
+      <aside class="sidebar">
+        <h3>Side Menu</h3>
+        <ul>
+          <li class="active">Emergencies</li>
+          <!-- <li class="disabled">Settings</li> -->
+        </ul>
+      </aside>
+
+      <!-- Main Content -->
+      <main class="content">
+        <!-- Emergency Call Section -->
+        <section class="emergency-section">
+          <h1>Emergency Assistance</h1>
+          <p class="emergency-note">
+            Use this button only in urgent situations.
+          </p>
+
+          <button class="emergency-button" id="emergencyCallBtn">
+            🚨 Emergency Call
+          </button>
+        </section>
+
+        <section class="info-card">
+          <h2>How the Emergency Button Works</h2>
+          <p>
+            The Emergency Call button is designed for quick access during urgent
+            situations. When pressed, the system asks for confirmation to
+            prevent accidental calls.
+          </p>
+
+          <ul>
+            <li>User presses the Emergency Call button</li>
+            <li>A confirmation prompt appears</li>
+            <li>
+              Once confirmed, the phone immediately calls emergency services
+            </li>
+          </ul>
+
+          <p class="highlight">
+            ✔ One intentional action &nbsp; ✔ No tracking &nbsp; ✔ Immediate
+            response
+          </p>
+        </section>
+      </main>
+    </div>
+
+    <script src="/Javascript/Emergencies.js"></script>
+  </body>
+</html>

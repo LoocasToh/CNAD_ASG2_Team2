@@ -1,0 +1,337 @@
+/* Reset */
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+    font-family: Arial, Helvetica, sans-serif;
+}
+
+body {
+    height: 100vh;
+    background: #f4f6f8;
+}
+
+/* =========================
+   TOP BAR
+   ========================= */
+.header-bar {
+    display: flex;
+    align-items: center;
+    justify-content: flex-start;
+    gap: 60px;
+
+    background-color: #1f2933;
+    padding: 15px 30px;
+}
+
+.header-bar p {
+    margin: 0;
+    margin-left: 50px;
+}
+
+.header-bar .Login {
+    margin-left: auto;
+    margin-right: 30px;
+}
+
+
+.header-bar a {
+    color: #ffffff;
+    text-decoration: none;
+    font-weight: 600;
+    transition: color 0.2s ease;
+}
+
+.header-bar a:hover {
+    color: #60a5fa;
+}
+
+/* Highlight Login tab */   
+.header-bar .Login a {
+    color: #60a5fa;
+}
+
+/* =========================
+   USER ICON & DROPDOWN
+   ========================= */
+.user-menu {
+    position: relative;
+}
+
+.user-icon {
+    width: 60px;           /* bigger */
+    height: 60px;          /* bigger */
+    border-radius: 50%;
+    object-fit: cover;
+    cursor: pointer;
+    border: 3px solid #60a5fa;  /* thicker border for emphasis */
+    transition: transform 0.2s ease;
+}
+
+.user-icon:hover {
+    transform: scale(1.05);
+}
+
+.user-dropdown {
+    position: absolute;
+    top: 65px;             /* adjust for larger icon */
+    right: 0;
+    background: white;
+    border-radius: 12px;
+    box-shadow: 0 10px 20px rgba(0,0,0,0.2);
+    min-width: 160px;      /* bigger dropdown */
+    display: none;
+    z-index: 100;
+    padding: 2px 0;
+    font-size: 18px;       /* bigger text */
+    transition: opacity 0.3s ease;
+}
+
+/* Hover state stays indefinitely */
+.user-menu.hovered .user-dropdown {
+    display: block;
+}
+
+/* Dropdown button styling */
+.user-dropdown button {
+    width: 100%;
+    padding: 12px 20px;    /* bigger clickable area */
+    border: none;
+    background: none;
+    cursor: pointer;
+    font-weight: 600;
+    font-size: 18px;       /* bigger text */
+    transition: background 0.2s ease, color 0.2s ease;
+}
+
+.user-dropdown button:hover {
+    background: #f1f5f9;
+}
+
+/* Active click state */
+.user-dropdown button:active {
+    background: #dbeafe;  /* light blue feedback */
+}
+
+/* Smooth fade-in (optional) */
+.user-dropdown.show {
+    display: block;
+    opacity: 1;
+}
+
+/* =========================
+   LAYOUT
+   ========================= */
+.layout {
+    display: flex;
+    height: calc(100vh - 55px);
+}
+
+/* =========================
+   SIDEBAR
+   ========================= */
+.sidebar {
+    width: 220px;
+    background: #1f2933;
+    color: white;
+    padding: 25px 20px;
+}
+
+.sidebar h3 {
+    margin-bottom: 15px;
+    font-size: 16px;
+    color: #cbd5e1;
+}
+
+.sidebar ul {
+    list-style: none;
+}
+
+.sidebar li {
+    padding: 12px;
+    border-radius: 8px;
+    margin-bottom: 8px;
+
+    cursor: pointer;
+    user-select: none;
+
+    transition:
+        background 0.15s ease,
+        transform 0.08s ease;
+}
+
+/* Hover (non-disabled) */
+.sidebar li:not(.disabled):hover {
+    background: #334155;
+}
+
+/* Active tab */
+.sidebar li.active {
+    background: #3b82f6;
+    color: white;
+}
+
+/* Active + Hover */
+.sidebar li.active:hover {
+    background: #2563eb;
+}
+
+/* Pressed */
+.sidebar li:not(.disabled):active {
+    transform: scale(0.97);
+}
+
+/* Disabled tab */
+.sidebar li.disabled {
+    opacity: 0.4;
+    cursor: not-allowed;
+}
+
+/* Disable hover/press for disabled */
+.sidebar li.disabled:hover,
+.sidebar li.disabled:active {
+    background: none;
+    transform: none;
+}
+
+/* =========================
+   CONTENT
+   ========================= */
+.content {
+    flex: 1;
+    padding: 50px;
+    overflow-y: auto;
+}
+
+/* =========================
+   EMERGENCY SECTION
+   ========================= */
+.emergency-section {
+    background: #fee2e2;
+    border: 2px solid #ef4444;
+    border-radius: 12px;
+    padding: 30px;
+    margin-bottom: 40px;
+    text-align: center;
+}
+
+.emergency-section h1 {
+    color: #991b1b;
+    margin-bottom: 10px;
+}
+
+.emergency-note {
+    color: #7f1d1d;
+    margin-bottom: 20px;
+}
+
+.emergency-button {
+    width: 100%;
+    padding: 28px;
+    font-size: 22px;
+    font-weight: bold;
+
+    background: #dc2626; /* red */
+    color: white;
+
+    border: none;
+    border-radius: 12px;
+    cursor: pointer;
+
+    transition: transform 0.1s ease, background 0.2s ease;
+}
+
+/* Hover */
+.emergency-button:hover {
+    background: #b91c1c;
+}
+
+/* Pressed */
+.emergency-button:active {
+    background: #991b1b;
+    transform: scale(0.98);
+}
+
+/* =========================
+   INFO CARDS
+   ========================= */
+.info-card {
+    background: white;
+    padding: 35px;
+    border-radius: 12px;
+    box-shadow: 0 15px 30px rgba(0,0,0,0.1);
+    margin-bottom: 30px;
+}
+
+.info-card h2 {
+    margin-bottom: 15px;
+    color: #1f2933;
+}
+
+.info-card h3 {
+    margin-top: 20px;
+    margin-bottom: 10px;
+    color: #2563eb;
+}
+
+.info-card h4 {
+    margin-top: 15px;
+    color: #374151;
+}
+
+.info-card ul {
+    margin-left: 20px;
+    margin-bottom: 10px;
+}
+
+.info-card li {
+    margin-bottom: 6px;
+}
+
+.highlight {
+    margin-top: 10px;
+    font-weight: bold;
+    color: #065f46;
+}
+
+.sidebar li.disabled {
+    opacity: 1;
+    cursor: not-allowed;
+    background: none;
+}
+
+.sidebar li.disabled:hover {
+    background: none;
+}
+
+/* Accessibility: visible focus */
+button:focus,
+input:focus {
+    outline: 3px solid #60a5fa;
+    outline-offset: 2px;
+}
+
+/* Completed task feedback */
+.task-list input[type="checkbox"]:checked + label {
+    text-decoration: line-through;
+    color: #6b7280;
+}
+
+.task-list input[type="checkbox"]:checked {
+    accent-color: #22c55e; /* green success */
+}
+
+.day-selector button.active {
+    background: #2563eb;
+    color: white;
+    font-size: 16px;
+    box-shadow: 0 0 0 3px rgba(37, 99, 235, 0.3);
+}
+
+.task-list li {
+    padding: 14px;
+}
+
+.task-card {
+    line-height: 1.6;
+}

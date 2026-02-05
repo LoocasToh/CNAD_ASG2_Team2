@@ -1,0 +1,61 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <link href="/CSS/LoginScreen.css" rel="stylesheet" type="text/css" />
+    <title>Login</title>
+  </head>
+  <body class="body" id="body">
+    <div class="header-bar" id="header-bar">
+      <p class="home" id="home"><a href="Index.html">Home</a></p>
+      <p class="caregiving" id="caregiving">
+        <a href="DailyTasks.html">Caregiving</a>
+      </p>
+      <p class="emergencies" id="emergencies">
+        <a href="Emergencies.html">Emergencies</a>
+      </p>
+      <!-- <p class="smartwatch" id="smartwatch"><a href="https://youtube.com">Smartwatch</a></p> -->
+
+      <div class="Login" id="auth-area">
+        <a href="LoginScreen.html" id="login-link">Login</a>
+      </div>
+
+      <!--<img>todo: add img area for profile icons-->
+    </div>
+
+    <div class="login-container" id="login-container">
+      <form>
+        <label for="UsernameInput" class="Username" id="Username"
+          >Username:</label
+        >
+        <input
+          required
+          placeholder="Enter Username"
+          class="UsernameInput"
+          id="UsernameInput"
+          type="text"
+        />
+        <label for="PasswordInput" class="Password" id="Password"
+          >Password</label
+        >
+        <input
+          required
+          placeholder="Enter Password"
+          class="PasswordInput"
+          id="PasswordInput"
+          type="password"
+        />
+
+        <button class="LoginButton" id="LoginButton">Login</button>
+
+        <p class="SignUp" id="SignUp">
+          New? Sign Up
+          <a href="SignUp.html" class="SignUpButton" id="SignUpButton">HERE!</a>
+        </p>
+      </form>
+    </div>
+
+    <script src="/Javascript/index.js"></script>
+  </body>
+</html>

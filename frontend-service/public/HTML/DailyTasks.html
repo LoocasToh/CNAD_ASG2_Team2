@@ -1,0 +1,88 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <link rel="stylesheet" href="/CSS/DailyTasks.css" />
+    <title>Daily Tasks</title>
+  </head>
+  <body>
+    <!-- Top Navbar -->
+    <div class="header-bar" id="header-bar">
+      <p class="home"><a href="Index.html">Home</a></p>
+      <p class="caregiving"><a href="DailyTasks.html">Caregiving</a></p>
+      <p class="emergencies"><a href="Emergencies.html">Emergencies</a></p>
+      <!-- <p class="smartwatch"><a href="https://youtube.com">Smartwatch</a></p> -->
+      <div class="Login" id="auth-area">
+        <a href="LoginScreen.html" id="login-link">Login</a>
+      </div>
+    </div>
+
+    <!-- Page Layout -->
+    <div class="layout">
+      <!-- Sidebar -->
+      <aside class="sidebar">
+        <h3>Side Menu</h3>
+        <ul>
+          <li class="active"><a href="DailyTasks.html">Daily Tasks</a></li>
+          <!-- <li>Calendar</li>
+                <li>Settings</li> -->
+        </ul>
+      </aside>
+
+      <!-- Main Content -->
+      <main class="content">
+        <!-- Day Selector -->
+        <div class="day-selector">
+          <button data-day="Sun">Sun</button>
+          <button data-day="Mon">Mon</button>
+          <button data-day="Tue">Tue</button>
+          <button data-day="Wed">Wed</button>
+          <button data-day="Thu">Thu</button>
+          <button data-day="Fri">Fri</button>
+          <button data-day="Sat">Sat</button>
+        </div>
+
+        <!-- Task Cards -->
+        <div class="task-card" data-day="Sun">
+          <h2>Sunday Tasks</h2>
+          <ul class="task-list"></ul>
+          <button class="add-task">+ Add New Task</button>
+        </div>
+        <div class="task-card" data-day="Mon">
+          <h2>Monday Tasks</h2>
+          <ul class="task-list"></ul>
+          <button class="add-task">+ Add New Task</button>
+        </div>
+        <div class="task-card" data-day="Tue">
+          <h2>Tuesday Tasks</h2>
+          <ul class="task-list"></ul>
+          <button class="add-task">+ Add New Task</button>
+        </div>
+        <div class="task-card" data-day="Wed">
+          <h2>Wednesday Tasks</h2>
+          <ul class="task-list"></ul>
+          <button class="add-task">+ Add New Task</button>
+        </div>
+        <div class="task-card" data-day="Thu">
+          <h2>Thursday Tasks</h2>
+          <ul class="task-list"></ul>
+          <button class="add-task">+ Add New Task</button>
+        </div>
+        <div class="task-card" data-day="Fri">
+          <h2>Friday Tasks</h2>
+          <ul class="task-list"></ul>
+          <button class="add-task">+ Add New Task</button>
+        </div>
+        <div class="task-card" data-day="Sat">
+          <h2>Saturday Tasks</h2>
+          <ul class="task-list"></ul>
+          <button class="add-task">+ Add New Task</button>
+        </div>
+      </main>
+    </div>
+
+    <!-- Separate JS file -->
+    <script src="/Javascript/index.js"></script>
+  </body>
+</html>
