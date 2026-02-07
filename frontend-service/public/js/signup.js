@@ -1,11 +1,14 @@
 // =========================
-// SIGN UP PAGE - Care Companion (STANDALONE)
-// Includes: toast, loading, validation, accessibility, show-password toggle
+// SIGN UP PAGE - Care Companion (BACKEND REQUIRED)
+// Fixes:
+// - Avoid AUTH_BASE redeclare (auth.js already declares it)
+// - Requires backend to return numeric user.id
 // =========================
 
-const AUTH_BASE = window.AUTH_BASE_URL || 'http://localhost:8080/auth';
+// IMPORTANT: do NOT use const AUTH_BASE here (auth.js already declares it)
+const AUTH_URL = window.AUTH_BASE_URL || 'http://localhost:8080/auth';
 
-// local fallback data
+// local-only lists (for UI checks only; not real auth)
 let users = JSON.parse(localStorage.getItem('careCompanionUsers')) || [];
 let tasks = JSON.parse(localStorage.getItem('careCompanionTasks')) || [];
 
@@ -102,7 +105,6 @@ function initAccessibility() {
     window.speechSynthesis.speak(speech);
   });
 
-  // eye toggle
   document.querySelectorAll('.show-password')?.forEach(btn => {
     btn.addEventListener('click', function () {
       const input = this.previousElementSibling;
@@ -126,11 +128,13 @@ function initAccessibility() {
 // SESSION CHECK
 // -------------------------
 function checkExistingSession() {
-  const user = JSON.parse(localStorage.getItem('careCompanionUser')) ||
+  const user =
+    JSON.parse(localStorage.getItem('careCompanionUser')) ||
     JSON.parse(sessionStorage.getItem('careCompanionUser'));
+
   if (user) {
     showToast('You are already logged in. Redirecting...', 'info');
-    setTimeout(() => (window.location.href = 'DailyTasks.html'), 1000);
+    setTimeout(() => (window.location.href = 'DailyTasks.html'), 800);
   }
 }
 
@@ -174,60 +178,6 @@ function validatePasswordMatch() {
   }
 }
 
-function validateUsername() {
-  const usernameInput = document.getElementById('UsernameInput');
-  if (!usernameInput) return;
-
-  const username = usernameInput.value.trim();
-  const usernameRegex = /^[a-zA-Z0-9_]{3,20}$/;
-
-  if (!username) {
-    usernameInput.classList.remove('valid', 'invalid');
-    return;
-  }
-
-  if (usernameRegex.test(username)) {
-    const isTaken = users.some(u => u.username === username);
-    if (isTaken) {
-      usernameInput.classList.add('invalid');
-      usernameInput.classList.remove('valid');
-      showToast('Username already taken', 'error');
-    } else {
-      usernameInput.classList.add('valid');
-      usernameInput.classList.remove('invalid');
-    }
-  } else {
-    usernameInput.classList.add('invalid');
-    usernameInput.classList.remove('valid');
-  }
-}
-
-function validateEmailField() {
-  const emailInput = document.getElementById('EmailInput');
-  if (!emailInput) return;
-
-  const email = emailInput.value.trim();
-  if (!email) {
-    emailInput.classList.remove('valid', 'invalid');
-    return;
-  }
-
-  if (validateEmail(email)) {
-    const isRegistered = users.some(u => u.email === email);
-    if (isRegistered) {
-      emailInput.classList.add('invalid');
-      emailInput.classList.remove('valid');
-      showToast('Email already registered', 'error');
-    } else {
-      emailInput.classList.add('valid');
-      emailInput.classList.remove('invalid');
-    }
-  } else {
-    emailInput.classList.add('invalid');
-    emailInput.classList.remove('valid');
-  }
-}
-
 function initRoleSelection() {
   const roleOptions = document.querySelectorAll('.role-option');
   const roleSelect = document.getElementById('RoleSelect');
@@ -245,58 +195,7 @@ function initRoleSelection() {
 }
 
 // -------------------------
-// TASK SEEDING
-// -------------------------
-function createDefaultTasks(userId) {
-  const now = Date.now();
-  const defaultTasks = [
-    {
-      id: 'task-' + now + '-1',
-      userId,
-      title: 'Morning medication',
-      description: 'Take prescribed morning medication',
-      day: 'Mon',
-      time: '08:00',
-      category: 'medication',
-      important: true,
-      recurring: true,
-      completed: false,
-      createdAt: new Date().toISOString(),
-    },
-    {
-      id: 'task-' + now + '-2',
-      userId,
-      title: 'Doctor appointment',
-      description: 'Monthly check-up with Dr. Smith',
-      day: 'Wed',
-      time: '14:30',
-      category: 'appointments',
-      important: true,
-      recurring: false,
-      completed: false,
-      createdAt: new Date().toISOString(),
-    },
-    {
-      id: 'task-' + now + '-3',
-      userId,
-      title: 'Evening walk',
-      description: '30-minute walk in the park',
-      day: 'Fri',
-      time: '18:00',
-      category: 'health',
-      important: false,
-      recurring: true,
-      completed: false,
-      createdAt: new Date().toISOString(),
-    },
-  ];
-
-  tasks.push(...defaultTasks);
-  localStorage.setItem('careCompanionTasks', JSON.stringify(tasks));
-}
-
-// -------------------------
-// SIGNUP
+// SIGNUP (BACKEND)
 // -------------------------
 async function handleSignUp(event) {
   event.preventDefault();
@@ -309,7 +208,6 @@ async function handleSignUp(event) {
   const termsAgreement = document.getElementById('termsAgreement');
   const newsletter = document.getElementById('newsletterSubscription');
   const signUpButton = document.getElementById('SignUpButton');
-  const warningElement = document.getElementById('sWarning');
 
   if (!usernameInput || !emailInput || !passwordInput || !confirmPasswordInput || !roleSelect || !termsAgreement || !signUpButton) return;
 
@@ -319,47 +217,13 @@ async function handleSignUp(event) {
   const confirmPassword = confirmPasswordInput.value;
   const role = roleSelect.value || 'user';
 
-  let isValid = true;
-
+  // Validation
   const usernameRegex = /^[a-zA-Z0-9_]{3,20}$/;
-  if (!usernameRegex.test(username)) {
-    showToast('Username must be 3-20 characters (letters, numbers, underscores only)', 'error');
-    usernameInput.focus();
-    usernameInput.classList.add('invalid');
-    isValid = false;
-  }
-
-  if (!validateEmail(email)) {
-    showToast('Please enter a valid email address', 'error');
-    emailInput.focus();
-    emailInput.classList.add('invalid');
-    isValid = false;
-  }
-
-  if (!validatePassword(password)) {
-    showToast('Password must be at least 8 characters with letters and numbers', 'error');
-    passwordInput.focus();
-    passwordInput.classList.add('invalid');
-    isValid = false;
-  }
-
-  if (password !== confirmPassword) {
-    showToast('Passwords do not match', 'error');
-    confirmPasswordInput.focus();
-    confirmPasswordInput.classList.add('invalid');
-    isValid = false;
-  }
-
-  if (!termsAgreement.checked) {
-    showToast('Please agree to the Terms of Service and Privacy Policy', 'error');
-    termsAgreement.focus();
-    isValid = false;
-  }
-
-  if (!isValid) return;
-
-  warningElement && (warningElement.style.display = 'none');
-  signUpButton.style.marginTop = '40px';
+  if (!usernameRegex.test(username)) return showToast('Username must be 3-20 characters (letters, numbers, underscores only)', 'error');
+  if (!validateEmail(email)) return showToast('Please enter a valid email address', 'error');
+  if (!validatePassword(password)) return showToast('Password must be at least 8 characters with letters and numbers', 'error');
+  if (password !== confirmPassword) return showToast('Passwords do not match', 'error');
+  if (!termsAgreement.checked) return showToast('Please agree to the Terms of Service and Privacy Policy', 'error');
 
   setLoading(signUpButton, true);
 
@@ -368,80 +232,44 @@ async function handleSignUp(event) {
       username,
       email,
       password,
-      role,
-      name: username,
       userType: role,
+      name: username,
       newsletter: newsletter ? newsletter.checked : false,
     };
 
-    const res = await fetch(`${AUTH_BASE}/signup`, {
+    const res = await fetch(`${AUTH_URL}/signup`, {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify(formData),
     });
 
-    const data = await res.json();
+    const raw = await res.text();
+    let data = null;
+    try { data = raw ? JSON.parse(raw) : null; } catch { data = { message: raw }; }
 
-    if (res.ok) {
-      const newUser = {
-        id: data.user?.id || 'user-' + Date.now(),
-        username,
-        email,
-        password,
-        role,
-        name: username,
-        createdAt: new Date().toISOString(),
-        newsletter: newsletter ? newsletter.checked : false,
-      };
-
-      users.push(newUser);
-      localStorage.setItem('careCompanionUsers', JSON.stringify(users));
-
-      createDefaultTasks(newUser.id);
-
-      if (data.token) {
-        localStorage.setItem('careCompanionToken', data.token);
-        localStorage.setItem('careCompanionUser', JSON.stringify(data.user || newUser));
-      } else {
-        localStorage.setItem('careCompanionUser', JSON.stringify({ ...newUser, password: undefined }));
-      }
-
-      showToast('Account created successfully! Welcome to Care Companion!', 'success');
-      setTimeout(() => (window.location.href = 'DailyTasks.html'), 1500);
-    } else {
-      const errorMessage = data.error || data.message || 'Signup failed';
-      showToast(errorMessage, 'error');
-
-      if (warningElement) {
-        warningElement.innerHTML = '* ' + errorMessage;
-        warningElement.style.display = 'block';
-        signUpButton.style.marginTop = '0px';
-      }
+    if (!res.ok) {
+      // 409 = email exists
+      const msg = data?.error || data?.message || `Signup failed (${res.status})`;
+      showToast(msg, 'error');
+      return;
     }
-  } catch (error) {
-    console.error('Signup error:', error);
-    showToast('Network error. Using local signup.', 'info');
 
-    // local fallback signup
-    const newUser = {
-      id: 'user-' + Date.now(),
-      username,
-      email,
-      password,
-      role,
-      name: username,
-      createdAt: new Date().toISOString(),
-      newsletter: newsletter ? newsletter.checked : false,
-    };
+    const newUser = data?.user;
+    const token = data?.token;
 
-    users.push(newUser);
-    localStorage.setItem('careCompanionUsers', JSON.stringify(users));
-    createDefaultTasks(newUser.id);
+    if (!newUser || !Number.isFinite(Number(newUser.id))) {
+      throw new Error(`Signup succeeded but backend did not return numeric user.id. Got: ${newUser?.id}`);
+    }
 
-    localStorage.setItem('careCompanionUser', JSON.stringify({ ...newUser, password: undefined }));
+    if (token) localStorage.setItem('careCompanionToken', token);
+    localStorage.setItem('careCompanionUser', JSON.stringify(newUser));
 
-    showToast('Account created locally! Redirecting...', 'success');
-    setTimeout(() => (window.location.href = 'DailyTasks.html'), 1500);
+    showToast('Account created successfully!', 'success');
+    setTimeout(() => (window.location.href = 'DailyTasks.html'), 800);
+
+  } catch (err) {
+    console.error('Signup error:', err);
+    showToast(err.message || 'Signup failed. Check auth-service.', 'error');
   } finally {
     setLoading(signUpButton, false);
   }
@@ -450,32 +278,13 @@ async function handleSignUp(event) {
 function initSignUpPage() {
   initAccessibility();
 
-  const signupForm = document.getElementById('signupForm');
-  signupForm?.addEventListener('submit', handleSignUp);
+  document.getElementById('signupForm')?.addEventListener('submit', handleSignUp);
 
   document.getElementById('PasswordInput')?.addEventListener('input', updatePasswordStrength);
   document.getElementById('PasswordInput')?.addEventListener('input', validatePasswordMatch);
   document.getElementById('ConfirmPasswordInput')?.addEventListener('input', validatePasswordMatch);
 
-  document.getElementById('UsernameInput')?.addEventListener('input', validateUsername);
-  document.getElementById('EmailInput')?.addEventListener('input', validateEmailField);
-
   initRoleSelection();
-
-  document.querySelectorAll('.social-btn')?.forEach(btn => {
-    btn.addEventListener('click', () => {
-      const provider = btn.classList.contains('google-btn') ? 'google' : 'apple';
-      showToast(`Signing up with ${provider}...`, 'info');
-    });
-  });
-
-  document.querySelectorAll('.checkbox-label a')?.forEach(link => {
-    link.addEventListener('click', e => {
-      e.preventDefault();
-      showToast('Terms and Privacy pages coming soon!', 'info');
-    });
-  });
-
   checkExistingSession();
 
   document.body.style.opacity = '0';

@@ -1,5 +1,6 @@
 const {
   createTask,
+  getTasksByUser,
   getTodayTasks,
   updateTask,
   deleteTask,
@@ -10,11 +11,22 @@ const {
 
 async function create(req, res) {
   try {
-    const { userId, title, task_time, category } = req.body;
+    const { userId, title, task_time, category, task_date, isDaily, important } = req.body;
+
     if (!userId || !title) {
       return res.status(400).json({ error: "userId and title required" });
     }
-    const task = await createTask({ userId, title, task_time, category });
+
+    const task = await createTask({
+      userId,
+      title,
+      task_time,
+      category,
+      task_date,
+      isDaily,
+      important,
+    });
+
     return res.status(201).json(task);
   } catch (err) {
     console.error(err);
@@ -22,16 +34,22 @@ async function create(req, res) {
   }
 }
 
+
+
+
+
 async function today(req, res) {
   try {
     const userId = Number(req.params.userId);
-    const tasks = await getTodayTasks(userId);
+    const dateStr = req.query.date || todaySG(); // allow frontend override
+    const tasks = await getTodayTasks(userId, dateStr);
     return res.json(tasks);
   } catch (err) {
     console.error(err);
     res.status(500).json({ error: "server error" });
   }
 }
+
 
 async function edit(req, res) {
   try {
@@ -85,4 +103,21 @@ async function logs(req, res) {
   }
 }
 
-module.exports = { create, today, edit, remove, complete, logs };
+async function all(req, res) {
+  try {
+    const userId = Number(req.params.userId);
+    const tasks = await getTasksByUser(userId);
+    return res.json(tasks);
+  } catch (err) {
+    console.error(err);
+    res.status(500).json({ error: "server error" });
+  }
+}
+
+async function todaySG() {
+  // YYYY-MM-DD in Asia/Singapore
+  return new Date().toLocaleDateString("en-CA", { timeZone: "Asia/Singapore" });
+}
+
+
+module.exports = { create, all, today, edit, remove, complete, logs };

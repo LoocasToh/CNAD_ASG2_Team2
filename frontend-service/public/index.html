@@ -3,22 +3,29 @@
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <link rel="stylesheet" href="/CSS/rewards.css" />
+    <link rel="stylesheet" href="../CSS/index.css" />
+  
     
     <title>Independence Support System</title>
   </head>
   <body>
     <!-- Top Navbar -->
-    <div class="header-bar">
-      <p class="home"><a href="Index.html">Home</a></p>
-      <p class="caregiving"><a href="DailyTasks.html">Caregiving</a></p>
-      <p class="emergencies"><a href="Emergencies.html">Emergencies</a></p>
-      <!-- <p class="smartwatch"><a href="#">Smartwatch</a></p> -->
-
-      <div class="Login" id="auth-area">
-        <a href="LoginScreen.html" id="login-link">Login</a>
+   <header class="header-bar">
+    <div class="logo">
+        <i class="fas fa-heartbeat"></i>
+        <span>Care Companion</span>
       </div>
+
+    <div class="nav-links">
+        <a href="index.html">Home</a>
+        <a href="DailyTasks.html">Daily Tasks</a>
+        <a href="Emergencies.html">Emergencies</a>
     </div>
+
+    <div class="Login">
+        <a href="LoginScreen.html">Login</a>
+    </div>
+</header>
 
     <!-- Hero Section -->
     <section class="hero">
@@ -102,7 +109,10 @@
 
    <script src="../js/login.js"></script>
    <script src="../js/signup.js"></script>
+   <script src="../js/index.js"></script>
     <!-- Auth Script -->
     <script src="../js/auth.js"></script>
   </body>
 </html>
+
+

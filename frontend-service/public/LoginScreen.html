@@ -3,37 +3,33 @@
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <link href="../CSS/LoginScreen.css" rel="stylesheet" type="text/css" />
+    <link href="../CSS/login.css" rel="stylesheet" type="text/css" />
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <title>Login - Care Companion</title>
   </head>
   <body class="body" id="body">
-    <!-- Top Navigation -->
-    <div class="header-bar" id="header-bar">
-      <div class="logo">
+     <!-- Top Navbar -->
+   <header class="header-bar">
+    <div class="logo">
         <i class="fas fa-heartbeat"></i>
         <span>Care Companion</span>
       </div>
-      
-      <p class="home" id="home">
-        <a href="Index.html"><i class="fas fa-home"></i> Home</a>
-      </p>
-      <p class="caregiving" id="caregiving">
-        <a href="DailyTasks.html"><i class="fas fa-tasks"></i> Caregiving</a>
-      </p>
-      <p class="emergencies" id="emergencies">
-        <a href="Emergencies.html"><i class="fas fa-first-aid"></i> Emergencies</a>
-      </p>
 
-      <div class="Login" id="auth-area">
-        <a href="LoginScreen.html" class="active-nav"><i class="fas fa-sign-in-alt"></i> Login</a>
-      </div>
+    <div class="nav-links">
+        <a href="index.html">Home</a>
+        <a href="DailyTasks.html">Daily Tasks</a>
+        <a href="Emergencies.html">Emergencies</a>
     </div>
+
+    <div class="Login">
+        <a href="LoginScreen.html">Login</a>
+    </div>
+</header>
 
     <!-- Main Login Content -->
     <main class="login-main">
-      <!-- Left Side - Welcome Message -->
-      <div class="login-welcome">
+      
+      <!-- <div class="login-welcome">
         <div class="welcome-content">
           <div class="welcome-icon">
             <i class="fas fa-hands-helping"></i>
@@ -68,7 +64,7 @@
             <p class="quote-author">- Sarah, Caregiver</p>
           </div>
         </div>
-      </div>
+      </div> -->
 
       <!-- Right Side - Login Form -->
       <div class="login-container" id="login-container">
@@ -109,7 +105,7 @@
                   type="password"
                 />
                 <button type="button" class="show-password" id="show-password-btn">
-                  <i class="fas fa-eye"></i>
+                  <i class="fas fa-eye" id="eyeicon"></i>
                 </button>
               </div>
               <div class="input-help" id="password-help">
@@ -210,7 +206,8 @@
       </div>
     </div>
 
-    <script src="../js/login.js"></script>
     <script src="../js/auth.js"></script>
+    <script src="../js/login.js"></script>
+   
   </body>
 </html>

@@ -3,10 +3,14 @@
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <link rel="stylesheet" href="../CSS/DailyTasks.css" />
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
-    <title>Daily Tasks - Care App</title>
+    <link rel="stylesheet" href="../CSS/dailytasks.css" />
+    <link
+      rel="stylesheet"
+      href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css"
+    />
+    <title>Daily Tasks - Care Companion</title>
   </head>
+
   <body>
     <!-- Top Navbar -->
     <div class="header-bar" id="header-bar">
@@ -14,20 +18,38 @@
         <i class="fas fa-heartbeat"></i>
         <span>Care Companion</span>
       </div>
-      <p class="home"><a href="Index.html"><i class="fas fa-home"></i> Home</a></p>
-      <p class="caregiving active-nav"><a href="DailyTasks.html"><i class="fas fa-tasks"></i> Daily Tasks</a></p>
-      <p class="emergencies"><a href="Emergencies.html"><i class="fas fa-first-aid"></i> Emergencies</a></p>
-      
+
+      <p class="home">
+        <a href="Index.html"><i class="fas fa-home"></i> Home</a>
+      </p>
+      <p class="caregiving active-nav">
+        <a href="DailyTasks.html"><i class="fas fa-tasks"></i> Daily Tasks</a>
+      </p>
+      <p class="emergencies">
+        <a href="Emergencies.html"><i class="fas fa-first-aid"></i> Emergencies</a>
+      </p>
+
       <!-- User Profile/Login -->
       <div class="user-section" id="auth-area">
         <div class="user-info" id="user-info">
           <i class="fas fa-user-circle user-icon"></i>
           <span class="user-name" id="headerUserName">Guest</span>
+          <i class="fas fa-chevron-down user-arrow"></i>
         </div>
+
         <div class="user-dropdown">
-          <a href="#" id="profile-link"><i class="fas fa-user-cog"></i> Profile</a>
-          <a href="#" id="help-link"><i class="fas fa-question-circle"></i> Help</a>
-          <a href="#" id="logout-link"><i class="fas fa-sign-out-alt"></i> Logout</a>
+          <a href="#" id="profile-link">
+            <i class="fas fa-user-cog"></i>
+            <span>Profile</span>
+          </a>
+          <a href="#" id="help-link">
+            <i class="fas fa-question-circle"></i>
+            <span>Help</span>
+          </a>
+          <a href="#" id="logout-link">
+            <i class="fas fa-sign-out-alt"></i>
+            <span>Logout</span>
+          </a>
         </div>
       </div>
     </div>
@@ -37,31 +59,41 @@
       <!-- Sidebar -->
       <aside class="sidebar">
         <div class="sidebar-header">
-          <h3><i class="fas fa-calendar-alt"></i> Daily Planner</h3>
-          <div class="today-date" id="today-date">
-            <!-- Filled by JavaScript -->
-          </div>
+          <h3><i class="fas fa-calendar-alt"></i> Task Filters</h3>
         </div>
-        
+
         <ul class="sidebar-menu">
-          <li class="active"><a href="DailyTasks.html"><i class="fas fa-list-check"></i> Daily Tasks</a></li>
-          <li><a href="#" id="completed-tasks-link"><i class="fas fa-check-circle"></i> Completed Tasks</a></li>
-          <li><a href="#" id="upcoming-tasks-link"><i class="fas fa-calendar-day"></i> Upcoming</a></li>
-          <li><a href="#" id="important-tasks-link"><i class="fas fa-star"></i> Important</a></li>
-          <li class="divider"></li>
-          <li><a href="#" id="settings-link"><i class="fas fa-cog"></i> Settings</a></li>
-          <li><a href="#" id="help-side-link"><i class="fas fa-life-ring"></i> Help Center</a></li>
+          <li class="active">
+            <a href="#" id="all-tasks-link">
+              <i class="fas fa-tasks"></i>
+              <span>All Tasks</span>
+            </a>
+          </li>
+          <li>
+            <a href="#" id="today-tasks-link">
+              <i class="fas fa-calendar-day"></i>
+              <span>Today's Tasks</span>
+            </a>
+          </li>
+          <li>
+            <a href="#" id="important-tasks-link">
+              <i class="fas fa-star"></i>
+              <span>Important</span>
+            </a>
+          </li>
+          <li>
+            <a href="#" id="completed-tasks-link">
+              <i class="fas fa-check-circle"></i>
+              <span>Completed</span>
+            </a>
+          </li>
+          <li>
+            <a href="#" id="pending-tasks-link">
+              <i class="fas fa-clock"></i>
+              <span>Pending</span>
+            </a>
+          </li>
         </ul>
-        
-        <div class="sidebar-footer">
-          <div class="progress-summary">
-            <h4>Today's Progress</h4>
-            <div class="progress-bar">
-              <div class="progress-fill" id="progress-fill"></div>
-            </div>
-            <span class="progress-text" id="progress-text">0% Complete</span>
-          </div>
-        </div>
       </aside>
 
       <!-- Main Content -->
@@ -69,173 +101,168 @@
         <!-- Welcome Header -->
         <div class="welcome-header">
           <h1><i class="fas fa-sun"></i> Good Day!</h1>
-          <p id="greeting-message">Let's complete your daily tasks. You're doing great!</p>
-          <div class="quick-stats">
-            <div class="stat-box">
-              <i class="fas fa-clock"></i>
-              <span class="stat-value" id="today-tasks">0</span>
-              <span class="stat-label">Today's Tasks</span>
-            </div>
-            <div class="stat-box">
-              <i class="fas fa-check-circle"></i>
-              <span class="stat-value" id="completed-tasks">0</span>
-              <span class="stat-label">Completed</span>
-            </div>
-            <div class="stat-box">
-              <i class="fas fa-star"></i>
-              <span class="stat-value" id="important-tasks">0</span>
-              <span class="stat-label">Important</span>
-            </div>
+          <p id="greeting-message">Welcome back. Here are today's caregiving tasks.</p>
+          <div class="date-display">
+            <i class="fas fa-calendar-day"></i>
+            <span id="current-date-display">Today</span>
           </div>
         </div>
 
-        <!-- Day Selector -->
-        <div class="day-selector-container">
-          <h3><i class="fas fa-calendar-week"></i> Select Day</h3>
-          <div class="day-selector">
-            <button data-day="Sun" class="day-btn">
-              <span class="day-short">Sun</span>
-              <span class="day-number" id="sun-date"></span>
-            </button>
-            <button data-day="Mon" class="day-btn">
-              <span class="day-short">Mon</span>
-              <span class="day-number" id="mon-date"></span>
-            </button>
-            <button data-day="Tue" class="day-btn">
-              <span class="day-short">Tue</span>
-              <span class="day-number" id="tue-date"></span>
-            </button>
-            <button data-day="Wed" class="day-btn">
-              <span class="day-short">Wed</span>
-              <span class="day-number" id="wed-date"></span>
-            </button>
-            <button data-day="Thu" class="day-btn">
-              <span class="day-short">Thu</span>
-              <span class="day-number" id="thu-date"></span>
-            </button>
-            <button data-day="Fri" class="day-btn">
-              <span class="day-short">Fri</span>
-              <span class="day-number" id="fri-date"></span>
-            </button>
-            <button data-day="Sat" class="day-btn">
-              <span class="day-short">Sat</span>
-              <span class="day-number" id="sat-date"></span>
-            </button>
-          </div>
-        </div>
+        <!-- Tasks Section -->
+        <div class="tasks-section">
+          <div class="section-header">
+  <div class="header-top">
+    <div class="header-left">
+      <h2>
+        <i class="fas fa-list-check"></i>
+        <span id="current-filter-title">All Tasks</span>
+      </h2>
+    </div>
 
-        <!-- Current Day Tasks (Initially shown) -->
-        <div class="tasks-container">
-          <div class="tasks-header">
-            <h2><i class="fas fa-list-check"></i> <span id="current-day-title">Today's</span> Tasks</h2>
-            <div class="tasks-controls">
-              <button class="btn-add-task" id="add-task-btn">
-                <i class="fas fa-plus-circle"></i> Add New Task
-              </button>
-              <button class="btn-clear-completed" id="clear-completed-btn">
-                <i class="fas fa-trash-alt"></i> Clear Completed
-              </button>
-            </div>
-          </div>
-          
-          <!-- Task Cards Container -->
-          <div class="task-cards-container" id="task-cards-container">
-            <!-- Task cards will be generated here by JavaScript -->
-            <!-- Each day's tasks will be shown when selected -->
-          </div>
-          
+    <div class="tasks-controls-row">
+      <button class="btn-add-task" id="add-task-btn" type="button">
+        <i class="fas fa-plus-circle"></i> Add New Task
+      </button>
+      <button class="btn-clear-completed" id="clear-completed-btn" type="button">
+        <i class="fas fa-trash-alt"></i> Clear Completed
+      </button>
+    </div>
+  </div>
+
+  <!-- progress bar now spans full width -->
+  <div class="progress-header">
+    <div class="progress-info">
+      <span class="progress-label">Today's Progress</span>
+      <span class="progress-percentage" id="progress-percentage">0%</span>
+    </div>
+
+    <div class="progress-bar">
+      <div class="progress-fill" id="progress-fill"></div>
+    </div>
+
+    <div class="progress-details">
+      <span class="progress-text" id="progress-text">0 of 0 tasks completed</span>
+    </div>
+  </div>
+</div>
+
+
+          <!-- Task Cards Container (leave EMPTY; JS renders tasks here) -->
+          <div class="task-cards-container" id="task-cards-container"></div>
+
           <!-- Empty State -->
           <div class="empty-state" id="empty-state">
             <i class="fas fa-clipboard-list"></i>
-            <h3>No tasks for this day</h3>
-            <p>Click "Add New Task" to create your first task!</p>
-            <button class="btn-add-task-empty" id="add-task-empty-btn">
+            <h3>No tasks found</h3>
+            <p>No tasks match your current filter. Try changing the filter or add a new task.</p>
+            <button class="btn-add-task-empty" id="add-task-empty-btn" type="button">
               <i class="fas fa-plus"></i> Add Your First Task
             </button>
           </div>
         </div>
 
-        <!-- Task Modal (Hidden by default) -->
+        <!-- Task Modal -->
         <div class="modal-overlay" id="task-modal-overlay">
           <div class="task-modal" id="task-modal">
             <div class="modal-header">
-              <h3><i class="fas fa-tasks"></i> <span id="modal-title">Add New Task</span></h3>
-              <button class="btn-close-modal" id="close-modal-btn">
+              <h3>
+                <i class="fas fa-tasks"></i>
+                <span id="modal-title">Add New Task</span>
+              </h3>
+              <button class="btn-close-modal" id="close-modal-btn" type="button">
                 <i class="fas fa-times"></i>
               </button>
             </div>
+
             <div class="modal-body">
               <form id="task-form">
                 <div class="form-group">
-                  <label for="task-title"><i class="fas fa-heading"></i> Task Title</label>
-                  <input type="text" id="task-title" placeholder="What do you need to do?" required>
+                  <label for="task-title">
+                    <i class="fas fa-heading"></i> Task Title *
+                  </label>
+                  <input
+                    type="text"
+                    id="task-title"
+                    placeholder="What needs to be done?"
+                    required
+                  />
                 </div>
-                
+
                 <div class="form-group">
-                  <label for="task-description"><i class="fas fa-align-left"></i> Description (Optional)</label>
-                  <textarea id="task-description" placeholder="Add more details about this task..." rows="3"></textarea>
+                  <label for="task-description">
+                    <i class="fas fa-align-left"></i> Description (Optional)
+                  </label>
+                  <textarea
+                    id="task-description"
+                    placeholder="Add details about this caregiving task..."
+                    rows="3"
+                  ></textarea>
                 </div>
-                
-                <div class="form-row">
-                  <div class="form-group half">
-                    <label for="task-day"><i class="fas fa-calendar-day"></i> Day</label>
-                    <select id="task-day">
-                      <option value="Sun">Sunday</option>
-                      <option value="Mon">Monday</option>
-                      <option value="Tue">Tuesday</option>
-                      <option value="Wed">Wednesday</option>
-                      <option value="Thu">Thursday</option>
-                      <option value="Fri">Friday</option>
-                      <option value="Sat">Saturday</option>
-                    </select>
-                  </div>
-                  
-                  <div class="form-group half">
-                    <label for="task-time"><i class="fas fa-clock"></i> Time (Optional)</label>
-                    <input type="time" id="task-time">
-                  </div>
-                </div>
-                
-                <div class="form-row">
-                  <div class="form-group half">
-                    <label class="checkbox-label">
-                      <input type="checkbox" id="task-important">
-                      <span class="checkmark"></span>
-                      <i class="fas fa-star"></i> Mark as Important
-                    </label>
-                  </div>
-                  
-                  <div class="form-group half">
-                    <label class="checkbox-label">
-                      <input type="checkbox" id="task-recurring">
-                      <span class="checkmark"></span>
-                      <i class="fas fa-redo"></i> Repeat Daily
-                    </label>
-                  </div>
-                </div>
-                
+
                 <div class="form-group">
-                  <label for="task-category"><i class="fas fa-tag"></i> Category</label>
+                  <label for="task-category">
+                    <i class="fas fa-tag"></i> Category
+                  </label>
                   <div class="category-selector">
-                    <button type="button" class="category-btn" data-category="personal">
-                      <i class="fas fa-user"></i> Personal
-                    </button>
-                    <button type="button" class="category-btn" data-category="health">
-                      <i class="fas fa-heartbeat"></i> Health
-                    </button>
-                    <button type="button" class="category-btn" data-category="appointments">
-                      <i class="fas fa-calendar-check"></i> Appointments
-                    </button>
                     <button type="button" class="category-btn" data-category="medication">
                       <i class="fas fa-pills"></i> Medication
+                    </button>
+                    <button type="button" class="category-btn" data-category="hygiene">
+                      <i class="fas fa-hands-wash"></i> Hygiene
+                    </button>
+                    <button type="button" class="category-btn" data-category="meal">
+                      <i class="fas fa-utensils"></i> Meal
+                    </button>
+                    <button type="button" class="category-btn" data-category="appointment">
+                      <i class="fas fa-calendar-check"></i> Appointment
                     </button>
                     <button type="button" class="category-btn" data-category="other">
                       <i class="fas fa-ellipsis-h"></i> Other
                     </button>
                   </div>
-                  <input type="hidden" id="task-category" value="personal">
+                  <input type="hidden" id="task-category" value="medication" />
                 </div>
-                
+
+                <div class="form-row">
+                  <div class="form-group half">
+                    <label for="task-time"><i class="fas fa-clock"></i> Time</label>
+                    <input type="time" id="task-time" />
+                  </div>
+
+                  <div class="form-group half">
+                    <label for="task-duration">
+                      <i class="fas fa-hourglass-half"></i> Duration (minutes)
+                    </label>
+                    <input type="number" id="task-duration" placeholder="30" min="1" max="240" />
+                  </div>
+                </div>
+
+                <div class="form-row">
+                  <div class="form-group half">
+                    <label for="task-date"><i class="fas fa-calendar-day"></i> Date</label>
+                    <input type="date" id="task-date">
+                  </div>
+                </div>
+
+
+                <div class="form-row">
+                  <div class="form-group half">
+                    <label class="checkbox-label">
+                      <input type="checkbox" id="task-important" />
+                      <span class="checkmark"></span>
+                      <i class="fas fa-star"></i> Mark as Important
+                    </label>
+                  </div>
+
+                  <div class="form-group half">
+                    <label class="checkbox-label">
+                      <input type="checkbox" id="task-recurring" />
+                      <span class="checkmark"></span>
+                      <i class="fas fa-redo"></i> Repeat Daily
+                    </label>
+                  </div>
+                </div>
+
                 <div class="modal-actions">
                   <button type="button" class="btn-cancel" id="cancel-task-btn">
                     Cancel
@@ -258,8 +285,8 @@
             <h3 id="confirm-title">Are you sure?</h3>
             <p id="confirm-message">This action cannot be undone.</p>
             <div class="confirm-actions">
-              <button class="btn-cancel" id="confirm-cancel-btn">No, Cancel</button>
-              <button class="btn-confirm" id="confirm-ok-btn">Yes, Continue</button>
+              <button class="btn-cancel" id="confirm-cancel-btn" type="button">No, Cancel</button>
+              <button class="btn-confirm" id="confirm-ok-btn" type="button">Yes, Continue</button>
             </div>
           </div>
         </div>
@@ -274,8 +301,8 @@
       </div>
     </div>
 
-    <!-- Separate JS file -->
-    <script src="../js/dailytask.js"></script> 
-     <script src="../js/auth.js"></script>
+    <!-- JS -->
+    <script src="../js/auth.js"></script>
+    <script src="../js/dailytasks.js"></script>
   </body>
 </html>

@@ -1,0 +1,669 @@
+/* =========================
+   RESET & BASE STYLES
+   ========================= */
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+}
+
+
+body {
+    min-height: 100vh;
+    background: linear-gradient(135deg, #f9f7fe 0%, #f0f4ff 100%);
+    color: #5a6c7d;
+    line-height: 1.6;
+    overflow-x: hidden;
+ 
+}
+
+
+/* =========================
+   HEADER / NAV BAR
+   ========================= */
+
+
+
+
+/* Main Header Container */
+.header-bar {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+
+
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  z-index: 9999;
+
+
+  /* more transparent so the gradient shows through */
+  background: rgba(255, 255, 255, 0.55);
+
+
+  /* consistent blur */
+  backdrop-filter: blur(18px) saturate(140%);
+  -webkit-backdrop-filter: blur(18px) saturate(140%);
+
+
+  padding: 10px 40px;
+
+
+  border-bottom: 1px solid rgba(255, 255, 255, 0.35);
+  box-shadow: 0 6px 24px rgba(168, 192, 255, 0.18);
+}
+
+
+
+
+/* Logo Styling */
+.logo {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    font-size: 1.5rem;
+    font-weight: 700;
+    color: #5a6cff;
+}
+
+
+.logo i {
+    font-size: 1.8rem;
+    color: #5a6cff;
+}
+
+
+/* Navigation Links Group (The "Words") */
+.nav-links {
+    display: flex;
+    gap: 20px;
+    /* This pushes the Login container to the right */
+    margin-right: auto;
+    /* Space between logo and first link */
+    margin-left: 50px;
+}
+
+
+/* Individual Link Styling */
+.header-bar a {
+    color: #5a6c7d;
+    text-decoration: none;
+    font-weight: 600;
+    font-size: 1rem;
+    transition: all 0.3s ease;
+    padding: 10px 18px;
+    border-radius: 12px;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+}
+
+
+/* Hover Effects */
+.header-bar a:hover {
+    color: #5a6cff;
+    background-color: rgba(255, 255, 255, 0.4);
+    transform: translateY(-2px);
+}
+
+
+/* Special Styling for the Login Button */
+.header-bar .Login a {
+    color: #5a6cff;
+    background-color: rgba(255, 255, 255, 0.3);
+    border: 1px solid rgba(255, 255, 255, 0.5);
+}
+
+
+/* Remove default paragraph margin */
+.header-bar p {
+    margin: 0;
+}
+
+
+/* =========================
+   HERO SECTION
+   ========================= */
+.hero {
+    padding: 80px 40px;
+    background: linear-gradient(135deg, #a8c0ff 0%, #9fa4ff 100%);
+    color: white;
+    text-align: center;
+    position: relative;
+    overflow: hidden;
+    min-height: 90vh;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+
+.hero::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: url('data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100" preserveAspectRatio="none" opacity="0.1"><path d="M0,0 L100,0 L100,100 Z" fill="white"/></svg>');
+    background-size: cover;
+    pointer-events: none;
+}
+
+
+.hero-text {
+    max-width: 800px;
+    margin: 0 auto;
+    position: relative;
+    z-index: 1;
+    animation: fadeInUp 0.8s ease-out;
+}
+
+
+@keyframes fadeInUp {
+    from {
+        opacity: 0;
+        transform: translateY(30px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+
+.hero h1 {
+    font-size: 3.5rem;
+    font-weight: 700;
+    margin-bottom: 25px;
+    line-height: 1.2;
+    text-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+}
+
+
+.hero p {
+    font-size: 1.3rem;
+    margin-bottom: 40px;
+    opacity: 0.95;
+    max-width: 600px;
+    margin-left: auto;
+    margin-right: auto;
+}
+
+
+.hero-actions {
+    display: flex;
+    gap: 20px;
+    justify-content: center;
+    flex-wrap: wrap;
+    margin-top: 40px;
+}
+
+
+.primary-btn, .secondary-btn {
+    padding: 18px 35px;
+    border-radius: 15px;
+    font-weight: 600;
+    font-size: 1.1rem;
+    text-decoration: none;
+    transition: all 0.3s ease;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: 12px;
+    min-width: 200px;
+    border: none;
+    cursor: pointer;
+}
+
+
+.primary-btn {
+    background: linear-gradient(135deg, #8affc1 0%, #6bffb3 100%);
+    color: #1a4731;
+    box-shadow: 0 8px 25px rgba(107, 255, 179, 0.3);
+}
+
+
+.primary-btn:hover {
+    background: linear-gradient(135deg, #6bffb3 0%, #4affa5 100%);
+    transform: translateY(-5px);
+    box-shadow: 0 12px 35px rgba(107, 255, 179, 0.4);
+}
+
+
+.secondary-btn {
+    background: rgba(255, 255, 255, 0.2);
+    color: white;
+    backdrop-filter: blur(10px);
+    border: 2px solid rgba(255, 255, 255, 0.3);
+}
+
+
+.secondary-btn:hover {
+    background: rgba(255, 255, 255, 0.3);
+    transform: translateY(-5px);
+    border-color: rgba(255, 255, 255, 0.5);
+}
+
+
+.primary-btn.large {
+    padding: 22px 45px;
+    font-size: 1.2rem;
+    min-width: 250px;
+}
+
+
+/* =========================
+   VALUES SECTION
+   ========================= */
+.values {
+    padding: 80px 40px;
+    background: #fafbff;
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+    gap: 30px;
+    max-width: 1200px;
+    margin: 0 auto;
+}
+
+
+.value-card {
+    background: white;
+    padding: 35px;
+    border-radius: 20px;
+    box-shadow: 0 10px 30px rgba(90, 108, 255, 0.08);
+    border: 1px solid #e6e9ff;
+    transition: all 0.3s ease;
+    text-align: center;
+}
+
+
+.value-card:hover {
+    transform: translateY(-10px);
+    box-shadow: 0 15px 40px rgba(90, 108, 255, 0.15);
+}
+
+
+.value-card h3 {
+    color: #5a6cff;
+    font-size: 1.5rem;
+    margin-bottom: 20px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 15px;
+}
+
+
+.value-card p {
+    color: #6a7b8c;
+    font-size: 1.05rem;
+    line-height: 1.6;
+}
+
+
+/* =========================
+   INFO SECTION
+   ========================= */
+.info {
+    padding: 80px 40px;
+    background: linear-gradient(135deg, #f0f4ff 0%, #e6eeff 100%);
+}
+
+
+.info h2 {
+    text-align: center;
+    color: #5a6cff;
+    font-size: 2.5rem;
+    margin-bottom: 50px;
+    font-weight: 700;
+}
+
+
+.info-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(350px, 1fr));
+    gap: 30px;
+    max-width: 1200px;
+    margin: 0 auto;
+}
+
+
+.info-card {
+    background: white;
+    padding: 40px;
+    border-radius: 20px;
+    box-shadow: 0 10px 30px rgba(90, 108, 255, 0.08);
+    border: 1px solid #e6e9ff;
+    transition: all 0.3s ease;
+}
+
+
+.info-card:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 15px 40px rgba(90, 108, 255, 0.15);
+}
+
+
+.info-card h4 {
+    color: #5a6cff;
+    font-size: 1.4rem;
+    margin-bottom: 25px;
+    padding-bottom: 15px;
+    border-bottom: 2px solid #e6e9ff;
+}
+
+
+.info-card ul {
+    list-style: none;
+}
+
+
+.info-card li {
+    padding: 12px 0;
+    color: #5a6c7d;
+    font-size: 1.1rem;
+    display: flex;
+    align-items: center;
+    gap: 12px;
+}
+
+
+.info-card li::before {
+    content: '✓';
+    color: #8affc1;
+    font-weight: bold;
+    font-size: 1.2rem;
+    background: #f0fff8;
+    width: 28px;
+    height: 28px;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+
+/* =========================
+   CALL TO ACTION SECTION
+   ========================= */
+.cta {
+    padding: 100px 40px;
+    background: linear-gradient(135deg, #a8c0ff 0%, #9fa4ff 100%);
+    color: white;
+    text-align: center;
+    position: relative;
+    overflow: hidden;
+}
+
+
+.cta::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: url('data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100" preserveAspectRatio="none" opacity="0.05"><circle cx="50" cy="50" r="40" fill="white"/></svg>');
+    background-size: 200px;
+    pointer-events: none;
+}
+
+
+.cta h2 {
+    font-size: 2.8rem;
+    margin-bottom: 25px;
+    font-weight: 700;
+    position: relative;
+    z-index: 1;
+}
+
+
+.cta p {
+    font-size: 1.2rem;
+    margin-bottom: 40px;
+    opacity: 0.95;
+    max-width: 600px;
+    margin-left: auto;
+    margin-right: auto;
+    position: relative;
+    z-index: 1;
+}
+
+
+.cta .primary-btn {
+    position: relative;
+    z-index: 1;
+    font-size: 1.2rem;
+    padding: 20px 40px;
+}
+
+
+/* =========================
+   ANIMATIONS
+   ========================= */
+@keyframes float {
+    0%, 100% {
+        transform: translateY(0);
+    }
+    50% {
+        transform: translateY(-10px);
+    }
+}
+
+
+.value-card:hover h3 {
+    animation: float 2s ease-in-out infinite;
+}
+
+
+/* =========================
+   ACCESSIBILITY
+   ========================= */
+@media (prefers-reduced-motion: reduce) {
+    * {
+        animation-duration: 0.01ms !important;
+        animation-iteration-count: 1 !important;
+        transition-duration: 0.01ms !important;
+    }
+}
+
+
+button:focus,
+a:focus,
+input:focus {
+    outline: 3px solid #5a6cff;
+    outline-offset: 3px;
+}
+
+
+/* High contrast mode support */
+@media (prefers-contrast: high) {
+    .primary-btn {
+        border: 2px solid #1a4731;
+    }
+   
+    .secondary-btn {
+        border: 2px solid white;
+    }
+}
+
+
+/* =========================
+   RESPONSIVE DESIGN
+   ========================= */
+@media (max-width: 1024px) {
+    .hero h1 {
+        font-size: 2.8rem;
+    }
+   
+    .info-grid {
+        grid-template-columns: 1fr;
+        max-width: 600px;
+    }
+   
+    .values {
+        grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+    }
+}
+
+
+@media (max-width: 768px) {
+    .header-bar {
+        flex-direction: column;
+        gap: 15px;
+        padding: 15px;
+        text-align: center;
+    }
+   
+    .hero {
+        padding: 60px 20px;
+        min-height: 60vh;
+    }
+   
+    .hero h1 {
+        font-size: 2.2rem;
+    }
+   
+    .hero p {
+        font-size: 1.1rem;
+    }
+   
+    .hero-actions {
+        flex-direction: column;
+        align-items: center;
+    }
+   
+    .primary-btn, .secondary-btn {
+        width: 100%;
+        max-width: 300px;
+    }
+   
+    .values, .info, .cta {
+        padding: 60px 20px;
+    }
+   
+    .info h2, .cta h2 {
+        font-size: 2rem;
+    }
+   
+    .info-card, .value-card {
+        padding: 25px;
+    }
+   
+    .cta .primary-btn {
+        width: 100%;
+        max-width: 300px;
+    }
+}
+
+
+@media (max-width: 480px) {
+    .hero h1 {
+        font-size: 1.8rem;
+    }
+   
+    .hero p {
+        font-size: 1rem;
+    }
+   
+    .values {
+        grid-template-columns: 1fr;
+    }
+   
+    .info-card h4 {
+        font-size: 1.2rem;
+    }
+   
+    .info-card li {
+        font-size: 1rem;
+    }
+   
+    .cta h2 {
+        font-size: 1.8rem;
+    }
+   
+    .cta p {
+        font-size: 1rem;
+    }
+}
+
+
+/* =========================
+   PRINT STYLES
+   ========================= */
+@media print {
+    .header-bar,
+    .hero-actions,
+    .primary-btn,
+    .secondary-btn {
+        display: none;
+    }
+   
+    body {
+        background: white;
+        color: black;
+    }
+   
+    .hero, .values, .info, .cta {
+        padding: 20px;
+        background: white;
+        color: black;
+    }
+   
+    .value-card, .info-card {
+        box-shadow: none;
+        border: 1px solid #ddd;
+        page-break-inside: avoid;
+    }
+}
+
+
+/* =========================
+   DARK MODE SUPPORT
+   ========================= */
+@media (prefers-color-scheme: dark) {
+    body {
+        background: linear-gradient(135deg, #1a1a2e 0%, #16213e 100%);
+        color: #e6e6e6;
+    }
+   
+    .header-bar {
+        background: linear-gradient(90deg, #2d3a5e 0%, #3a4a7a 100%);
+    }
+   
+    .header-bar a {
+        color: #b8c2d1;
+    }
+   
+    .header-bar a:hover {
+        color: #a8c0ff;
+        background-color: rgba(255, 255, 255, 0.1);
+    }
+   
+    .value-card, .info-card {
+        background: #2d3748;
+        border-color: #4a5568;
+        color: #e6e6e6;
+    }
+   
+    .value-card h3, .info-card h4 {
+        color: #a8c0ff;
+    }
+   
+    .value-card p, .info-card li {
+        color: #b8c2d1;
+    }
+   
+    .info {
+        background: linear-gradient(135deg, #1e293b 0%, #2d3748 100%);
+    }
+   
+    .info-card li::before {
+        background: #2d4d3d;
+    }
+}
+

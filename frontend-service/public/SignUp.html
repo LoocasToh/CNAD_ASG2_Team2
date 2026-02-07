@@ -3,31 +3,32 @@
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <link href="../CSS/SignUp.css" rel="stylesheet" type="text/css" />
+    <link href="../CSS/signup.css" rel="stylesheet" type="text/css" />
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <title>Sign Up - Care Companion</title>
   </head>
   <body class="body">
-    <!-- Header Bar -->
-    <div class="header-bar">
-      <div class="logo">
+    <!-- Top Navbar -->
+   <header class="header-bar">
+    <div class="logo">
         <i class="fas fa-heartbeat"></i>
         <span>Care Companion</span>
       </div>
-      
-      <p class="home"><a href="Index.html"><i class="fas fa-home"></i> Home</a></p>
-      <p class="caregiving"><a href="DailyTasks.html"><i class="fas fa-tasks"></i> Caregiving</a></p>
-      <p class="emergencies"><a href="Emergencies.html"><i class="fas fa-first-aid"></i> Emergencies</a></p>
-      
-      <div class="Login" id="auth-area">
-        <a href="LoginScreen.html" id="login-link"><i class="fas fa-sign-in-alt"></i> Login</a>
-      </div>
+
+    <div class="nav-links">
+        <a href="index.html">Home</a>
+        <a href="DailyTasks.html">Daily Tasks</a>
+        <a href="Emergencies.html">Emergencies</a>
     </div>
 
-    <!-- Main Content -->
+    <div class="Login">
+        <a href="LoginScreen.html">Login</a>
+    </div>
+</header>
+
+    
     <main class="signup-main">
-      <!-- Left Side - Benefits -->
-      <div class="signup-benefits">
+      <!-- <div class="signup-benefits">
         <div class="benefits-content">
           <div class="benefits-icon">
             <i class="fas fa-user-plus"></i>
@@ -84,7 +85,7 @@
             </div>
           </div>
         </div>
-      </div>
+      </div> -->
 
       <!-- Right Side - Sign Up Form -->
       <div class="signup-container">
@@ -245,17 +246,19 @@
             </div>
           </form>
         </div>
-        
         <!-- Accessibility Options -->
         <div class="accessibility-options">
-          <button class="accessibility-btn" id="text-size-btn" title="Increase text size">
+          <button class="accessibility-btn" id="text-size-btn">
             <i class="fas fa-text-height"></i>
+            <span>Adjust Text Size</span>
           </button>
-          <button class="accessibility-btn" id="high-contrast-btn" title="High contrast mode">
+          <button class="accessibility-btn" id="high-contrast-btn">
             <i class="fas fa-adjust"></i>
+            <span>High Contrast</span>
           </button>
-          <button class="accessibility-btn" id="read-aloud-btn" title="Read aloud">
+          <button class="accessibility-btn" id="read-aloud-btn">
             <i class="fas fa-volume-up"></i>
+            <span>Read Aloud</span>
           </button>
         </div>
       </div>
@@ -265,7 +268,38 @@
     <div class="toast" id="toast">
       <div class="toast-content">
         <i class="fas fa-check-circle toast-icon"></i>
-        <div class="toast-message">Account created successfully!</div>
+        <div class="toast-message">Login successful!</div>
+      </div>
+    </div>
+
+    <!-- Voice Guidance Modal -->
+    <div class="voice-modal" id="voice-modal">
+      <div class="voice-modal-content">
+        <div class="voice-modal-header">
+          <h3><i class="fas fa-assistive-listening-systems"></i> Voice Guidance</h3>
+          <button class="close-voice-modal" id="close-voice-modal">
+            <i class="fas fa-times"></i>
+          </button>
+        </div>
+        <div class="voice-modal-body">
+          <p>Voice guidance will read the page content aloud. This can help with navigation and form filling.</p>
+          <div class="voice-controls">
+            <button class="voice-control-btn" id="play-voice">
+              <i class="fas fa-play"></i> Start
+            </button>
+            <button class="voice-control-btn" id="pause-voice">
+              <i class="fas fa-pause"></i> Pause
+            </button>
+            <button class="voice-control-btn" id="stop-voice">
+              <i class="fas fa-stop"></i> Stop
+            </button>
+          </div>
+          <div class="voice-speed">
+            <label for="voice-speed">Speed:</label>
+            <input type="range" id="voice-speed" min="0.5" max="2" step="0.1" value="1">
+            <span id="speed-value">Normal</span>
+          </div>
+        </div>
       </div>
     </div>
 

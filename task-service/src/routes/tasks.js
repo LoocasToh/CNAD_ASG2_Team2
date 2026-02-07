@@ -8,6 +8,7 @@ router.use(verifyJWT);
 
 router.post("/tasks", ctrl.create);
 router.get("/tasks/today/:userId", ctrl.today);
+router.get("/tasks/:userId", ctrl.all);
 router.patch("/tasks/:taskId", ctrl.edit);
 router.delete("/tasks/:taskId", ctrl.remove);
 router.post("/tasks/:taskId/complete", ctrl.complete);

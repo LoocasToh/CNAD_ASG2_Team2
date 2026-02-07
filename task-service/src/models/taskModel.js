@@ -9,17 +9,30 @@ const pool = mysql.createPool({
   connectionLimit: 10,
 });
 
-async function createTask({ userId, title, task_time, category, isDaily = 1 }) {
+async function createTask({
+  userId,
+  title,
+  task_time = null,
+  category = null,
+  task_date = null,
+  isDaily = 1,
+  important = 0,
+}) {
   const [result] = await pool.execute(
-    `INSERT INTO tasks (userId, title, task_time, category, isDaily)
-     VALUES (?, ?, ?, ?, ?)`,
-    [userId, title, task_time || null, category || null, isDaily]
-  );
+  `INSERT INTO tasks (userId, title, task_date, task_time, category, important, isDaily)
+   VALUES (?, ?, ?, ?, ?, ?, ?)`,
+  [userId, title, task_date || null, task_time || null, category || null, important ? 1 : 0, isDaily ? 1 : 0]
+);
+
+
   const [rows] = await pool.execute(`SELECT * FROM tasks WHERE id = ?`, [
     result.insertId,
   ]);
   return rows[0];
 }
+
+
+
 
 async function getTasksByUser(userId) {
   const [rows] = await pool.execute(`SELECT * FROM tasks WHERE userId = ?`, [
@@ -28,14 +41,21 @@ async function getTasksByUser(userId) {
   return rows;
 }
 
-async function getTodayTasks(userId) {
-  // For now: same as all tasks (because "refresh everyday" = daily tasks)
+async function getTodayTasks(userId, dateStr /* YYYY-MM-DD */) {
   const [rows] = await pool.execute(
-    `SELECT * FROM tasks WHERE userId = ? AND isDaily = 1 ORDER BY task_time IS NULL, task_time`,
-    [userId]
+    `SELECT *
+     FROM tasks
+     WHERE userId = ?
+       AND (
+         isDaily = 1
+         OR task_date = ?
+       )
+     ORDER BY task_time IS NULL, task_time`,
+    [userId, dateStr]
   );
   return rows;
 }
+
 
 async function findTaskById(taskId) {
   const [rows] = await pool.execute(`SELECT * FROM tasks WHERE id = ?`, [
@@ -45,7 +65,7 @@ async function findTaskById(taskId) {
 }
 
 async function updateTask(taskId, fields) {
-  const allowed = ["title", "task_time", "category", "isDaily"];
+  const allowed = ["title", "task_date", "task_time", "category", "isDaily", "important"];
   const sets = [];
   const vals = [];
 
