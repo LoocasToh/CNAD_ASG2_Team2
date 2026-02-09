@@ -11,6 +11,8 @@ router.get("/tasks/today/:userId", ctrl.today);
 router.get("/tasks/:userId", ctrl.all);
 router.patch("/tasks/:taskId", ctrl.edit);
 router.delete("/tasks/:taskId", ctrl.remove);
+
+// ✅ needed for progress + chart
 router.post("/tasks/:taskId/complete", ctrl.complete);
 router.get("/logs/:userId", ctrl.logs);
 

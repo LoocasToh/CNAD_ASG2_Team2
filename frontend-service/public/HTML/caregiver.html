@@ -10,7 +10,6 @@
 <body>
   <!-- Top Navbar -->
   <div class="header-bar">
-    <!-- IMPORTANT: you're inside /HTML/, so links should include HTML/ -->
     <p class="home"><a href="index.html">Home</a></p>
     <p class="caregiving"><a href="caregiver.html">Caregiving</a></p>
     <p class="emergencies"><a href="Emergencies.html">Emergencies</a></p>
@@ -63,8 +62,19 @@
             <span>Wed</span><span>Thu</span><span>Fri</span><span>Sat</span>
           </div>
 
-          <!-- IMPORTANT: your CSS uses .calendar-grid -->
           <div id="calendar" class="calendar-grid"></div>
+        </div>
+      </div>
+
+      <!-- ✅ NEW: Chart Card -->
+      <div class="card">
+        <h2>Monthly Task Completion Rate</h2>
+        <p id="chartHint" style="margin-top:-6px; opacity:0.8;">
+          Select a PWID to view completion rate for the selected month.
+        </p>
+
+        <div style="width:100%; overflow-x:auto;">
+          <canvas id="completionChart" height="120"></canvas>
         </div>
       </div>
 
@@ -82,7 +92,10 @@
     </div>
   </div>
 
-  <!-- IMPORTANT: JS is in public/js -->
+  <!-- ✅ Chart.js CDN (must be BEFORE caregiver.js) -->
+  <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+
+  <!-- Your JS -->
   <script src="../js/caregiver.js"></script>
 </body>
 </html>
