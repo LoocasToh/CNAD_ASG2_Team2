@@ -24,6 +24,9 @@ jwt_secret.txt
 db_password.txt
 payment_api_key.txt
 
+# Kubernetes
+k8s/*local*.yaml
+
 # Docker
 # Ignore local volume folders (Postgres, etc.)
 databases/

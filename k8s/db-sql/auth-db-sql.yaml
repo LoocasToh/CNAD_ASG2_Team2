@@ -1,0 +1,51 @@
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: auth-db-sql
+data:
+  01_user_table.sql: |
+    CREATE DATABASE IF NOT EXISTS authdb;
+    USE authdb;
+
+    CREATE TABLE IF NOT EXISTS users (
+      id INT AUTO_INCREMENT PRIMARY KEY,
+      name VARCHAR(255) DEFAULT NULL,
+      email VARCHAR(255) NOT NULL UNIQUE,
+      password VARCHAR(255) NOT NULL,
+      created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+      userType ENUM('admin', 'user', 'caregiver') NOT NULL
+    );
+
+    INSERT INTO users (name, email, password, userType)
+    VALUES ('admin', 'admin@example.com', '$2a$10$Stc3hhatnvc45ZqolKrz1O1zRdrT.J28loausQzU2ImdTDDD0509e', 'admin');
+
+    INSERT INTO users (name, email, password, userType)
+    VALUES ('caregiver', 'care@example.com', '$2a$10$Stc3hhatnvc45ZqolKrz1O1zRdrT.J28loausQzU2ImdTDDD0509e', 'caregiver');
+
+    INSERT INTO users (name, email, password, userType)
+    VALUES ('pwid', 'pwid@example.com', '$2a$10$Stc3hhatnvc45ZqolKrz1O1zRdrT.J28loausQzU2ImdTDDD0509e', 'user');
+
+  02_rewards.sql: |
+    CREATE TABLE IF NOT EXISTS shop_items (
+    item_id INT AUTO_INCREMENT PRIMARY KEY,
+    item_name VARCHAR(100) NOT NULL,
+    category ENUM('hat', 'clothing', 'accessory', 'background') NOT NULL,
+    price INT NOT NULL,
+    image_path VARCHAR(255) NOT NULL
+    );
+
+    CREATE TABLE IF NOT EXISTS user_inventory (
+        user_id INT NOT NULL,
+        item_id INT NOT NULL,
+        PRIMARY KEY (user_id, item_id),
+        FOREIGN KEY (user_id) REFERENCES users(id) ON DELETE CASCADE,
+        FOREIGN KEY (item_id) REFERENCES shop_items(item_id) ON DELETE CASCADE
+    );
+
+    CREATE TABLE IF NOT EXISTS equipped_items (
+        user_id INT PRIMARY KEY,
+        hat_id INT DEFAULT NULL,
+        clothing_id INT DEFAULT NULL,
+        accessory_id INT DEFAULT NULL,
+        FOREIGN KEY (user_id) REFERENCES users(id) ON DELETE CASCADE
+    );

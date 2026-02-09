@@ -9,6 +9,9 @@ app.use(express.json());
 
 app.get("/", (req, res) => res.send({ ok: true, service: "task" }));
 app.use("/", taskRoutes);
+app.get("/health", (req, res) => {
+  res.status(200).send("OK");
+});
 
 const PORT = process.env.PORT || 8081;
 app.listen(PORT, () => console.log(`Task service listening on ${PORT}`));
