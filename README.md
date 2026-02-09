@@ -1,17 +1,33 @@
 # CNAD Assignment 2 – Team 2
 
-## 📌 Overview
+## 📌 Project Overview
 
-This repository contains a **containerized microservices-based application** developed for **CNAD Assignment 2**.  
-The system is designed with a strong emphasis on:
+Persons with Intellectual Disabilities (PWIDs) often require support in completing **Activities of Daily Living (ADLs)** such as personal hygiene, medication intake, meal preparation, and household tasks. While existing solutions attempt to address these needs, many rely heavily on **invasive monitoring techniques** such as cameras or constant supervision, which can compromise privacy, dignity, and autonomy.
 
-- Clear separation of concerns  
-- Infrastructure-as-Code (IaC) principles  
-- Cloud-native and DevOps best practices  
+Our project aims to explore how **technology can support and empower PWIDs** in managing their daily routines **without unnecessarily infringing on their privacy**. Rather than continuous surveillance, the system focuses on **intentional, low-resolution interactions** that indicate task completion while preserving independence.
 
-Key technologies and practices used include **Docker**, **Docker Compose**, **CI security scanning**, and **disciplined Git workflows**.
+---
 
-The application is composed of multiple independent services that communicate over well-defined interfaces, enabling **scalability**, **maintainability**, and **independent deployment**.
+## 💡 Solution Overview
+
+We designed a **privacy-preserving, task-based support system** that assists PWIDs with daily self-care and household routines while providing caregivers with **high-level visibility** into task progress and long-term trends.
+
+### Key Design Principles
+- **Non-intrusive support** – No cameras or continuous monitoring
+- **User dignity & autonomy** – Tasks are completed through intentional actions
+- **Caregiver reassurance** – Aggregated progress and trends, not surveillance
+- **Scalable architecture** – Microservices-based and cloud-native
+
+### How the System Works
+- PWIDs complete tasks through **intentional interactions** (e.g. NFC-based actions)
+- Task completion is inferred and logged without capturing sensitive data
+- Caregivers access a dashboard that shows:
+  - Daily task progress
+  - Monthly completion trends
+  - Calendar-based task views
+  - Direct call functionality for manual check-ins
+
+To validate system behaviour without relying on physical hardware, **sensor interactions are simulated using structured JSON events**, allowing backend logic, task inference, and analytics to be demonstrated clearly and ethically.
 
 ---
 
@@ -21,13 +37,25 @@ The application is composed of multiple independent services that communicate ov
 
 The system follows a **microservices architecture** consisting of the following core components:
 
-- **Frontend Service** – User-facing web application  
-- **Auth Service** – Authentication and authorization logic  
-- **Task Service** – Core business logic for task management  
-- **Infrastructure Layer** – Container orchestration and service wiring  
+- **Frontend Service** – User-facing web application (PWID & caregiver dashboards)
+- **Auth Service** – Authentication and authorization logic
+- **Task Service** – Core business logic for task management and analytics
+- **Infrastructure Layer** – Container orchestration and service wiring
 
 All services are containerized using Docker and orchestrated locally via Docker Compose.
 
+┌──────────────┐
+│ Frontend │
+│ Service │
+└──────┬───────┘
+│ HTTP / API
+┌──────▼───────┐
+│ Auth Service │
+└──────┬───────┘
+│
+┌──────▼───────┐
+│ Task Service │
+└──────────────┘
 
 ---
 
@@ -37,6 +65,7 @@ All services are containerized using Docker and orchestrated locally via Docker 
 
 **Responsibility**
 - Handles all user interactions and UI logic
+- Provides PWID and caregiver dashboards
 - Communicates with backend services via HTTP APIs
 
 **Key Files**
@@ -56,7 +85,8 @@ All services are containerized using Docker and orchestrated locally via Docker 
 
 **Responsibility**
 - Handles user authentication and authorization  
-- Performs credential validation and access control  
+- Manages user roles (PWID vs caregiver)
+- Controls access to protected resources
 
 **Key Files**
 - `Dockerfile`  
@@ -64,7 +94,7 @@ All services are containerized using Docker and orchestrated locally via Docker 
 
 **Design Notes**
 - Authentication logic is isolated to improve security  
-- Service can be scaled independently from other components  
+- Can be scaled independently from other services  
 - Reduces coupling between identity management and business logic  
 
 ---
@@ -72,17 +102,18 @@ All services are containerized using Docker and orchestrated locally via Docker 
 ### 3️⃣ Task Service (`task-service/`)
 
 **Responsibility**
-- Implements core application functionality related to tasks  
-- Exposes APIs for task creation, updates, and retrieval  
+- Implements core task management functionality
+- Handles task creation, updates, logging, and analytics
+- Provides APIs for progress tracking and trend analysis
 
 **Key Files**
 - `Dockerfile`  
 - `package.json`  
 
 **Design Notes**
-- Designed as a stateless service  
-- Clear API boundaries enable future extensibility  
-- Core business logic is decoupled from UI and authentication  
+- Stateless service design  
+- Clear API boundaries for extensibility  
+- Core business logic decoupled from UI and authentication  
 
 ---
 
@@ -102,6 +133,15 @@ All services are containerized using Docker and orchestrated locally via Docker 
 
 ## 🗂️ Git Repository Organization
 
+CNAD_ASG2_Team2/
+├── auth-service/
+├── frontend-service/
+├── infra/sql
+├── task-service/
+├── docker-compose.yml
+├── .gitignore
+└── README.md
+
 
 **Design Principles**
 - Each service is self-contained  
@@ -113,83 +153,54 @@ All services are containerized using Docker and orchestrated locally via Docker 
 ## 🔀 Git Workflow & Version Control Practices
 
 ### Branching Strategy
-
-- **`main` branch**
+- **`main` branch**  
   - Production-ready, stable code only  
-
-- **Feature branches**
+- **Feature branches**  
   - Used for developing new features or fixes  
   - Named descriptively (e.g. `feature/auth-service`, `fix/docker-build`)  
 
----
-
 ### Merge Strategy
-
-- Feature branches are merged into `main` via **Pull Requests**
-- Ensures:
-  - Code review  
-  - CI checks before integration  
-  - Clean and traceable commit history  
+- Feature branches merged via **Pull Requests**
+- Ensures code review, CI checks, and clean history  
 
 ---
 
 ## 📝 Commit Message Standards
 
 This repository follows **Conventional Commits**:
+<type>(scope): <short description>
 
-### Common Types
-- `feat` – New feature  
-- `fix` – Bug fix  
-- `docs` – Documentation changes  
-- `chore` – Maintenance tasks  
-- `refactor` – Code restructuring without behavior changes  
-- `ci` – CI/CD-related changes  
 
-### Examples
-- `feat(frontend): add login page`  
-- `fix(auth): resolve token validation bug`  
-- `docs(readme): add architecture documentation`  
-- `ci(actions): add SAST and DAST workflows`  
+Common types include `feat`, `fix`, `docs`, `chore`, `refactor`, and `ci`.
 
 ---
 
 ## 🚫 `.gitignore` Configuration
 
-The `.gitignore` file excludes:
-
-- `node_modules/`  
-- Environment files (`.env`)  
-- Build artifacts  
+Excludes:
+- `node_modules/`
+- Environment files (`.env`)
+- Build artifacts
 - OS-specific files  
 
-This ensures:
-- Cleaner repository history  
-- No accidental commits of sensitive data  
-- Smaller and more secure repository  
+This ensures a clean, secure repository.
 
 ---
 
 ## 🔐 DevOps & Security Practices
 
-The project incorporates:
+- Containerization using **Docker**
+- Service orchestration via **Docker Compose**
+- CI-based security scanning (SAST, DAST, SCA)
+- Strong separation of concerns across services
 
-- Containerization using **Docker**  
-- Service orchestration with **Docker Compose**  
-- CI-based security scanning:
-  - SAST  
-  - DAST  
-  - SCA (via GitHub Actions)  
-- Strong separation of concerns across services  
-
-These practices align with **real-world cloud-native and DevSecOps standards**.
+These practices align with **cloud-native and DevSecOps standards**.
 
 ---
 
 ## ▶️ How to Run the Project
 
-Ensure Docker and Docker Compose are installed, then run:
+Ensure Docker and Docker Compose are installed:
 
 ```bash
 docker-compose up --build
-
-
