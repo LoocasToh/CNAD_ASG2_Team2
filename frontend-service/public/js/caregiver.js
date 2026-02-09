@@ -2,15 +2,100 @@ document.addEventListener("DOMContentLoaded", () => {
   console.log("Caregiver dashboard loaded (backend mode)");
 
   // =======================
+  // HEADER AUTH UI
+  // =======================
+  const headerUserName = document.getElementById("headerUserName");
+  const loginLink = document.getElementById("login-link");
+  const logoutLink = document.getElementById("logout-link");
+
+  function getToken() {
+    return (
+      (window.auth && window.auth.getToken && window.auth.getToken()) ||
+      localStorage.getItem("careCompanionToken") ||
+      ""
+    );
+  }
+
+  function getCurrentUser() {
+    const viaAuth = window.auth && window.auth.getUser && window.auth.getUser();
+    if (viaAuth) return viaAuth;
+
+    try {
+      const s = sessionStorage.getItem("careCompanionUser");
+      if (s) return JSON.parse(s);
+    } catch {}
+
+    try {
+      const l = localStorage.getItem("careCompanionUser");
+      if (l) return JSON.parse(l);
+    } catch {}
+
+    return null;
+  }
+
+  function applyHeaderAuthUI() {
+    const token = getToken();
+    const user = getCurrentUser();
+
+    if (token && user && user.name) {
+      if (headerUserName) headerUserName.textContent = user.name;
+      if (loginLink) loginLink.style.display = "none";
+      if (logoutLink) logoutLink.style.display = "flex";
+    } else {
+      if (headerUserName) headerUserName.textContent = "Guest";
+      if (loginLink) loginLink.style.display = "flex";
+      if (logoutLink) logoutLink.style.display = "none";
+    }
+  }
+
+  // ✅ ROLE PROTECTION: ONLY caregiver accounts can stay here
+  function requireCaregiverOrRedirect() {
+    const token = getToken();
+    const user = getCurrentUser();
+
+    if (!token || !user) {
+      window.location.href = "LoginScreen.html";
+      return false;
+    }
+
+    const role = String(user.userType || "").toLowerCase();
+    if (role !== "caregiver") {
+      window.location.href = "DailyTasks.html";
+      return false;
+    }
+
+    return true;
+  }
+
+  if (logoutLink) {
+    logoutLink.addEventListener("click", (e) => {
+      e.preventDefault();
+
+      if (window.handleLogout) {
+        window.handleLogout(e);
+        return;
+      }
+
+      if (window.auth && window.auth.clearAuth) window.auth.clearAuth();
+
+      localStorage.removeItem("careCompanionToken");
+      localStorage.removeItem("careCompanionUser");
+      localStorage.removeItem("careCompanionRemember");
+      sessionStorage.removeItem("careCompanionUser");
+
+      window.location.href = "LoginScreen.html";
+    });
+  }
+
+  applyHeaderAuthUI();
+  if (!requireCaregiverOrRedirect()) return;
+
+  // =======================
   // CONFIG
   // =======================
   const API_BASE = window.TASK_BASE_URL || "http://localhost:8081"; // task-service
   const AUTH_BASE = window.AUTH_BASE_URL || "http://localhost:8080/auth"; // auth-service
   const TOKEN_KEY = "careCompanionToken";
-
-  function getToken() {
-    return localStorage.getItem(TOKEN_KEY) || "";
-  }
 
   async function api(path, options = {}) {
     const token = getToken();
@@ -37,7 +122,6 @@ document.addEventListener("DOMContentLoaded", () => {
     return data;
   }
 
-  // ✅ NEW: call auth-service endpoints (PWID list)
   async function authApi(path, options = {}) {
     const token = getToken();
     const headers = {
@@ -89,10 +173,7 @@ document.addEventListener("DOMContentLoaded", () => {
   let currentYear = 2026;
   let currentMonth = 1; // Feb (0-based)
 
-  // ✅ NEW: dynamic list from backend
-  // pwids = [{ id, name, email, userType }]
   let pwids = [];
-
   let selectedUserId = null;
   let selectedDate = null;
 
@@ -134,13 +215,11 @@ document.addEventListener("DOMContentLoaded", () => {
       populatePWIDs();
     } catch (e) {
       console.warn("Failed to load PWIDs:", e.message);
-      // still allow rest of page to work even if dropdown fails
     }
 
     populateMonthYear();
     renderCalendar();
 
-    // At start, no PWID/date selected
     setProgressHint();
     renderCompletionChart([]);
   }
@@ -150,20 +229,17 @@ document.addEventListener("DOMContentLoaded", () => {
     progressText.textContent = "Select a PWID and date to view progress";
   }
 
-  // ✅ NEW: fetch pwids from backend
   async function loadPWIDsFromBackend() {
-    // This endpoint is caregiver-only
     const rows = await authApi(`/pwids?userType=user`, { method: "GET" });
     pwids = Array.isArray(rows) ? rows : [];
   }
 
-  // ✅ UPDATED: dropdown population from pwids array
   function populatePWIDs() {
     while (pwidSelect.options.length > 1) pwidSelect.remove(1);
 
     pwids.forEach((u) => {
       const opt = document.createElement("option");
-      opt.value = String(u.id); // IMPORTANT: store numeric id as value
+      opt.value = String(u.id);
       opt.textContent = `${u.name} (ID: ${u.id})`;
       pwidSelect.appendChild(opt);
     });
@@ -206,7 +282,6 @@ document.addEventListener("DOMContentLoaded", () => {
     await refreshChart();
   });
 
-  // ✅ UPDATED: PWID selection is now numeric userId
   pwidSelect.addEventListener("change", async () => {
     selectedDate = null;
 
@@ -232,7 +307,6 @@ document.addEventListener("DOMContentLoaded", () => {
       await loadPWIDTasks();
       renderCalendar();
 
-      // PWID selected but no date yet
       progressBar.style.width = "0%";
       progressText.textContent = "Select a date to view progress";
 
@@ -273,7 +347,6 @@ document.addEventListener("DOMContentLoaded", () => {
     }
   });
 
-  // ✅ If you want phone calling later, you need phone in DB. For now just log the selected user.
   callPWIDBtn.addEventListener("click", () => {
     if (!selectedUserId) return;
     const u = pwids.find((x) => Number(x.id) === Number(selectedUserId));
@@ -437,9 +510,7 @@ document.addEventListener("DOMContentLoaded", () => {
 
     try {
       const resp = await api(
-        `/tasks/${taskId}/complete?userId=${encodeURIComponent(
-          selectedUserId
-        )}&date=${encodeURIComponent(selectedDate)}`,
+        `/tasks/${taskId}/complete?userId=${encodeURIComponent(selectedUserId)}&date=${encodeURIComponent(selectedDate)}`,
         {
           method: "POST",
           body: JSON.stringify({ method: "manual" }),
@@ -449,11 +520,8 @@ document.addEventListener("DOMContentLoaded", () => {
       await updateProgress();
       await refreshChart();
 
-      if (resp?.alreadyCompletedToday) {
-        alert("Already completed for this date.");
-      } else {
-        alert("Task marked as completed!");
-      }
+      if (resp?.alreadyCompletedToday) alert("Already completed for this date.");
+      else alert("Task marked as completed!");
     } catch (err) {
       console.error(err);
       alert(err.message || "Failed to complete task");
@@ -461,7 +529,7 @@ document.addEventListener("DOMContentLoaded", () => {
   }
 
   // =======================
-  // PROGRESS (DATE-BASED)
+  // PROGRESS
   // =======================
   async function updateProgress() {
     if (!selectedUserId || !selectedDate) {
@@ -472,9 +540,7 @@ document.addEventListener("DOMContentLoaded", () => {
 
     try {
       const data = await api(
-        `/analytics/progress/day?userId=${encodeURIComponent(
-          selectedUserId
-        )}&date=${encodeURIComponent(selectedDate)}`,
+        `/analytics/progress/day?userId=${encodeURIComponent(selectedUserId)}&date=${encodeURIComponent(selectedDate)}`,
         { method: "GET" }
       );
 
@@ -498,7 +564,7 @@ document.addEventListener("DOMContentLoaded", () => {
   }
 
   // =======================
-  // CHART (Monthly Completion Daily)
+  // CHART
   // =======================
   async function refreshChart() {
     if (!selectedUserId) {
@@ -516,9 +582,7 @@ document.addEventListener("DOMContentLoaded", () => {
 
     try {
       const rows = await api(
-        `/analytics/completion/daily?userId=${encodeURIComponent(
-          selectedUserId
-        )}&year=${encodeURIComponent(year)}&month=${encodeURIComponent(month1to12)}`,
+        `/analytics/completion/daily?userId=${encodeURIComponent(selectedUserId)}&year=${encodeURIComponent(year)}&month=${encodeURIComponent(month1to12)}`,
         { method: "GET" }
       );
 
@@ -544,12 +608,7 @@ document.addEventListener("DOMContentLoaded", () => {
       type: "bar",
       data: {
         labels,
-        datasets: [
-          {
-            label: "Completion Rate (%)",
-            data,
-          },
-        ],
+        datasets: [{ label: "Completion Rate (%)", data }],
       },
       options: {
         responsive: true,

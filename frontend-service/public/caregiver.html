@@ -3,51 +3,52 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
   <link rel="stylesheet" href="../CSS/caregiver.css" />
   <title>Caregiver Dashboard</title>
 </head>
 
 <body>
- <!-- Top Navbar - Same as other pages -->
-    <div class="header-bar">
-      <div class="logo">
-        <i class="fas fa-hands-helping"></i>
-        <span>MyBuddy</span>
-      </div>
-
-      <div class="nav-links">
-        <a href="index.html">Home</a>
-         <a href="caregiver.html" class="active">Caregiver</a>
-      </div>
-
-      <!-- User Profile/Login -->
-      <div class="user-section" id="auth-area">
-        <div class="user-info" id="user-info">
-          <i class="fas fa-user-circle user-icon"></i>
-          <span class="user-name" id="headerUserName">Guest</span>
-          <i class="fas fa-chevron-down user-arrow"></i>
-        </div>
-
-        <div class="user-dropdown">
-          <a href="profile.html" id="profile-link">
-            <i class="fas fa-user-cog"></i>
-            <span>Profile</span>
-          </a>
-          <a href="LoginScreen.html" id="login-link">
-            <i class="fas fa-sign-in-alt"></i>
-            <span>Login</span>
-          </a>
-          <a href="#" id="logout-link" style="display: none;">
-            <i class="fas fa-sign-out-alt"></i>
-            <span>Logout</span>
-          </a>
-        </div>
-      </div>
+  <!-- Top Navbar -->
+  <div class="header-bar">
+    <div class="logo">
+      <i class="fas fa-hands-helping"></i>
+      <span>MyBuddy</span>
     </div>
 
-  <div class="main-container">
+    <div class="nav-links">
+      <!-- <a href="index.html">Home</a> -->
+      <a href="caregiver.html" class="active">Caregiver</a>
+    </div>
 
+    <!-- User Profile/Login -->
+    <div class="user-section" id="auth-area">
+      <div class="user-info" id="user-info">
+        <i class="fas fa-user-circle user-icon"></i>
+        <span class="user-name" id="headerUserName">Guest</span>
+        <i class="fas fa-chevron-down user-arrow"></i>
+      </div>
+
+      <div class="user-dropdown">
+        <!-- <a href="profile.html" id="profile-link">
+          <i class="fas fa-user-cog"></i>
+          <span>Profile</span>
+        </a> -->
+
+        <a href="LoginScreen.html" id="login-link">
+          <i class="fas fa-sign-in-alt"></i>
+          <span>Login</span>
+        </a>
+
+        <a href="#" id="logout-link" style="display:none;">
+          <i class="fas fa-sign-out-alt"></i>
+          <span>Logout</span>
+        </a>
+      </div>
+    </div>
+  </div>
+
+  <div class="main-container">
     <!-- Side Menu -->
     <div class="side-menu">
       <h3>Caregiver Menu</h3>
@@ -96,7 +97,7 @@
         </div>
       </div>
 
-      <!-- ✅ NEW: Chart Card -->
+      <!-- Chart -->
       <div class="card">
         <h2>Monthly Task Completion Rate</h2>
         <p id="chartHint" style="margin-top:-6px; opacity:0.8;">
@@ -110,7 +111,6 @@
 
       <div class="card">
         <h2 id="taskDateTitle">Tasks</h2>
-
         <ul id="taskList"></ul>
 
         <div class="add-task">
@@ -122,8 +122,11 @@
     </div>
   </div>
 
-  <!-- ✅ Chart.js CDN (must be BEFORE caregiver.js) -->
+  <!-- Chart.js CDN -->
   <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+
+  <!-- IMPORTANT: auth-shared must load BEFORE caregiver.js -->
+  <script src="../js/auth-shared.js"></script>
 
   <!-- Your JS -->
   <script src="../js/caregiver.js"></script>

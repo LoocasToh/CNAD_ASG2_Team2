@@ -192,22 +192,23 @@ const API_BASE = window.AUTH_BASE_URL || "http://localhost:8080/auth";
   // Render
   // -------------------------
   function renderAuthUser(meObj) {
-    const name = meObj?.name || "User";
-    const first = name.split(" ")[0] || "User";
-    headerUserName.textContent = first;
+  const preferredFullName =
+    (profile?.full_name && String(profile.full_name).trim()) ||
+    (meObj?.name && String(meObj.name).trim()) ||
+    (meObj?.email && String(meObj.email).trim()) ||
+    "User";
 
-    userRole.textContent = meObj?.userType === "caregiver" ? "Caregiver" : "Care Recipient";
-    emailEl.textContent = meObj?.email || "-";
+  // ✅ show FULL name in navbar
+  headerUserName.textContent = preferredFullName;
 
-    displayName.textContent = name;
-    fullName.textContent = name;
+  userRole.textContent = meObj?.userType === "caregiver" ? "Caregiver" : "Care Recipient";
+  emailEl.textContent = meObj?.email || "-";
 
-    // memberSince (if you store created_at)
-    if (meObj?.created_at) {
-      const dt = new Date(meObj.created_at);
-      if (!Number.isNaN(dt.getTime())) memberSince.textContent = String(dt.getFullYear());
-    }
-  }
+  displayName.textContent = preferredFullName;
+  fullName.textContent = preferredFullName;
+}
+
+
 
   function renderProfile(profileObj, meObj) {
     const full = profileObj?.full_name || meObj?.name || "-";

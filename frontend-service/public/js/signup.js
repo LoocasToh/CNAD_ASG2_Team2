@@ -270,7 +270,7 @@ async function handleSignUp(event) {
     showToast('Account created successfully!', 'success');
     const redirect =
   role === 'caregiver'
-    ? '/HTML/caregiver.html'
+    ? '/caregiver.html'
     : '/DailyTasks.html';
 
 setTimeout(() => {
