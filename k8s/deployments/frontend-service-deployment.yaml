@@ -17,3 +17,4 @@ spec:
           image: liferaider/frontend-service:latest
           ports:
             - containerPort: 80
+          imagePullPolicy: Always
