@@ -22,6 +22,9 @@ app.use("/auth", profileRoutes);
 // health endpoints
 app.get('/', (req, res) => res.json({ ok: true, service: 'auth' }));
 app.get('/status', (req, res) => res.json({ ok: true, service: 'auth' }));
+app.get("/health", (req, res) => {
+  res.status(200).send("OK");
+});
 
 const PORT = process.env.PORT || 8080;
-app.listen(PORT, () => console.log(`Auth service listening on ${PORT}`));
+app.listen(PORT, '0.0.0.0', () => console.log(`Auth service listening on ${PORT}`));

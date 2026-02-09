@@ -12,6 +12,9 @@ app.use(express.json());
 app.get("/", (req, res) => res.send({ ok: true, service: "task" }));
 
 app.use("/", taskRoutes);
+app.get("/health", (req, res) => {
+  res.status(200).send("OK");
+});
 app.use("/analytics", analyticsRoutes);
 
 const PORT = process.env.PORT || 8081;

@@ -18,8 +18,8 @@ services:
       retries: 10
     networks:
       - appnet
-    ports:
-      - "3306:3306" # remove in production if you don't want external MySQL access
+    # ports:
+      # - "3306:3306" # remove in production if you don't want external MySQL access
 
   auth:
     build: ./auth-service
@@ -70,8 +70,8 @@ services:
       retries: 10
     networks:
       - appnet
-    ports:
-      - "3307:3306"  # so it doesn't clash with auth-db's 3306
+    # ports:
+      # - "3307:3306"  # so it doesn't clash with auth-db's 3306
 
   task:
     build: ./task-service
