@@ -3,116 +3,270 @@
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <link rel="stylesheet" href="../CSS/index.css" />
-  
-    
-    <title>Independence Support System</title>
+    <link href="../CSS/home.css" rel="stylesheet" type="text/css" />
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <title>MyBuddy - Independence Support System</title>
   </head>
   <body>
-    <!-- Top Navbar -->
-   <header class="header-bar">
-    <div class="logo">
-        <i class="fas fa-heartbeat"></i>
-        <span>Care Companion</span>
+    <!-- Top Navbar - Same as other pages -->
+    <div class="header-bar">
+      <div class="logo">
+        <i class="fas fa-hands-helping"></i>
+        <span>MyBuddy</span>
       </div>
 
-    <div class="nav-links">
-        <a href="index.html">Home</a>
+      <div class="nav-links">
+        <a href="index.html" class="active">Home</a>
         <a href="DailyTasks.html">Daily Tasks</a>
-        <a href="Emergencies.html">Emergencies</a>
-    </div>
+        <a href="Emergencies.html">Quick Help</a>
+        <a href="profile.html">Profile</a>
+      </div>
 
-    <div class="Login">
-        <a href="LoginScreen.html">Login</a>
+      <!-- User Profile/Login -->
+      <div class="user-section" id="auth-area">
+        <div class="user-info" id="user-info">
+          <i class="fas fa-user-circle user-icon"></i>
+          <span class="user-name" id="headerUserName">Guest</span>
+          <i class="fas fa-chevron-down user-arrow"></i>
+        </div>
+
+        <div class="user-dropdown">
+          <a href="profile.html" id="profile-link">
+            <i class="fas fa-user-cog"></i>
+            <span>Profile</span>
+          </a>
+          <a href="LoginScreen.html" id="login-link">
+            <i class="fas fa-sign-in-alt"></i>
+            <span>Login</span>
+          </a>
+          <a href="#" id="logout-link" style="display: none;">
+            <i class="fas fa-sign-out-alt"></i>
+            <span>Logout</span>
+          </a>
+        </div>
+      </div>
     </div>
-</header>
 
     <!-- Hero Section -->
     <section class="hero">
-      <div class="hero-text">
-        <h1>Support Independence.<br />Respect Privacy.</h1>
-        <p>
-          A privacy-first system that helps Persons With Intellectual
-          Disabilities complete daily tasks independently — without
-          surveillance.
-        </p>
+      <div class="hero-content">
+        <div class="hero-text">
+          <h1>Support Independence.<br />Respect Privacy.</h1>
+          <p>
+            A privacy-first system that helps Persons With Intellectual
+            Disabilities complete daily tasks independently — without
+            surveillance.
+          </p>
 
-        <div class="hero-actions">
-          <a href="DailyTasks.html" class="primary-btn">View Daily Tasks</a>
-          <a href="Emergencies.html" class="secondary-btn">Emergency Access</a>
+          <div class="hero-actions">
+            <a href="DailyTasks.html" class="primary-btn">
+              <i class="fas fa-tasks"></i>
+              View Daily Tasks
+            </a>
+            <a href="Emergencies.html" class="secondary-btn">
+              <i class="fas fa-first-aid"></i>
+              Quick Help
+            </a>
+          </div>
+        </div>
+        <div class="hero-image">
+          <div class="floating-card">
+            <i class="fas fa-check-circle"></i>
+            <h3>Task Completed</h3>
+            <p>Brushed Teeth - 8:30 AM</p>
+          </div>
+          <div class="floating-card">
+            <i class="fas fa-clock"></i>
+            <h3>Next Task</h3>
+            <p>Take Medicine - 9:00 AM</p>
+          </div>
         </div>
       </div>
     </section>
 
     <!-- Core Values -->
     <section class="values">
-      <div class="value-card">
-        <h3>🧠 Intentional Actions</h3>
-        <p>
-          Tasks are recorded only when the user actively taps their NFC band. No
-          background tracking.
-        </p>
+      <div class="section-header">
+        <h2><i class="fas fa-star"></i> Our Core Values</h2>
+        <p class="section-description">Designed with dignity and respect</p>
       </div>
 
-      <div class="value-card">
-        <h3>🔒 Privacy by Design</h3>
-        <p>
-          No cameras, no motion sensors, no continuous monitoring — only
-          meaningful task completion.
-        </p>
-      </div>
+      <div class="values-container">
+        <div class="value-card">
+          <div class="value-icon">
+            <i class="fas fa-brain"></i>
+          </div>
+          <h3>Intentional Actions</h3>
+          <p>
+            Tasks are recorded only when you actively complete them. No background tracking or surveillance.
+          </p>
+        </div>
 
-      <div class="value-card">
-        <h3>🤝 Caregiver Confidence</h3>
-        <p>
-          Caregivers see task completion and timestamps, without intrusive
-          supervision.
-        </p>
+        <div class="value-card">
+          <div class="value-icon">
+            <i class="fas fa-shield-alt"></i>
+          </div>
+          <h3>Privacy by Design</h3>
+          <p>
+            No cameras, no motion sensors, no continuous monitoring — only meaningful task completion.
+          </p>
+        </div>
+
+        <div class="value-card">
+          <div class="value-icon">
+            <i class="fas fa-hands-helping"></i>
+          </div>
+          <h3>Caregiver Confidence</h3>
+          <p>
+            Caregivers see task completion and timestamps, without intrusive supervision or pressure.
+          </p>
+        </div>
       </div>
     </section>
 
     <!-- How It Helps -->
     <section class="info">
-      <h2>How This System Helps</h2>
+      <div class="section-header">
+        <h2><i class="fas fa-question-circle"></i> How MyBuddy Helps</h2>
+        <p class="section-description">Supporting both PWIDs and their caregivers</p>
+      </div>
 
-      <div class="info-grid">
+      <div class="info-container">
         <div class="info-card">
-          <h4>For PWIDs</h4>
+          <div class="info-header">
+            <div class="info-icon">
+              <i class="fas fa-user"></i>
+            </div>
+            <h3>For PWIDs</h3>
+          </div>
           <ul>
-            <li>Simple daily checklist</li>
-            <li>Clear progress feedback</li>
-            <li>Independence without pressure</li>
+            <li><i class="fas fa-check"></i> Simple daily checklist</li>
+            <li><i class="fas fa-check"></i> Clear progress feedback</li>
+            <li><i class="fas fa-check"></i> Independence without pressure</li>
+            <li><i class="fas fa-check"></i> Easy-to-use interface</li>
+            <li><i class="fas fa-check"></i> Quick emergency access</li>
           </ul>
         </div>
 
         <div class="info-card">
-          <h4>For Caregivers</h4>
+          <div class="info-header">
+            <div class="info-icon">
+              <i class="fas fa-user-nurse"></i>
+            </div>
+            <h3>For Caregivers</h3>
+          </div>
           <ul>
-            <li>Task completion visibility</li>
-            <li>No constant check-ins</li>
-            <li>Peace of mind</li>
+            <li><i class="fas fa-check"></i> Task completion visibility</li>
+            <li><i class="fas fa-check"></i> No constant check-ins needed</li>
+            <li><i class="fas fa-check"></i> Peace of mind</li>
+            <li><i class="fas fa-check"></i> Emergency alerts</li>
+            <li><i class="fas fa-check"></i> Progress tracking</li>
           </ul>
+        </div>
+      </div>
+    </section>
+
+    <!-- Features Section -->
+    <section class="features">
+      <div class="section-header">
+        <h2><i class="fas fa-cogs"></i> Key Features</h2>
+        <p class="section-description">Everything you need in one simple app</p>
+      </div>
+
+      <div class="features-grid">
+        <div class="feature-item">
+          <div class="feature-icon">
+            <i class="fas fa-calendar-check"></i>
+          </div>
+          <h3>Daily Tasks</h3>
+          <p>Easy-to-follow daily task lists with visual progress tracking</p>
+        </div>
+        <div class="feature-item">
+          <div class="feature-icon">
+            <i class="fas fa-first-aid"></i>
+          </div>
+          <h3>Quick Help</h3>
+          <p>Emergency buttons for immediate assistance with safety timer</p>
+        </div>
+        <div class="feature-item">
+          <div class="feature-icon">
+            <i class="fas fa-user-circle"></i>
+          </div>
+          <h3>Personal Profile</h3>
+          <p>Customizable profile with health info and preferences</p>
+        </div>
+        <div class="feature-item">
+          <div class="feature-icon">
+            <i class="fas fa-bell"></i>
+          </div>
+          <h3>Smart Reminders</h3>
+          <p>Gentle reminders for important tasks and medications</p>
+        </div>
+        <div class="feature-item">
+          <div class="feature-icon">
+            <i class="fas fa-universal-access"></i>
+          </div>
+          <h3>Accessible Design</h3>
+          <p>Large buttons, simple language, and high contrast options</p>
+        </div>
+        <div class="feature-item">
+          <div class="feature-icon">
+            <i class="fas fa-shield-alt"></i>
+          </div>
+          <h3>Privacy First</h3>
+          <p>Your data stays private and secure on your device</p>
         </div>
       </div>
     </section>
 
     <!-- Call to Action -->
     <section class="cta">
-      <h2>Designed for Dignity and Safety</h2>
-      <p>
-        Empowering independence while keeping emergency support just one action
-        away.
-      </p>
-
-      <a href="DailyTasks.html" class="primary-btn large">Get Started</a>
+      <div class="cta-content">
+        <div class="cta-text">
+          <h2><i class="fas fa-hands-helping"></i> Ready to Get Started?</h2>
+          <p>
+            Join thousands of users who have found independence and peace of mind with MyBuddy.
+          </p>
+        </div>
+        <div class="cta-actions">
+          <a href="DailyTasks.html" class="primary-btn large">
+            <i class="fas fa-play-circle"></i>
+            Start Your Journey
+          </a>
+          <a href="profile.html" class="secondary-btn large">
+            <i class="fas fa-user-plus"></i>
+            Create Profile
+          </a>
+        </div>
+      </div>
     </section>
 
-   <script src="../js/login.js"></script>
-   <script src="../js/signup.js"></script>
-   <script src="../js/index.js"></script>
-    <!-- Auth Script -->
+    <!-- Footer -->
+    <footer class="footer">
+      <div class="footer-content">
+        <div class="footer-logo">
+          <i class="fas fa-hands-helping"></i>
+          <span>MyBuddy</span>
+        </div>
+        <div class="footer-links">
+          <a href="index.html">Home</a>
+          <a href="DailyTasks.html">Daily Tasks</a>
+          <a href="Emergencies.html">Quick Help</a>
+          <a href="profile.html">Profile</a>
+          <a href="LoginScreen.html">Login</a>
+        </div>
+        <div class="footer-info">
+          <p><i class="fas fa-shield-alt"></i> Your privacy is our priority</p>
+          <p><i class="fas fa-heart"></i> Designed with care for PWID</p>
+        </div>
+      </div>
+      <div class="footer-bottom">
+        <p>&copy; 2024 MyBuddy. All rights reserved.</p>
+      </div>
+    </footer>
+
+    <!-- JavaScript -->
     <script src="../js/auth.js"></script>
+    <script src="../js/index.js"></script>
   </body>
 </html>
-
-

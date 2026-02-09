@@ -10,11 +10,37 @@ CREATE TABLE IF NOT EXISTS users (
   userType ENUM('user', 'caregiver') NOT NULL
 );
 
-INSERT INTO users (name, email, password, userType)
-VALUES ('admin', 'admin@example.com', '$2a$10$Stc3hhatnvc45ZqolKrz1O1zRdrT.J28loausQzU2ImdTDDD0509e', 'admin');
+CREATE TABLE IF NOT EXISTS user_profiles (
+  userId INT PRIMARY KEY,
+  full_name VARCHAR(255) NULL,
+  dob DATE NULL,
+  gender VARCHAR(20) NULL,
+  phone VARCHAR(30) NULL,
+  address VARCHAR(255) NULL,
+  updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
+  CONSTRAINT fk_profiles_user FOREIGN KEY (userId) REFERENCES users(id) ON DELETE CASCADE
+);
 
-INSERT INTO users (name, email, password, userType)
-VALUES ('caregiver', 'care@example.com', '$2a$10$Stc3hhatnvc45ZqolKrz1O1zRdrT.J28loausQzU2ImdTDDD0509e', 'caregiver');
+CREATE TABLE IF NOT EXISTS emergency_contacts (
+  id INT AUTO_INCREMENT PRIMARY KEY,
+  userId INT NOT NULL,
+  name VARCHAR(255) NOT NULL,
+  relationship VARCHAR(50) NULL,
+  phone VARCHAR(30) NOT NULL,
+  notes VARCHAR(255) NULL,
+  isPrimary TINYINT(1) NOT NULL DEFAULT 0,
+  created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+  CONSTRAINT fk_contacts_user FOREIGN KEY (userId) REFERENCES users(id) ON DELETE CASCADE
+);
 
-INSERT INTO users (name, email, password, userType)
-VALUES ('pwid', 'pwid@example.com', '$2a$10$Stc3hhatnvc45ZqolKrz1O1zRdrT.J28loausQzU2ImdTDDD0509e', 'pwid');
+CREATE TABLE IF NOT EXISTS health_medications (
+  id INT AUTO_INCREMENT PRIMARY KEY,
+  userId INT NOT NULL,
+  med_name VARCHAR(255) NOT NULL,
+  dosage VARCHAR(50) NULL,
+  time_of_day TIME NULL,
+  notes VARCHAR(255) NULL,
+  isActive TINYINT(1) NOT NULL DEFAULT 1,
+  created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+  CONSTRAINT fk_meds_user FOREIGN KEY (userId) REFERENCES users(id) ON DELETE CASCADE
+);

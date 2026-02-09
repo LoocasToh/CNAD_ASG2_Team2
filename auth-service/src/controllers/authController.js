@@ -1,6 +1,6 @@
 const bcrypt = require('bcrypt');
 const jwt = require('jsonwebtoken');
-const { createUser, findUserByEmail } = require('../models/userModel');
+const { createUser, findUserByEmailOrName } = require('../models/userModel');
 
 const JWT_SECRET = process.env.JWT_SECRET || 'change_me';
 
@@ -28,7 +28,7 @@ async function signup(req, res) {
       return res.status(400).json({ error: 'UserType required' });
     }
 
-    const existing = await findUserByEmail(email);
+    const existing = await findUserByEmailOrName(email);
     if (existing) {
       return res.status(409).json({ error: 'User already exists' });
     }
@@ -70,33 +70,30 @@ async function signup(req, res) {
 
 async function login(req, res) {
   try {
-    const { email, password } = req.body;
+    const { email, password } = req.body; // (frontend still sends "email" field)
+    const identifier = String(email || "").trim().toLowerCase();
 
-    const user = await findUserByEmail(email);
-    if (!user) return res.status(401).json({ error: 'user not found' });
-
-    const ok = await bcrypt.compare(password, user.password);
-    if (!ok) return res.status(401).json({ error: 'invalid credentials' });
-
-    const numericId = Number(user.id);
-    if (!Number.isFinite(numericId) || numericId <= 0) {
-      return res.status(500).json({ error: 'User id in DB is not numeric' });
+    if (!identifier || !password) {
+      return res.status(400).json({ error: "Email/Username and password required" });
     }
 
+    // use the new lookup
+    const user = await findUserByEmailOrName(identifier);
+    if (!user) return res.status(401).json({ error: "user not found" });
+
+    const ok = await bcrypt.compare(password, user.password);
+    if (!ok) return res.status(401).json({ error: "invalid credentials" });
+
+    const numericId = Number(user.id);
     const token = signToken({ ...user, id: numericId });
 
     return res.json({
       token,
-      user: {
-        id: numericId,
-        name: user.name,
-        email: user.email,
-        userType: user.userType,
-      },
+      user: { id: numericId, name: user.name, email: user.email, userType: user.userType }
     });
   } catch (err) {
     console.error(err);
-    return res.status(500).json({ error: 'server error' });
+    return res.status(500).json({ error: "server error" });
   }
 }
 
