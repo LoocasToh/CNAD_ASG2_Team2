@@ -9,9 +9,9 @@
 
 <body>
   <!-- Top Navbar -->
-   <!-- Top Navbar -->
   <div class="header-bar">
-    <p class="home"><a href="Index.html">Home</a></p>
+    <!-- IMPORTANT: you're inside /HTML/, so links should include HTML/ -->
+    <p class="home"><a href="index.html">Home</a></p>
     <p class="caregiving"><a href="caregiver.html">Caregiving</a></p>
     <p class="emergencies"><a href="Emergencies.html">Emergencies</a></p>
     <p class="login"><a href="#" id="logout">Logout</a></p>
@@ -26,68 +26,63 @@
     </div>
 
     <!-- Main Content -->
- <div class="content">
+    <div class="content">
 
-  <div class="card">
-    <h2>Select PWID</h2>
-    <select id="pwidSelect">
-      <option value="">-- Select PWID --</option>
-    </select>
-    <div class="pwid-actions">
-  <button id="callPWIDBtn" disabled>
-    📞 Call PWID
-  </button>
-  <div class="card">
-  <h2>Today's Progress</h2>
+      <div class="card">
+        <h2>Select PWID</h2>
+        <select id="pwidSelect">
+          <option value="">-- Select PWID --</option>
+        </select>
 
-  <div class="progress-container">
-    <div class="progress-bar" id="progressBar"></div>
-  </div>
+        <div class="pwid-actions">
+          <button id="callPWIDBtn" disabled>📞 Call PWID</button>
+        </div>
 
-  <p id="progressText">0% completed</p>
-</div>
+        <div class="card" style="margin-top:20px;">
+          <h2>Today's Progress</h2>
 
-</div>
+          <div class="progress-container">
+            <div class="progress-bar" id="progressBar"></div>
+          </div>
 
-  </div>
+          <p id="progressText">0% completed</p>
+        </div>
+      </div>
 
-<div class="card">
-  <h2>Calendar</h2>
+      <div class="card">
+        <h2>Calendar</h2>
 
-  <div class="calendar-controls">
-    <select id="monthSelect"></select>
-    <select id="yearSelect"></select>
-  </div>
+        <div class="calendar-controls">
+          <select id="monthSelect"></select>
+          <select id="yearSelect"></select>
+        </div>
 
-  <div class="calendar-container">
-    <div class="calendar-header">
-      <span>Sun</span><span>Mon</span><span>Tue</span>
-      <span>Wed</span><span>Thu</span><span>Fri</span><span>Sat</span>
+        <div class="calendar-container">
+          <div class="calendar-header">
+            <span>Sun</span><span>Mon</span><span>Tue</span>
+            <span>Wed</span><span>Thu</span><span>Fri</span><span>Sat</span>
+          </div>
+
+          <!-- IMPORTANT: your CSS uses .calendar-grid -->
+          <div id="calendar" class="calendar-grid"></div>
+        </div>
+      </div>
+
+      <div class="card">
+        <h2 id="taskDateTitle">Tasks</h2>
+
+        <ul id="taskList"></ul>
+
+        <div class="add-task">
+          <input id="newTaskInput" placeholder="New task name" />
+          <button id="addTaskBtn">Add Task</button>
+        </div>
+      </div>
+
     </div>
-
-    <div id="calendar" class="calendar-grid"></div>
-  </div>
-</div>
-
-<div class="card">
-  <h2 id="taskDateTitle">Tasks</h2>
-
-  <ul id="taskList"></ul>
-
-  <div class="add-task">
-    <input id="newTaskInput" placeholder="New task name" />
-    <button id="addTaskBtn">Add Task</button>
-  </div>
-</div>
-
-
-
-
-
-</div>
-
   </div>
 
-  <script src="/js/caregiver.js"></script>
+  <!-- IMPORTANT: JS is in public/js -->
+  <script src="../js/caregiver.js"></script>
 </body>
 </html>

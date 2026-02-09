@@ -6,7 +6,7 @@ window.AUTH_BASE_URL = window.AUTH_BASE_URL || 'http://localhost:8080/auth';
 const AUTH_BASE = window.AUTH_BASE_URL;
 
 // Use ONE token key everywhere
-const TOKEN_KEY = 'auth_token';
+const TOKEN_KEY = 'careCompanionToken';
 
 function getToken() {
   return localStorage.getItem(TOKEN_KEY);
@@ -37,7 +37,7 @@ async function loadProfile() {
     const data = await res.json();
 
     // store + event (your original behavior)
-    localStorage.setItem('auth_user', JSON.stringify(data));
+    localStorage.setItem('careCompanionUser', JSON.stringify(data));
     document.dispatchEvent(new CustomEvent('userDataStored', { detail: data }));
 
     return data;
@@ -68,7 +68,7 @@ function handleLogout(e) {
 
   // if you also used these in other files
   localStorage.removeItem('auth_token');
-  localStorage.removeItem('auth_user');
+  localStorage.removeItem('careCompanionUser');
 
   showToast('Logged out', 'info');
 

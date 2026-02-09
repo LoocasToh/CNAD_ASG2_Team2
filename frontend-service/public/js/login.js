@@ -240,11 +240,16 @@ async function handleLogin() {
 
     // IMPORTANT: store numeric id for tasks.userId INT
     const userObj = {
-      id: data.userId,         // numeric
+      id: Number(data.userId),         // numeric
       email,
       userType: data.userType,
       name: data.userName || email.split('@')[0],
     };
+
+    if (!Number.isFinite(userObj.id)) {
+  showToast('Backend returned invalid userId (must be numeric).', 'error');
+  return;
+}
 
     if (rememberMe?.checked) {
       localStorage.setItem('careCompanionUser', JSON.stringify(userObj));
@@ -253,7 +258,15 @@ async function handleLogin() {
     }
 
     showToast('Login success!', 'success');
-    setTimeout(() => (window.location.href = 'DailyTasks.html'), 800);
+
+// ✅ redirect based on userType
+const redirect = userObj.userType === 'caregiver'
+  ? '/HTML/caregiver.html'
+  : '/DailyTasks.html';
+
+setTimeout(() => {
+  window.location.href = redirect;
+}, 800);
   } catch (err) {
     console.error(err);
     showToast('Network error contacting auth service', 'error');

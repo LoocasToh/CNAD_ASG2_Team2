@@ -128,14 +128,17 @@ function initAccessibility() {
 // SESSION CHECK
 // -------------------------
 function checkExistingSession() {
-  const user =
-    JSON.parse(localStorage.getItem('careCompanionUser')) ||
-    JSON.parse(sessionStorage.getItem('careCompanionUser'));
+  // If user comes to SignUp page, they want to create a NEW account.
+  // So clear any previous session to stop auto-redirect.
+  localStorage.removeItem('careCompanionToken');
+  localStorage.removeItem('careCompanionUser');
+  localStorage.removeItem('careCompanionRemember');
 
-  if (user) {
-    showToast('You are already logged in. Redirecting...', 'info');
-    setTimeout(() => (window.location.href = 'DailyTasks.html'), 800);
-  }
+  sessionStorage.removeItem('careCompanionUser');
+
+  // Optional: if you used other keys before
+  localStorage.removeItem('auth_token');
+  localStorage.removeItem('auth_user');
 }
 
 // -------------------------
@@ -265,7 +268,17 @@ async function handleSignUp(event) {
     localStorage.setItem('careCompanionUser', JSON.stringify(newUser));
 
     showToast('Account created successfully!', 'success');
-    setTimeout(() => (window.location.href = 'DailyTasks.html'), 800);
+    const redirect =
+  role === 'caregiver'
+    ? '/HTML/caregiver.html'
+    : '/DailyTasks.html';
+
+setTimeout(() => {
+  window.location.href = redirect;
+}, 800);
+
+
+
 
   } catch (err) {
     console.error('Signup error:', err);
