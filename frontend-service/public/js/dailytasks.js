@@ -9,7 +9,7 @@
 // - Redirect logout -> Index.html
 // =========================
 
-const API_BASE = window.API_BASE_URL || 'http://localhost:8081'; // task-service
+const API_BASE = window.TASK_BASE_URL || 'http://localhost:8081'; // task-service
 const LOGIN_PAGE = 'LoginScreen.html';
 const INDEX_PAGE = 'Index.html';
 

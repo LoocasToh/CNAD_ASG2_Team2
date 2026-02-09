@@ -50,8 +50,9 @@ CREATE TABLE IF NOT EXISTS health_medications (
 -- Users
 INSERT INTO users (name, email, password, userType)
 VALUES
-('Alice Lim', 'alice@example.com', 'password123', 'user'),
-('Bob Tan', 'bob@example.com', 'password123', 'caregiver');
+('Admin', 'admin@example.com', '$2a$10$Stc3hhatnvc45ZqolKrz1O1zRdrT.J28loausQzU2ImdTDDD0509e', 'admin'),
+('Alice Lim', 'alice@example.com', '$2a$10$Stc3hhatnvc45ZqolKrz1O1zRdrT.J28loausQzU2ImdTDDD0509e', 'user'),
+('Bob Tan', 'bob@example.com', '$2a$10$Stc3hhatnvc45ZqolKrz1O1zRdrT.J28loausQzU2ImdTDDD0509e', 'caregiver');
 
 -- User Profiles
 INSERT INTO user_profiles (userId, full_name, dob, gender, phone, address)

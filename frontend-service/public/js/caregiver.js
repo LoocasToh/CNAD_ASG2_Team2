@@ -4,7 +4,7 @@ document.addEventListener("DOMContentLoaded", () => {
   // =======================
   // CONFIG
   // =======================
-  const API_BASE = window.API_BASE_URL || "http://localhost:8081"; // task-service
+  const API_BASE = window.TASK_BASE_URL || "http://localhost:8081"; // task-service
   const AUTH_BASE = window.AUTH_BASE_URL || "http://localhost:8080/auth"; // auth-service
   const TOKEN_KEY = "careCompanionToken";
 
