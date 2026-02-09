@@ -170,19 +170,16 @@ function applyFilter() {
   const todayLocal = localYMD(new Date());
 
   if (currentFilter === "today") {
-    filteredTasks = list.filter((t) => {
-      const isDaily = Number(t.isDaily) === 1;
-      if (isDaily) return true;
+  filteredTasks = list.filter((t) => {
+    if (!t.task_date) return false;
+    const taskLocal = localYMD(t.task_date);
+    return taskLocal === todayLocal;
+  });
 
-      if (!t.task_date) return false;
+  els.filterTitle && (els.filterTitle.textContent = "Today's Tasks");
+  setActiveSidebar("today-tasks-link");
 
-      // Compare using LOCAL date
-      const taskLocal = localYMD(t.task_date);
-      return taskLocal === todayLocal;
-    });
 
-    els.filterTitle && (els.filterTitle.textContent = "Today's Tasks");
-    setActiveSidebar("today-tasks-link");
   } else if (currentFilter === "important") {
     filteredTasks = list.filter((t) => Number(t.important) === 1 || t.important === true);
     els.filterTitle && (els.filterTitle.textContent = "Important");
@@ -204,6 +201,60 @@ function applyFilter() {
   renderTasksOnly();
   updateProgress();
 }
+
+function addDaysYMD(ymd, days) {
+  const [y, m, d] = ymd.split("-").map(Number);
+  const dt = new Date(y, m - 1, d);
+  dt.setDate(dt.getDate() + days);
+  return localYMD(dt);
+}
+
+function isOnOrBefore(aYMD, bYMD) {
+  // compare YYYY-MM-DD strings safely
+  return aYMD <= bYMD;
+}
+
+async function ensureNextDailyTask(task) {
+  const isDaily = Number(task.isDaily) === 1;
+  if (!isDaily) return;
+
+  // base date = task.task_date if exists, else today
+  const base = task.task_date ? localYMD(task.task_date) : localYMD(new Date());
+  if (!base) return;
+
+  const nextDate = addDaysYMD(base, 1);
+
+  // respect end_date if provided
+  if (task.end_date) {
+    const end = localYMD(task.end_date);
+    if (end && !isOnOrBefore(nextDate, end)) return;
+  }
+
+  // prevent duplicates (same title + date + daily)
+  const exists = tasks.some(t =>
+    Number(t.isDaily) === 1 &&
+    (t.title || "").trim().toLowerCase() === (task.title || "").trim().toLowerCase() &&
+    localYMD(t.task_date) === nextDate
+  );
+  if (exists) return;
+
+  // create tomorrow copy
+  const payload = {
+    userId,
+    title: task.title,
+    description: task.description || null,
+    category: task.category || "other",
+    task_time: task.task_time ? String(task.task_time).slice(0,5) : null,
+    isDaily: 1,
+    important: Number(task.important) === 1 ? 1 : 0,
+    task_date: nextDate,
+    end_date: task.end_date ? String(task.end_date).slice(0,10) : null,
+    duration: task.duration ?? null,
+  };
+
+  await api("/tasks", { method: "POST", body: JSON.stringify(payload) });
+}
+
 
 function openEditModal(task) {
   editMode = true;
@@ -612,22 +663,19 @@ async function toggleComplete(task, checked) {
   }
 
   // Insert into logs (backend)
+    // Insert into logs (backend)
   await api(`/tasks/${task.id}/complete`, {
     method: "POST",
     body: JSON.stringify({ method: "manual" }),
   });
 
-  // Update UI state + lock checkbox forever
-  completedTodaySet.add(idNum);
+  // ✅ if daily, create next day task
+  await ensureNextDailyTask(task);
 
-  const chk = document.getElementById(`chk-${task.id}`);
-  if (chk) {
-    chk.checked = true;
-    chk.disabled = true;
-  }
+  // refresh so the new task appears tomorrow and state is accurate
+  await refreshFromServer();
+  return;
 
-  // Re-render so it moves into Completed tab immediately
-  applyFilter();
 }
 
 
@@ -703,25 +751,45 @@ function formatDate(mysqlDate) {
 
 function cardHTML(t) {
   const cat = normalizeCategory(t.category);
+
   const doneToday = completedTodaySet.has(Number(t.id));
-  const timeText = t.task_time ? formatTime(t.task_time) : 'No time';
-  const dateText = t.task_date ? formatDate(t.task_date) : (t.isDaily ? 'Daily' : 'No date');
-  const endText = t.end_date ? formatDate(t.end_date) : '';
 
-  const desc = (t.description || '').trim();
+  const timeText = t.task_time ? formatTime(t.task_time) : "No time";
 
-  // ✅ disable edit if completed
-  const editDisabledAttr = doneToday ? 'disabled aria-disabled="true"' : '';
-  const editTitle = doneToday ? 'Completed (cannot edit)' : 'Edit';
+  // date label
+  let dateText = "No date";
+  if (t.task_date) {
+    dateText = formatDate(t.task_date); // uses your formatDate()
+  } else if (Number(t.isDaily) === 1) {
+    // fallback only if daily has no date (shouldn't happen if you auto-create next day tasks)
+    dateText = "Daily";
+  }
+
+  // Daily badge (small label)
+  const dailyBadge =
+    Number(t.isDaily) === 1
+      ? ` <span class="task-badge task-badge-daily">Daily</span>`
+      : "";
+
+  // End date
+  const endText = t.end_date ? formatDate(t.end_date) : "";
+  const rangeText = endText ? ` → ${endText}` : "";
+
+  const desc = (t.description || "").trim();
+
+  // disable edit if completed
+  const editDisabledAttr = doneToday ? 'disabled aria-disabled="true"' : "";
+  const editTitle = doneToday ? "Completed (cannot edit)" : "Edit";
 
   return `
     <div class="task-card ${cat}">
       <div class="task-header">
         <div>
           <div class="task-checkbox">
-            <input type="checkbox" id="chk-${t.id}" ${doneToday ? 'checked disabled' : ''}>
+            <input type="checkbox" id="chk-${t.id}" ${doneToday ? "checked disabled" : ""}>
             <label for="chk-${t.id}" class="task-title">${escapeHTML(t.title)}</label>
           </div>
+
           ${desc ? `<p class="task-description">${escapeHTML(desc)}</p>` : `<p class="task-description"></p>`}
         </div>
 
@@ -738,7 +806,7 @@ function cardHTML(t) {
 
       <div class="task-time">
         <i class="fas fa-calendar-day"></i>
-        ${dateText}${endText ? ` → ${endText}` : ''}
+        ${dateText}${dailyBadge}${rangeText}
       </div>
 
       <div class="task-meta">
@@ -746,6 +814,7 @@ function cardHTML(t) {
           <i class="fas fa-clock"></i>
           ${timeText}
         </div>
+
         <span class="task-category ${cat}">
           ${categoryIcon(cat)} ${cap(cat)}
         </span>
@@ -753,6 +822,7 @@ function cardHTML(t) {
     </div>
   `;
 }
+
 
 
 async function refreshFromServer() {

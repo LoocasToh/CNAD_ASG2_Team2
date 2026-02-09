@@ -3,18 +3,48 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
   <link rel="stylesheet" href="../CSS/caregiver.css" />
   <title>Caregiver Dashboard</title>
 </head>
 
 <body>
-  <!-- Top Navbar -->
-  <div class="header-bar">
-    <p class="home"><a href="index.html">Home</a></p>
-    <p class="caregiving"><a href="caregiver.html">Caregiving</a></p>
-    <p class="emergencies"><a href="Emergencies.html">Emergencies</a></p>
-    <p class="login"><a href="#" id="logout">Logout</a></p>
-  </div>
+ <!-- Top Navbar - Same as other pages -->
+    <div class="header-bar">
+      <div class="logo">
+        <i class="fas fa-hands-helping"></i>
+        <span>MyBuddy</span>
+      </div>
+
+      <div class="nav-links">
+        <a href="index.html">Home</a>
+         <a href="caregiver.html" class="active">Caregiver</a>
+      </div>
+
+      <!-- User Profile/Login -->
+      <div class="user-section" id="auth-area">
+        <div class="user-info" id="user-info">
+          <i class="fas fa-user-circle user-icon"></i>
+          <span class="user-name" id="headerUserName">Guest</span>
+          <i class="fas fa-chevron-down user-arrow"></i>
+        </div>
+
+        <div class="user-dropdown">
+          <a href="profile.html" id="profile-link">
+            <i class="fas fa-user-cog"></i>
+            <span>Profile</span>
+          </a>
+          <a href="LoginScreen.html" id="login-link">
+            <i class="fas fa-sign-in-alt"></i>
+            <span>Login</span>
+          </a>
+          <a href="#" id="logout-link" style="display: none;">
+            <i class="fas fa-sign-out-alt"></i>
+            <span>Logout</span>
+          </a>
+        </div>
+      </div>
+    </div>
 
   <div class="main-container">
 
