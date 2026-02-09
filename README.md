@@ -33,31 +33,11 @@ To validate system behaviour without relying on physical hardware, **sensor inte
 
 ## 🏗️ System Architecture & Program Design
 
-### High-Level Architecture
 
-The system follows a **microservices architecture** consisting of the following core components:
+### System Architecture Diagram
 
-- **Frontend Service** – User-facing web application (PWID & caregiver dashboards)
-- **Auth Service** – Authentication and authorization logic
-- **Task Service** – Core business logic for task management and analytics
-- **Infrastructure Layer** – Container orchestration and service wiring
+![System Architecture Diagram](images/architecture-diagram.png)
 
-All services are containerized using Docker and orchestrated locally via Docker Compose.
-
-```text
-┌──────────────┐
-│  Frontend    │
-│  Service     │
-└──────┬───────┘
-       │ HTTP / API
-┌──────▼───────┐
-│  Auth Service│
-└──────┬───────┘
-       │
-┌──────▼───────┐
-│  Task Service│
-└──────────────┘
-```
 ---
 
 ## 🧩 Service Breakdown
