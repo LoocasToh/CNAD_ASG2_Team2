@@ -1,0 +1,324 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <link rel="stylesheet" href="../CSS/profile.css" />
+    <link
+      rel="stylesheet"
+      href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css"
+    />
+    <title>My Profile - MyBuddy</title>
+  </head>
+
+  <body>
+    <!-- Top Navbar -->
+    <div class="header-bar" id="header-bar">
+      <div class="logo">
+        <i class="fas fa-hands-helping"></i>
+        <span>MyBuddy</span>
+      </div>
+
+      <div class="nav-links">
+        <a href="index.html">Home</a>
+        <a href="DailyTasks.html">Daily Tasks</a>
+        <a href="Emergencies.html">Quick Help</a>
+        <a href="profile.html" class="active">My Profile</a>
+      </div>
+
+      <!-- User Profile/Login -->
+      <div class="user-section" id="auth-area">
+        <div class="user-info" id="user-info">
+          <i class="fas fa-user-circle user-icon"></i>
+          <span class="user-name" id="headerUserName">Guest</span>
+          <i class="fas fa-chevron-down user-arrow"></i>
+        </div>
+
+        <div class="user-dropdown">
+          <a href="profile.html" id="profile-link">
+            <i class="fas fa-user-cog"></i>
+            <span>Profile</span>
+          </a>
+          <a href="LoginScreen.html" id="login-link">
+            <i class="fas fa-sign-in-alt"></i>
+            <span>Login</span>
+          </a>
+          <a href="#" id="logout-link" style="display: none;">
+            <i class="fas fa-sign-out-alt"></i>
+            <span>Logout</span>
+          </a>
+        </div>
+      </div>
+    </div>
+
+    <!-- Page Layout -->
+    <div class="layout">
+      <!-- Sidebar -->
+      <aside class="sidebar">
+        <div class="sidebar-header">
+          <h3><i class="fas fa-user-circle"></i> Profile Menu</h3>
+        </div>
+
+        <ul class="sidebar-menu">
+          <li class="active">
+            <a href="#personal-info" id="personal-info-link">
+              <i class="fas fa-user"></i>
+              <span>Personal Info</span>
+            </a>
+          </li>
+          <li>
+            <a href="#emergency-contacts" id="emergency-contacts-link">
+              <i class="fas fa-address-book"></i>
+              <span>Emergency Contacts</span>
+            </a>
+          </li>
+          <li>
+            <a href="#health-info" id="health-info-link">
+              <i class="fas fa-heartbeat"></i>
+              <span>Health Information</span>
+            </a>
+          </li>
+        </ul>
+
+        <!-- Profile Summary -->
+        <div class="sidebar-footer">
+          <div class="profile-summary">
+            <h4><i class="fas fa-info-circle"></i> Profile Status</h4>
+            <div class="summary-item">
+              <span class="summary-label">Profile Complete</span>
+              <span class="summary-value" id="profile-completion">65%</span>
+            </div>
+            <div class="summary-item">
+              <span class="summary-label">Last Updated</span>
+              <span class="summary-value" id="last-updated">Today</span>
+            </div>
+            <div class="summary-item">
+              <span class="summary-label">Member Since</span>
+              <span class="summary-value" id="member-since">2024</span>
+            </div>
+          </div>
+        </div>
+      </aside>
+
+      <!-- Main Content -->
+      <main class="content">
+        <!-- Welcome Header -->
+        <div class="welcome-header">
+          <h1><i class="fas fa-user-circle"></i> My Profile</h1>
+          <p id="greeting-message">Manage your personal information</p>
+          <div class="date-display">
+            <i class="fas fa-shield-alt"></i>
+            <span>Your information is kept private and secure</span>
+          </div>
+        </div>
+
+        <!-- 1. PERSONAL INFORMATION SECTION -->
+        <section id="personal-info" class="profile-section">
+          <div class="section-header">
+            <div class="header-top">
+              <div class="header-left">
+                <h2>
+                  <i class="fas fa-user"></i>
+                  <span>Personal Information</span>
+                </h2>
+              </div>
+              <div class="tasks-controls-row">
+                <button class="btn-edit" id="edit-personal-btn">
+                  <i class="fas fa-edit"></i> Edit
+                </button>
+              </div>
+            </div>
+            <p class="section-description">Your basic information for identification</p>
+          </div>
+
+          <div class="profile-card">
+            <div class="profile-header">
+              <div class="avatar-container">
+                <div class="avatar" id="user-avatar">
+                  <i class="fas fa-user"></i>
+                </div>
+                <button class="avatar-change-btn" id="change-avatar-btn">
+                  <i class="fas fa-camera"></i> Change
+                </button>
+              </div>
+              <div class="profile-name">
+                <h3 id="display-name">-</h3>
+                <p class="profile-role" id="user-role">-</p>
+              </div>
+            </div>
+
+            <div class="info-grid">
+              <div class="info-item">
+                <label><i class="fas fa-signature"></i> Full Name</label>
+                <div class="info-value" id="full-name">-</div>
+              </div>
+              <div class="info-item">
+                <label><i class="fas fa-birthday-cake"></i> Date of Birth</label>
+                <div class="info-value" id="dob">-</div>
+              </div>
+              <div class="info-item">
+                <label><i class="fas fa-venus-mars"></i> Gender</label>
+                <div class="info-value" id="gender">-</div>
+              </div>
+              <div class="info-item">
+                <label><i class="fas fa-phone"></i> Phone Number</label>
+                <div class="info-value" id="phone">-</div>
+              </div>
+              <div class="info-item">
+                <label><i class="fas fa-envelope"></i> Email</label>
+                <div class="info-value" id="email">-</div>
+              </div>
+              <div class="info-item">
+                <label><i class="fas fa-home"></i> Address</label>
+                <div class="info-value" id="address">-</div>
+              </div>
+            </div>
+          </div>
+        </section>
+
+        <!-- 2. EMERGENCY CONTACTS SECTION -->
+        <section id="emergency-contacts" class="profile-section">
+          <div class="section-header">
+            <div class="header-top">
+              <div class="header-left">
+                <h2>
+                  <i class="fas fa-address-book"></i>
+                  <span>Emergency Contacts</span>
+                </h2>
+              </div>
+              <div class="tasks-controls-row">
+                <button class="btn-add-task" id="add-contact-btn">
+                  <i class="fas fa-plus-circle"></i> Add Contact
+                </button>
+              </div>
+            </div>
+            <p class="section-description">People who will be contacted in case of emergency</p>
+          </div>
+
+          <div class="contacts-container" id="contacts-container">
+            <p id="contacts-loading" style="color:#718096; padding:12px;">Loading contacts...</p>
+          </div>
+        </section>
+
+        
+
+    <!-- Edit Personal Info Modal -->
+    <div class="modal-overlay" id="edit-personal-modal">
+      <div class="profile-modal">
+        <div class="modal-header">
+          <h3><i class="fas fa-user-edit"></i> Edit Personal Information</h3>
+          <button class="btn-close-modal" id="close-edit-modal">
+            <i class="fas fa-times"></i>
+          </button>
+        </div>
+        <div class="modal-body">
+          <form id="personal-form">
+            <div class="form-grid">
+              <div class="form-group">
+                <label for="edit-first-name"><i class="fas fa-user"></i> First Name</label>
+                <input type="text" id="edit-first-name" value="" required>
+              </div>
+              <div class="form-group">
+                <label for="edit-last-name"><i class="fas fa-user"></i> Last Name</label>
+                <input type="text" id="edit-last-name" value="" required>
+              </div>
+              <div class="form-group">
+                <label for="edit-dob"><i class="fas fa-birthday-cake"></i> Date of Birth</label>
+                <input type="date" id="edit-dob" value="">
+              </div>
+              <div class="form-group">
+                <label for="edit-gender"><i class="fas fa-venus-mars"></i> Gender</label>
+                <select id="edit-gender">
+                  <option value="">Select</option>
+                  <option value="male">Male</option>
+                  <option value="female">Female</option>
+                  <option value="other">Other</option>
+                  <option value="prefer-not">Prefer not to say</option>
+                </select>
+              </div>
+              <div class="form-group">
+                <label for="edit-phone"><i class="fas fa-phone"></i> Phone Number</label>
+                <input type="tel" id="edit-phone" value="">
+              </div>
+              <div class="form-group">
+                <label for="edit-email"><i class="fas fa-envelope"></i> Email</label>
+                <input type="email" id="edit-email" value="" disabled>
+              </div>
+              <div class="form-group full-width">
+                <label for="edit-address"><i class="fas fa-home"></i> Address</label>
+                <textarea id="edit-address" rows="2"></textarea>
+              </div>
+            </div>
+            <div class="modal-actions">
+              <button type="button" class="btn-cancel" id="cancel-edit-btn">Cancel</button>
+              <button type="submit" class="btn-save">Save Changes</button>
+            </div>
+          </form>
+        </div>
+      </div>
+    </div>
+
+    <!-- Add Contact Modal -->
+    <div class="modal-overlay" id="add-contact-modal">
+      <div class="profile-modal">
+        <div class="modal-header">
+          <h3><i class="fas fa-user-plus"></i> Add Emergency Contact</h3>
+          <button class="btn-close-modal" id="close-contact-modal">
+            <i class="fas fa-times"></i>
+          </button>
+        </div>
+        <div class="modal-body">
+          <form id="contact-form">
+            <div class="form-group">
+              <label for="contact-name"><i class="fas fa-user"></i> Full Name</label>
+              <input type="text" id="contact-name" placeholder="Enter full name" required>
+            </div>
+            <div class="form-group">
+              <label for="contact-relationship"><i class="fas fa-users"></i> Relationship</label>
+              <select id="contact-relationship">
+                <option value="family">Family Member</option>
+                <option value="caregiver">Caregiver</option>
+                <option value="doctor">Doctor</option>
+                <option value="friend">Friend</option>
+                <option value="neighbor">Neighbor</option>
+                <option value="other">Other</option>
+              </select>
+            </div>
+            <div class="form-group">
+              <label for="contact-phone"><i class="fas fa-phone"></i> Phone Number</label>
+              <input type="tel" id="contact-phone" placeholder="(555) 123-4567" required>
+            </div>
+            <div class="form-group">
+              <label for="contact-notes"><i class="fas fa-sticky-note"></i> Notes (Optional)</label>
+              <textarea id="contact-notes" placeholder="Add any important notes..." rows="3"></textarea>
+            </div>
+            <div class="form-group">
+              <label class="checkbox-label">
+                <input type="checkbox" id="is-primary-contact">
+                <span class="checkmark"></span>
+                <span>Set as primary emergency contact</span>
+              </label>
+            </div>
+            <div class="modal-actions">
+              <button type="button" class="btn-cancel" id="cancel-contact-btn">Cancel</button>
+              <button type="submit" class="btn-save">Add Contact</button>
+            </div>
+          </form>
+        </div>
+      </div>
+    </div>
+
+    
+    <!-- Notification Toast -->
+    <div class="toast" id="toast">
+      <div class="toast-content">
+        <i class="fas fa-check-circle toast-icon"></i>
+        <div class="toast-message">Profile updated successfully!</div>
+      </div>
+    </div>
+
+    <!-- JS -->
+    <script src="../js/auth.js"></script>
+    <script src="../js/profile.js"></script>
+  </body>
+</html>

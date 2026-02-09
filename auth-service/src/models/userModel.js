@@ -26,13 +26,17 @@ async function createUser({ name, email, password, userType }) {
   return rows[0];
 }
 
-async function findUserByEmail(email) {
+async function findUserByEmailOrName(identifier) {
   const [rows] = await pool.execute(
-    `SELECT id, name, email, password, created_at, userType FROM users WHERE email = ?`,
-    [email]
+    `SELECT id, name, email, password, created_at, userType
+     FROM users
+     WHERE LOWER(email) = LOWER(?) OR LOWER(name) = LOWER(?)
+     LIMIT 1`,
+    [identifier, identifier]
   );
-
   return rows[0];
 }
 
-module.exports = { createUser, findUserByEmail };
+module.exports = { createUser, findUserByEmailOrName };
+
+
