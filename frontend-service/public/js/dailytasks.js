@@ -115,6 +115,7 @@ const els = {
   inputImportant: document.getElementById('task-important'),
   inputRecurring: document.getElementById('task-recurring'),
   inputDate: document.getElementById('task-date'),
+  inputEndDate: document.getElementById('task-end-date'),
 
 
   categoryButtons: document.querySelectorAll('.category-btn'),
@@ -144,6 +145,8 @@ let completedTodaySet = new Set();
 
 let currentFilter = 'all';      // all | today | important | completed | pending
 let filteredTasks = [];         // tasks to show in UI
+let editMode = false;
+let editingTaskId = null;
 
 function setActiveSidebar(id) {
   els.sidebarItems?.forEach(li => li.classList.remove('active'));
@@ -201,6 +204,98 @@ function applyFilter() {
   renderTasksOnly();
   updateProgress();
 }
+
+function openEditModal(task) {
+  editMode = true;
+  editingTaskId = task.id;
+
+  if (els.modalTitle) els.modalTitle.textContent = 'Edit Task';
+
+  // fill modal fields
+  if (els.inputTitle) els.inputTitle.value = task.title || '';
+  if (els.inputDesc) els.inputDesc.value = task.description || '';
+  if (els.inputTime) els.inputTime.value = task.task_time ? String(task.task_time).slice(0, 5) : '';
+  if (els.inputDuration) els.inputDuration.value = task.duration ?? '';
+
+  if (els.inputImportant) els.inputImportant.checked = Number(task.important) === 1 || task.important === true;
+  if (els.inputRecurring) els.inputRecurring.checked = Number(task.isDaily) === 1 || task.isDaily === true;
+
+  // date input expects YYYY-MM-DD
+  if (els.inputDate) {
+    els.inputDate.value = task.task_date ? String(task.task_date).slice(0, 10) : '';
+  }
+
+  // category
+  const cat = normalizeCategory(task.category);
+  if (els.inputCat) els.inputCat.value = cat;
+  els.categoryButtons?.forEach((b) => b.classList.remove('active'));
+  const btn = Array.from(els.categoryButtons || []).find((b) => (b.dataset.category || '').toLowerCase() === cat);
+  btn?.classList.add('active');
+
+  showModal();
+}
+
+async function updateTaskFromModal() {
+  if (!editingTaskId) return;
+
+  const title = (els.inputTitle?.value || '').trim();
+  if (!title) return;
+
+  const payload = {
+  userId,
+  title,
+  category: els.inputCat?.value || null,
+  task_time: els.inputTime?.value || null,
+  task_date: els.inputDate?.value || null,
+  end_date: els.inputEndDate?.value || null,
+  important: els.inputImportant?.checked ? 1 : 0,
+  description: (els.inputDesc?.value || '').trim(),
+  isDaily: els.inputRecurring?.checked ? 1 : 0,
+};
+
+
+  // Your backend route is PATCH /tasks/:taskId
+  await api(`/tasks/${editingTaskId}`, {
+    method: 'PATCH',
+    body: JSON.stringify(payload),
+  });
+
+  closeModal();
+  editMode = false;
+  editingTaskId = null;
+
+  await refreshFromServer();
+}
+
+function openCreateModal() {
+  editingTaskId = null; // IMPORTANT
+  if (els.modalTitle) els.modalTitle.textContent = 'Add New Task';
+  resetModal();
+  showModal();
+}
+
+function normalizeTimeForInput(mysqlTime) {
+  if (!mysqlTime) return '';
+  // "14:05:00" -> "14:05"
+  const parts = String(mysqlTime).split(':');
+  if (parts.length >= 2) return `${parts[0].padStart(2, '0')}:${parts[1].padStart(2, '0')}`;
+  return '';
+}
+
+function normalizeDateForInput(mysqlDate) {
+  if (!mysqlDate) return '';
+  // If already "YYYY-MM-DD"
+  if (typeof mysqlDate === 'string' && /^\d{4}-\d{2}-\d{2}$/.test(mysqlDate)) return mysqlDate;
+
+  // If MySQL returns Date object string like "2026-02-08T00:00:00.000Z"
+  const dt = new Date(mysqlDate);
+  if (Number.isNaN(dt.getTime())) return '';
+  const y = dt.getFullYear();
+  const m = String(dt.getMonth() + 1).padStart(2, '0');
+  const d = String(dt.getDate()).padStart(2, '0');
+  return `${y}-${m}-${d}`;
+}
+
 
 
 
@@ -273,6 +368,13 @@ function wireUI() {
     applyFilter();
   });
 
+  els.historyLink?.addEventListener("click", async (e) => {
+    e.preventDefault();
+    currentFilter = "history";
+    if (els.filterTitle) els.filterTitle.textContent = "History";
+    setActiveSidebar("history-link");
+    await renderHistoryView(); // new function
+  });
 
   // category buttons set hidden input + active state
   els.categoryButtons.forEach((btn) => {
@@ -287,10 +389,17 @@ function wireUI() {
   });
 
   // submit modal form
-  els.taskForm?.addEventListener('submit', async (e) => {
-    e.preventDefault();
+ els.taskForm?.addEventListener('submit', async (e) => {
+  e.preventDefault();
+
+  if (editMode) {
+    await updateTaskFromModal();
+  } else {
     await createTaskFromModal();
-  });
+  }
+});
+
+
 
   // clear completed (today)
   els.clearCompletedBtn?.addEventListener('click', async () => {
@@ -311,6 +420,7 @@ function resetModal() {
   if (els.inputDuration) els.inputDuration.value = '';
   if (els.inputImportant) els.inputImportant.checked = false;
   if (els.inputRecurring) els.inputRecurring.checked = false;
+  if (els.inputEndDate) els.inputEndDate.value = '';
 
   // default category
   if (els.inputCat) els.inputCat.value = 'medication';
@@ -328,7 +438,81 @@ function showModal() {
 function closeModal() {
   if (!els.modalOverlay) return;
   els.modalOverlay.style.display = 'none';
+
+  editMode = false;
+  editingTaskId = null;
 }
+
+async function renderHistoryView() {
+  // Replace cards container with history layout
+  if (!els.container) return;
+
+  const todayISO = new Date().toISOString().slice(0, 10);
+
+  els.container.style.display = "block";
+  if (els.empty) els.empty.style.display = "none";
+
+  els.container.innerHTML = `
+    <div style="display:flex; gap:12px; align-items:center; margin-bottom:16px;">
+      <label style="font-weight:600; color:#2d3748;">Filter date:</label>
+      <input type="date" id="history-date" value="${todayISO}" />
+      <button class="btn-clear-completed" id="history-clear-date" type="button">
+        Show All
+      </button>
+    </div>
+    <div id="history-list"></div>
+  `;
+
+  const input = document.getElementById("history-date");
+  const showAllBtn = document.getElementById("history-clear-date");
+
+  async function load(dateStrOrNull) {
+    const q = dateStrOrNull ? `?date=${encodeURIComponent(dateStrOrNull)}` : "";
+    const data = await api(`/history/${userId}${q}`, { method: "GET" });
+    const logs = data?.logs || [];
+
+    const listEl = document.getElementById("history-list");
+    if (!listEl) return;
+
+    if (!logs.length) {
+      listEl.innerHTML = `<p style="color:#718096; padding:20px;">No completed tasks found.</p>`;
+      return;
+    }
+
+    listEl.innerHTML = logs.map(historyRowHTML).join("");
+  }
+
+  input?.addEventListener("change", () => load(input.value || null));
+  showAllBtn?.addEventListener("click", () => load(null));
+
+  // initial load for today
+  await load(todayISO);
+}
+
+function historyRowHTML(row) {
+  const cat = normalizeCategory(row.category);
+  const when = new Date(row.completed_at);
+  const dateText = when.toLocaleDateString("en-SG", { weekday: "short", day: "2-digit", month: "short", year: "numeric" });
+  const timeText = when.toLocaleTimeString("en-SG", { hour: "2-digit", minute: "2-digit" });
+
+  return `
+    <div class="task-card ${cat}" style="margin-bottom:12px;">
+      <div class="task-header">
+        <div>
+          <div class="task-title">${escapeHTML(row.title)}</div>
+          <p class="task-description">Completed: ${dateText} • ${timeText} (${escapeHTML(row.method || "manual")})</p>
+        </div>
+      </div>
+      <div class="task-meta">
+        <span class="task-category ${cat}">
+          ${categoryIcon(cat)} ${cap(cat)}
+        </span>
+      </div>
+    </div>
+  `;
+}
+
+
 
 // -------------------------
 // Server calls
@@ -360,17 +544,16 @@ async function api(path, options = {}) {
   return data;
 }
 
-async function refreshFromServer() {
-  // backend returns: [tasks...]
-  const list = await api(`/tasks/${userId}`, { method: "GET" });
-  tasks = Array.isArray(list) ? list : [];
-  // Your backend doesn't return completedToday yet -> set empty
-  completedTodaySet = new Set();
-  filteredTasks = tasks;
-  applyFilter();
+// async function refreshFromServer() {
+//   const list = await api(`/tasks/${userId}`, { method: "GET" });
+//   tasks = Array.isArray(list) ? list : [];
 
-  render();
-}
+//   const done = await api(`/tasks/completed/today/${userId}`, { method: "GET" });
+//   completedTodaySet = new Set((done?.completedToday || []).map(Number));
+
+//   applyFilter();
+// }
+
 
 
 async function createTaskFromModal() {
@@ -387,6 +570,8 @@ async function createTaskFromModal() {
     important: els.inputImportant?.checked ? 1 : 0, // backend may ignore
     task_date: els.inputDate?.value || null,
     duration: els.inputDuration?.value ? Number(els.inputDuration.value) : null, // backend may ignore
+    historyLink: document.getElementById("history-link"),
+    end_date: els.inputEndDate?.value || null,
   };
 
   await api('/tasks', { method: 'POST', body: JSON.stringify(payload) });
@@ -394,21 +579,58 @@ async function createTaskFromModal() {
   await refreshFromServer();
 }
 
-async function toggleComplete(taskId, checked) {
-  if (checked) {
-    await api(`/tasks/${taskId}/complete`, {
-      method: 'POST',
-      body: JSON.stringify({ userId, method: 'manual' }),
-    });
-    completedTodaySet.add(Number(taskId));
-  } else {
-    // UI-only undo unless you implement an "undo completion" endpoint
-    completedTodaySet.delete(Number(taskId));
+async function toggleComplete(task, checked) {
+  const idNum = Number(task.id);
+
+  // If already completed, keep it checked + locked forever
+  if (completedTodaySet.has(idNum)) {
+    const chk = document.getElementById(`chk-${task.id}`);
+    if (chk) {
+      chk.checked = true;
+      chk.disabled = true;
+    }
+    return;
   }
 
-  updateProgress();
-  renderTasksOnly();
+  // Block unchecking (not allowed)
+  if (!checked) {
+    const chk = document.getElementById(`chk-${task.id}`);
+    if (chk) chk.checked = false;
+    return;
+  }
+
+  // Confirm first
+  const ok = await confirmDialog({
+    title: "Mark task as completed?",
+    message: `Did you complete "${task.title}"?`,
+  });
+
+  if (!ok) {
+    const chk = document.getElementById(`chk-${task.id}`);
+    if (chk) chk.checked = false; // revert UI
+    return;
+  }
+
+  // Insert into logs (backend)
+  await api(`/tasks/${task.id}/complete`, {
+    method: "POST",
+    body: JSON.stringify({ method: "manual" }),
+  });
+
+  // Update UI state + lock checkbox forever
+  completedTodaySet.add(idNum);
+
+  const chk = document.getElementById(`chk-${task.id}`);
+  if (chk) {
+    chk.checked = true;
+    chk.disabled = true;
+  }
+
+  // Re-render so it moves into Completed tab immediately
+  applyFilter();
 }
+
+
 
 async function deleteTask(taskId) {
   await api(`/tasks/${taskId}?userId=${encodeURIComponent(userId)}`, { method: 'DELETE' });
@@ -446,11 +668,19 @@ function renderTasksOnly() {
 
   // wire per-card events
   for (const t of list) {
-    const chk = document.getElementById(`chk-${t.id}`);
-    chk?.addEventListener('change', (e) => toggleComplete(t.id, e.target.checked));
-
-    document.getElementById(`del-${t.id}`)?.addEventListener('click', () => deleteTask(t.id));
+  const chk = document.getElementById(`chk-${t.id}`);
+  chk?.addEventListener("change", (e) => toggleComplete(t, e.target.checked));
+  if (completedTodaySet.has(Number(t.id))) {
+  chk.checked = true;
+  chk.disabled = true;
   }
+
+
+  document.getElementById(`edit-${t.id}`)?.addEventListener("click", () => openEditModal(t));
+  document.getElementById(`del-${t.id}`)?.addEventListener("click", () => deleteTask(t.id));
+
+}
+
 }
 
 function formatDate(mysqlDate) {
@@ -476,21 +706,30 @@ function cardHTML(t) {
   const doneToday = completedTodaySet.has(Number(t.id));
   const timeText = t.task_time ? formatTime(t.task_time) : 'No time';
   const dateText = t.task_date ? formatDate(t.task_date) : (t.isDaily ? 'Daily' : 'No date');
+  const endText = t.end_date ? formatDate(t.end_date) : '';
 
-  // NOTE: Your DB schema does not include description, but if your API returns it, we show it
   const desc = (t.description || '').trim();
+
+  // ✅ disable edit if completed
+  const editDisabledAttr = doneToday ? 'disabled aria-disabled="true"' : '';
+  const editTitle = doneToday ? 'Completed (cannot edit)' : 'Edit';
 
   return `
     <div class="task-card ${cat}">
       <div class="task-header">
         <div>
           <div class="task-checkbox">
-            <input type="checkbox" id="chk-${t.id}" ${doneToday ? 'checked' : ''}>
+            <input type="checkbox" id="chk-${t.id}" ${doneToday ? 'checked disabled' : ''}>
             <label for="chk-${t.id}" class="task-title">${escapeHTML(t.title)}</label>
           </div>
           ${desc ? `<p class="task-description">${escapeHTML(desc)}</p>` : `<p class="task-description"></p>`}
         </div>
+
         <div class="task-actions">
+          <button class="task-action-btn" id="edit-${t.id}" title="${editTitle}" ${editDisabledAttr}>
+            <i class="fas fa-edit"></i>
+          </button>
+
           <button class="task-action-btn" id="del-${t.id}" title="Delete">
             <i class="fas fa-trash"></i>
           </button>
@@ -499,7 +738,7 @@ function cardHTML(t) {
 
       <div class="task-time">
         <i class="fas fa-calendar-day"></i>
-        ${dateText}
+        ${dateText}${endText ? ` → ${endText}` : ''}
       </div>
 
       <div class="task-meta">
@@ -513,6 +752,17 @@ function cardHTML(t) {
       </div>
     </div>
   `;
+}
+
+
+async function refreshFromServer() {
+  const list = await api(`/tasks/${userId}`, { method: "GET" });
+  tasks = Array.isArray(list) ? list : [];
+
+  const done = await api(`/tasks/completed/today/${userId}`, { method: "GET" });
+  completedTodaySet = new Set((done?.completedToday || []).map(Number));
+
+  applyFilter();
 }
 
 function updateProgress() {
@@ -574,5 +824,47 @@ function renderTodayDate() {
     day: '2-digit',
     month: 'short',
     year: 'numeric',
+  });
+}
+
+function confirmDialog({ title = "Are you sure?", message = "This action cannot be undone." }) {
+  const overlay = document.getElementById("confirm-modal-overlay");
+  const titleEl = document.getElementById("confirm-title");
+  const msgEl = document.getElementById("confirm-message");
+  const cancelBtn = document.getElementById("confirm-cancel-btn");
+  const okBtn = document.getElementById("confirm-ok-btn");
+
+  if (!overlay || !titleEl || !msgEl || !cancelBtn || !okBtn) {
+    // fallback if modal missing
+    return Promise.resolve(window.confirm(`${title}\n\n${message}`));
+  }
+
+  titleEl.textContent = title;
+  msgEl.textContent = message;
+
+  overlay.style.display = "flex";
+
+  return new Promise((resolve) => {
+    const cleanup = () => {
+      overlay.style.display = "none";
+      cancelBtn.removeEventListener("click", onCancel);
+      okBtn.removeEventListener("click", onOk);
+      overlay.removeEventListener("click", onOverlay);
+      document.removeEventListener("keydown", onEsc);
+    };
+
+    const onCancel = () => { cleanup(); resolve(false); };
+    const onOk = () => { cleanup(); resolve(true); };
+    const onOverlay = (e) => {
+      if (e.target === overlay) { cleanup(); resolve(false); }
+    };
+    const onEsc = (e) => {
+      if (e.key === "Escape") { cleanup(); resolve(false); }
+    };
+
+    cancelBtn.addEventListener("click", onCancel);
+    okBtn.addEventListener("click", onOk);
+    overlay.addEventListener("click", onOverlay);
+    document.addEventListener("keydown", onEsc);
   });
 }

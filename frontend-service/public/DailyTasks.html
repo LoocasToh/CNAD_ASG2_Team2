@@ -14,20 +14,17 @@
   <body>
     <!-- Top Navbar -->
     <div class="header-bar" id="header-bar">
-      <div class="logo">
-        <i class="fas fa-heartbeat"></i>
-        <span>Care Companion</span>
+     <div class="logo">
+        <i class="fas fa-hands-helping"></i>
+        <span>MyBuddy</span>
       </div>
 
-      <p class="home">
-        <a href="Index.html"><i class="fas fa-home"></i> Home</a>
-      </p>
-      <p class="caregiving active-nav">
-        <a href="DailyTasks.html"><i class="fas fa-tasks"></i> Daily Tasks</a>
-      </p>
-      <p class="emergencies">
-        <a href="Emergencies.html"><i class="fas fa-first-aid"></i> Emergencies</a>
-      </p>
+    <div class="nav-links">
+        <a href="index.html">Home</a>
+        <a href="DailyTasks.html" class="active">Daily Tasks</a>
+        <a href="Emergencies.html">Quick Help</a>
+        <a href="profile.html">My Profile</a>
+      </div>
 
       <!-- User Profile/Login -->
       <div class="user-section" id="auth-area">
@@ -38,14 +35,11 @@
         </div>
 
         <div class="user-dropdown">
-          <a href="#" id="profile-link">
+          <a href="profile.html" id="profile-link">
             <i class="fas fa-user-cog"></i>
             <span>Profile</span>
           </a>
-          <a href="#" id="help-link">
-            <i class="fas fa-question-circle"></i>
-            <span>Help</span>
-          </a>
+      
           <a href="#" id="logout-link">
             <i class="fas fa-sign-out-alt"></i>
             <span>Logout</span>
@@ -93,6 +87,12 @@
               <span>Pending</span>
             </a>
           </li>
+          <!-- <li>
+            <a href="#" id="history-link">
+              <i class="fas fa-history"></i>
+              <span>History</span>
+            </a>
+          </li> -->
         </ul>
       </aside>
 
@@ -239,8 +239,14 @@
 
                 <div class="form-row">
                   <div class="form-group half">
-                    <label for="task-date"><i class="fas fa-calendar-day"></i> Date</label>
+                    <label for="task-date"><i class="fas fa-calendar-day"></i> Start Date</label>
                     <input type="date" id="task-date">
+                  </div>
+                
+
+                  <div class="form-group half">
+                    <label for="task-end-date"><i class="fas fa-calendar-check"></i> End Date</label>
+                    <input type="date" id="task-end-date">
                   </div>
                 </div>
 
