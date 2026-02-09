@@ -9,7 +9,7 @@ const app = express();
 app.use(cors({
   // Your frontend is exposed at http://localhost (port 80) by docker
   origin: ['http://localhost', 'http://localhost:80'],
-  methods: ['GET', 'POST', 'PUT', 'DELETE', 'OPTIONS'],
+  methods: ['GET', 'POST', 'PUT', 'DELETE', 'PATCH', 'OPTIONS'],
   allowedHeaders: ['Content-Type', 'Authorization'],
 }));
 
