@@ -7,15 +7,13 @@ const {
   updateTask,
   deleteTask,
   findTaskById,
-  logCompletion,
+  logCompletionOncePerDay,
   getLogsByUser,
   getCompletedTaskIdsToday,
   getHistory,
 } = require("../models/taskModel");
 
-// ✅ NOT async
 function todaySG() {
-  // YYYY-MM-DD in Singapore time
   return new Date().toLocaleDateString("en-CA", { timeZone: "Asia/Singapore" });
 }
 
@@ -49,8 +47,7 @@ async function create(req, res) {
       isDaily: Number(isDaily) ? 1 : 0,
     });
 
-    // createTask should return something like { id: insertId, ... }
-    return res.json({ ok: true, id: task.id });
+    return res.json(task);
   } catch (err) {
     console.error("create task error:", err);
     return res.status(500).json({ error: "server error" });
@@ -75,9 +72,7 @@ async function today(req, res) {
     const userId = Number(req.params.userId);
     if (!userId) return res.status(400).json({ error: "userId required" });
 
-    // allow ?date=YYYY-MM-DD override, otherwise Singapore "today"
     const dateStr = req.query.date || todaySG();
-
     const tasks = await getTodayTasks(userId, dateStr);
     return res.json(tasks);
   } catch (err) {
@@ -122,16 +117,25 @@ async function complete(req, res) {
     const task = await findTaskById(taskId);
     if (!task) return res.status(404).json({ error: "task not found" });
 
-    const userId = task.userId; // (or use req.user.userId if you do JWT middleware)
+    const userId = task.userId;
     const method = req.body?.method || "manual";
 
-    const log = await logCompletion({ taskId, userId, method });
-    return res.json({ ok: true, log });
+    // ✅ use selected date if provided
+    const dateStr = req.query.date || todaySG();
+
+    const log = await logCompletionOncePerDay({ taskId, userId, method, dateStr });
+
+    if (log?.alreadyCompletedToday) {
+      return res.json({ ok: true, alreadyCompletedToday: true, date: dateStr });
+    }
+
+    return res.json({ ok: true, log, date: dateStr });
   } catch (err) {
     console.error("complete task error:", err);
     return res.status(500).json({ error: "server error" });
   }
 }
+
 
 async function logs(req, res) {
   try {
@@ -153,7 +157,7 @@ async function completedToday(req, res) {
 
     const dateStr = req.query.date || todaySG();
     const ids = await getCompletedTaskIdsToday(userId, dateStr);
-    return res.json({ completedToday: ids });
+    return res.json({ completedToday: ids, date: dateStr });
   } catch (err) {
     console.error("completedToday error:", err);
     return res.status(500).json({ error: "server error" });
@@ -165,7 +169,7 @@ async function history(req, res) {
     const userId = Number(req.params.userId);
     if (!userId) return res.status(400).json({ error: "userId required" });
 
-    const date = req.query.date || null; // YYYY-MM-DD or null for all
+    const date = req.query.date || null;
     const rows = await getHistory(userId, date);
     return res.json({ logs: rows });
   } catch (err) {

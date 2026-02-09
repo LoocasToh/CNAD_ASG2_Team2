@@ -5,7 +5,7 @@ document.addEventListener("DOMContentLoaded", () => {
   // CONFIG
   // =======================
   const API_BASE = window.API_BASE_URL || "http://localhost:8081"; // task-service
-  const TOKEN_KEY = "careCompanionToken"; // keep consistent with your auth.js
+  const TOKEN_KEY = "careCompanionToken";
 
   function getToken() {
     return localStorage.getItem(TOKEN_KEY) || "";
@@ -43,14 +43,12 @@ document.addEventListener("DOMContentLoaded", () => {
     return String(n).padStart(2, "0");
   }
 
-  // local yyyy-mm-dd (NOT UTC)
   function localYMD(d = new Date()) {
     const dt = d instanceof Date ? d : new Date(d);
     if (Number.isNaN(dt.getTime())) return null;
     return `${dt.getFullYear()}-${pad2(dt.getMonth() + 1)}-${pad2(dt.getDate())}`;
   }
 
-  // Normalize DB task_date into yyyy-mm-dd
   function toYMD(task_date) {
     if (typeof task_date === "string" && /^\d{4}-\d{2}-\d{2}$/.test(task_date)) return task_date;
     const dt = new Date(task_date);
@@ -64,7 +62,6 @@ document.addEventListener("DOMContentLoaded", () => {
   let currentYear = 2026;
   let currentMonth = 1; // Feb (0-based)
 
-  // Replace with REAL PWID user IDs later
   const pwids = {
     alex: { userId: 2, name: "Alex", phone: "91234567" },
     jamie: { userId: 3, name: "Jamie", phone: "98765432" },
@@ -97,10 +94,9 @@ document.addEventListener("DOMContentLoaded", () => {
   const monthSelect = document.getElementById("monthSelect");
   const yearSelect = document.getElementById("yearSelect");
 
-  // Chart DOM
   const chartHint = document.getElementById("chartHint");
   const completionChartCanvas = document.getElementById("completionChart");
-  let completionChart = null; // Chart.js instance
+  let completionChart = null;
 
   callPWIDBtn.disabled = true;
 
@@ -111,8 +107,15 @@ document.addEventListener("DOMContentLoaded", () => {
     populatePWIDs();
     populateMonthYear();
     renderCalendar();
-    updateProgress(); // empty state
-    renderCompletionChart([]); // empty chart
+
+    // ✅ At start, no PWID/date selected
+    setProgressHint();
+    renderCompletionChart([]);
+  }
+
+  function setProgressHint() {
+    progressBar.style.width = "0%";
+    progressText.textContent = "Select a PWID and date to view progress";
   }
 
   function populatePWIDs() {
@@ -154,13 +157,13 @@ document.addEventListener("DOMContentLoaded", () => {
   monthSelect.addEventListener("change", async () => {
     currentMonth = parseInt(monthSelect.value, 10);
     renderCalendar();
-    await refreshChart(); // ✅ update chart when month changes
+    await refreshChart();
   });
 
   yearSelect.addEventListener("change", async () => {
     currentYear = parseInt(yearSelect.value, 10);
     renderCalendar();
-    await refreshChart(); // ✅ update chart when year changes
+    await refreshChart();
   });
 
   pwidSelect.addEventListener("change", async () => {
@@ -177,7 +180,7 @@ document.addEventListener("DOMContentLoaded", () => {
       allTasks = [];
       tasksByDate = new Map();
       renderCalendar();
-      updateProgress();
+      setProgressHint();
       renderCompletionChart([]);
       chartHint.textContent = "Select a PWID to view completion rate for the selected month.";
       return;
@@ -188,8 +191,12 @@ document.addEventListener("DOMContentLoaded", () => {
     try {
       await loadPWIDTasks();
       renderCalendar();
-      updateProgress();
-      await refreshChart(); // ✅ load chart data
+
+      // ✅ PWID selected but no date yet
+      progressBar.style.width = "0%";
+      progressText.textContent = "Select a date to view progress";
+
+      await refreshChart();
     } catch (err) {
       console.error(err);
       alert(err.message || "Failed to load tasks for PWID");
@@ -218,7 +225,7 @@ document.addEventListener("DOMContentLoaded", () => {
       await loadPWIDTasks();
       renderCalendar();
       renderTasks();
-      updateProgress();
+      await updateProgress();   // ✅ refresh progress for selectedDate
       await refreshChart();
     } catch (err) {
       console.error(err);
@@ -230,7 +237,6 @@ document.addEventListener("DOMContentLoaded", () => {
     if (!selectedPWIDKey) return;
     const phone = pwids[selectedPWIDKey].phone;
     console.log("Call PWID:", phone);
-    // window.location.href = `tel:${phone}`;
   });
 
   // =======================
@@ -243,7 +249,6 @@ document.addEventListener("DOMContentLoaded", () => {
     allTasks = Array.isArray(list) ? list : [];
 
     tasksByDate = new Map();
-
     for (const t of allTasks) {
       const ymd = toYMD(t.task_date);
       const isDaily = Number(t.isDaily) === 1;
@@ -290,10 +295,11 @@ document.addEventListener("DOMContentLoaded", () => {
         cell.appendChild(dot);
       }
 
-      cell.addEventListener("click", () => {
+      cell.addEventListener("click", async () => {
         selectedDate = date;
         renderCalendar();
         renderTasks();
+        await updateProgress(); // ✅ only compute progress after date selected
       });
 
       if (date === selectedDate) cell.classList.add("active");
@@ -343,12 +349,10 @@ document.addEventListener("DOMContentLoaded", () => {
       btnWrap.style.display = "flex";
       btnWrap.style.gap = "8px";
 
-      // ✅ NEW: Complete button (creates task_logs row)
       const completeBtn = document.createElement("button");
       completeBtn.textContent = "Complete";
       completeBtn.addEventListener("click", () => completeTask(t.id));
 
-      // Delete button
       const delBtn = document.createElement("button");
       delBtn.textContent = "Delete";
       delBtn.addEventListener("click", () => deleteTask(t.id));
@@ -370,7 +374,7 @@ document.addEventListener("DOMContentLoaded", () => {
       await loadPWIDTasks();
       renderCalendar();
       renderTasks();
-      updateProgress();
+      await updateProgress();
       await refreshChart();
     } catch (err) {
       console.error(err);
@@ -378,44 +382,65 @@ document.addEventListener("DOMContentLoaded", () => {
     }
   }
 
-  // ✅ NEW: complete a task (log it)
-  async function completeTask(taskId) {
-    if (!selectedUserId || !taskId) return;
+async function completeTask(taskId) {
+  if (!selectedUserId || !taskId) return;
 
-    try {
-      await api(`/tasks/${taskId}/complete?userId=${encodeURIComponent(selectedUserId)}`, {
-        method: "POST",
-      });
-
-      // refresh progress + chart
-      updateProgress();
-      await refreshChart();
-
-      alert("Task marked as completed!");
-    } catch (err) {
-      console.error(err);
-      alert(err.message || "Failed to complete task");
-    }
+  if (!selectedDate) {
+    alert("Please select a date first.");
+    return;
   }
 
+  try {
+    const resp = await api(
+      `/tasks/${taskId}/complete?userId=${encodeURIComponent(selectedUserId)}&date=${encodeURIComponent(selectedDate)}`,
+      {
+        method: "POST",
+        body: JSON.stringify({ method: "manual" }),
+      }
+    );
+
+    await updateProgress();  // now updates for selectedDate
+    await refreshChart();    // now chart will show the correct day
+
+    if (resp?.alreadyCompletedToday) {
+      alert("Already completed for this date.");
+    } else {
+      alert("Task marked as completed!");
+    }
+  } catch (err) {
+    console.error(err);
+    alert(err.message || "Failed to complete task");
+  }
+}
+
   // =======================
-  // PROGRESS BAR (TODAY)
+  // ✅ PROGRESS (DATE-BASED)
   // =======================
   async function updateProgress() {
-    if (!selectedUserId) {
+    if (!selectedUserId || !selectedDate) {
       progressBar.style.width = "0%";
-      progressText.textContent = "0% completed";
+      progressText.textContent = "Select a date to view progress";
       return;
     }
 
     try {
-      const data = await api(`/analytics/progress/today?userId=${encodeURIComponent(selectedUserId)}`, {
-        method: "GET",
-      });
+      const data = await api(
+        `/analytics/progress/day?userId=${encodeURIComponent(selectedUserId)}&date=${encodeURIComponent(selectedDate)}`,
+        { method: "GET" }
+      );
 
+      const expected = Number(data?.expected ?? 0);
+      const completed = Number(data?.completed ?? 0);
       const percent = Number(data?.percent ?? 0);
+
+      if (expected === 0) {
+        progressBar.style.width = "0%";
+        progressText.textContent = "No tasks for this date";
+        return;
+      }
+
       progressBar.style.width = `${Math.max(0, Math.min(100, percent))}%`;
-      progressText.textContent = `${Math.round(percent)}% completed`;
+      progressText.textContent = `${completed}/${expected} completed (${Math.round(percent)}%)`;
     } catch (err) {
       console.warn("Progress analytics not available:", err.message);
       progressBar.style.width = "0%";
@@ -424,7 +449,7 @@ document.addEventListener("DOMContentLoaded", () => {
   }
 
   // =======================
-  // ✅ CHART (Monthly Completion Daily)
+  // CHART (Monthly Completion Daily)
   // =======================
   async function refreshChart() {
     if (!selectedUserId) {
@@ -451,11 +476,9 @@ document.addEventListener("DOMContentLoaded", () => {
   }
 
   function renderCompletionChart(rows) {
-    // rows: [{date, expected, completed, rate}, ...]
-    const labels = rows.map(r => r.date.slice(-2)); // day "01","02"...
-    const data = rows.map(r => Number(r.rate || 0));
+    const labels = rows.map((r) => r.date.slice(-2));
+    const data = rows.map((r) => Number(r.rate || 0));
 
-    // destroy old chart to avoid duplicates
     if (completionChart) {
       completionChart.destroy();
       completionChart = null;

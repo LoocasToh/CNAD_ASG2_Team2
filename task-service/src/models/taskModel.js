@@ -1,3 +1,5 @@
+// models/taskModel.js
+
 const mysql = require("mysql2/promise");
 
 const pool = mysql.createPool({
@@ -8,6 +10,10 @@ const pool = mysql.createPool({
   waitForConnections: true,
   connectionLimit: 10,
 });
+
+function n(v) {
+  return v === undefined ? null : v;
+}
 
 async function createTask({
   userId,
@@ -26,14 +32,14 @@ async function createTask({
      VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)`,
     [
       Number(userId),
-      title,
-      task_time || null,
-      category || null,
-      task_date || null,     // if null your DB default CURRENT_DATE will apply (if you set it)
-      end_date || null,
-      important ? 1 : 0,
-      description || null,
-      isDaily ? 1 : 0,
+      String(title),
+      n(task_time) || null,
+      n(category) || null,
+      n(task_date) || null,
+      n(end_date) || null,
+      Number(important) ? 1 : 0,
+      n(description) || null,
+      Number(isDaily) ? 1 : 0,
     ]
   );
 
@@ -42,11 +48,13 @@ async function createTask({
 }
 
 async function getTasksByUser(userId) {
-  const [rows] = await pool.execute(`SELECT * FROM tasks WHERE userId = ?`, [Number(userId)]);
+  const [rows] = await pool.execute(
+    `SELECT * FROM tasks WHERE userId = ?`,
+    [Number(userId)]
+  );
   return rows;
 }
 
-// ✅ dateStr is "YYYY-MM-DD" (Asia/Singapore from controller)
 async function getTodayTasks(userId, dateStr) {
   const [rows] = await pool.execute(
     `
@@ -54,13 +62,11 @@ async function getTodayTasks(userId, dateStr) {
     FROM tasks
     WHERE userId = ?
       AND (
-        -- daily tasks: show every day from task_date until end_date (if any)
         (isDaily = 1
           AND (task_date IS NULL OR task_date <= ?)
           AND (end_date IS NULL OR end_date >= ?)
         )
         OR
-        -- one-off tasks: show only on that date
         (isDaily = 0 AND task_date = ?)
       )
     ORDER BY task_time IS NULL, task_time
@@ -71,24 +77,35 @@ async function getTodayTasks(userId, dateStr) {
 }
 
 async function findTaskById(taskId) {
-  const [rows] = await pool.execute(`SELECT * FROM tasks WHERE id = ?`, [Number(taskId)]);
+  const [rows] = await pool.execute(
+    `SELECT * FROM tasks WHERE id = ?`,
+    [Number(taskId)]
+  );
   return rows[0];
 }
 
 async function updateTask(taskId, fields) {
-  const allowed = ["title", "task_time", "category", "task_date", "end_date", "important", "description", "isDaily"];
+  const allowed = [
+    "title",
+    "task_time",
+    "category",
+    "task_date",
+    "end_date",
+    "important",
+    "description",
+    "isDaily",
+  ];
   const sets = [];
   const vals = [];
 
   for (const key of allowed) {
     if (fields[key] !== undefined) {
-      // normalize boolean-ish fields
       if (key === "important" || key === "isDaily") {
         sets.push(`${key} = ?`);
         vals.push(fields[key] ? 1 : 0);
       } else {
         sets.push(`${key} = ?`);
-        vals.push(fields[key]);
+        vals.push(fields[key] === "" ? null : fields[key]);
       }
     }
   }
@@ -105,15 +122,43 @@ async function deleteTask(taskId) {
   return true;
 }
 
-async function logCompletion({ taskId, userId, method = "manual" }) {
+// models/taskModel.js
+
+// ✅ prevent duplicate completion per task per date
+async function logCompletionOncePerDay({ taskId, userId, method = "manual", dateStr }) {
+  // 1) check if already completed on that date
+  const [exists] = await pool.execute(
+    `
+    SELECT 1
+    FROM task_logs
+    WHERE userId = ?
+      AND taskId = ?
+      AND DATE(completed_at) = ?
+    LIMIT 1
+    `,
+    [Number(userId), Number(taskId), dateStr]
+  );
+
+  if (exists.length > 0) {
+    return { alreadyCompletedToday: true };
+  }
+
+  // 2) ✅ insert completion with completed_at forced to the selected date
+  // Use noon time to avoid timezone date shifting issues with TIMESTAMP columns.
+  const forcedCompletedAt = `${dateStr} 12:00:00`;
+
   const [result] = await pool.execute(
-    `INSERT INTO task_logs (taskId, userId, method) VALUES (?, ?, ?)`,
-    [Number(taskId), Number(userId), method]
+    `
+    INSERT INTO task_logs (taskId, userId, method, completed_at)
+    VALUES (?, ?, ?, ?)
+    `,
+    [Number(taskId), Number(userId), method, forcedCompletedAt]
   );
 
   const [rows] = await pool.execute(`SELECT * FROM task_logs WHERE id = ?`, [result.insertId]);
   return rows[0];
 }
+
 
 async function getLogsByUser(userId) {
   const [rows] = await pool.execute(
@@ -175,7 +220,7 @@ module.exports = {
   findTaskById,
   updateTask,
   deleteTask,
-  logCompletion,
+  logCompletionOncePerDay,
   getLogsByUser,
   getCompletedTaskIdsToday,
   getHistory,
