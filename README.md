@@ -44,18 +44,20 @@ The system follows a **microservices architecture** consisting of the following 
 
 All services are containerized using Docker and orchestrated locally via Docker Compose.
 
+```text
 ┌──────────────┐
-│ Frontend │
-│ Service │
+│  Frontend    │
+│  Service     │
 └──────┬───────┘
-│ HTTP / API
+       │ HTTP / API
 ┌──────▼───────┐
-│ Auth Service │
+│  Auth Service│
 └──────┬───────┘
-│
+       │
 ┌──────▼───────┐
-│ Task Service │
+│  Task Service│
 └──────────────┘
+
 
 ---
 
@@ -133,11 +135,13 @@ All services are containerized using Docker and orchestrated locally via Docker 
 
 ## 🗂️ Git Repository Organization
 
+```markdown
+```text
 CNAD_ASG2_Team2/
 ├── auth-service/
 ├── frontend-service/
-├── infra/sql
 ├── task-service/
+├── infra/
 ├── docker-compose.yml
 ├── .gitignore
 └── README.md
