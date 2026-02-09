@@ -57,8 +57,7 @@ All services are containerized using Docker and orchestrated locally via Docker 
 ┌──────▼───────┐
 │  Task Service│
 └──────────────┘
-
-
+```
 ---
 
 ## 🧩 Service Breakdown
@@ -146,7 +145,7 @@ CNAD_ASG2_Team2/
 ├── .gitignore
 └── README.md
 
-
+```
 **Design Principles**
 - Each service is self-contained  
 - Clear and predictable folder structure  
