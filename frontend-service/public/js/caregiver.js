@@ -5,6 +5,7 @@ document.addEventListener("DOMContentLoaded", () => {
   // CONFIG
   // =======================
   const API_BASE = window.API_BASE_URL || "http://localhost:8081"; // task-service
+  const AUTH_BASE = window.AUTH_BASE_URL || "http://localhost:8080/auth"; // auth-service
   const TOKEN_KEY = "careCompanionToken";
 
   function getToken() {
@@ -20,6 +21,32 @@ document.addEventListener("DOMContentLoaded", () => {
     if (token) headers.Authorization = `Bearer ${token}`;
 
     const res = await fetch(`${API_BASE}${path}`, { ...options, headers });
+    const text = await res.text();
+
+    let data;
+    try {
+      data = text ? JSON.parse(text) : null;
+    } catch {
+      data = text;
+    }
+
+    if (!res.ok) {
+      const msg = data?.error || data?.message || `Request failed (${res.status})`;
+      throw new Error(msg);
+    }
+    return data;
+  }
+
+  // ✅ NEW: call auth-service endpoints (PWID list)
+  async function authApi(path, options = {}) {
+    const token = getToken();
+    const headers = {
+      "Content-Type": "application/json",
+      ...(options.headers || {}),
+    };
+    if (token) headers.Authorization = `Bearer ${token}`;
+
+    const res = await fetch(`${AUTH_BASE}${path}`, { ...options, headers });
     const text = await res.text();
 
     let data;
@@ -62,12 +89,10 @@ document.addEventListener("DOMContentLoaded", () => {
   let currentYear = 2026;
   let currentMonth = 1; // Feb (0-based)
 
-  const pwids = {
-    alex: { userId: 2, name: "Alex", phone: "91234567" },
-    jamie: { userId: 3, name: "Jamie", phone: "98765432" },
-  };
+  // ✅ NEW: dynamic list from backend
+  // pwids = [{ id, name, email, userType }]
+  let pwids = [];
 
-  let selectedPWIDKey = null;
   let selectedUserId = null;
   let selectedDate = null;
 
@@ -75,8 +100,8 @@ document.addEventListener("DOMContentLoaded", () => {
   let tasksByDate = new Map();
 
   const months = [
-    "January","February","March","April","May","June",
-    "July","August","September","October","November","December"
+    "January", "February", "March", "April", "May", "June",
+    "July", "August", "September", "October", "November", "December"
   ];
 
   // =======================
@@ -103,12 +128,19 @@ document.addEventListener("DOMContentLoaded", () => {
   // =======================
   // INIT
   // =======================
-  function init() {
-    populatePWIDs();
+  async function init() {
+    try {
+      await loadPWIDsFromBackend();
+      populatePWIDs();
+    } catch (e) {
+      console.warn("Failed to load PWIDs:", e.message);
+      // still allow rest of page to work even if dropdown fails
+    }
+
     populateMonthYear();
     renderCalendar();
 
-    // ✅ At start, no PWID/date selected
+    // At start, no PWID/date selected
     setProgressHint();
     renderCompletionChart([]);
   }
@@ -118,13 +150,21 @@ document.addEventListener("DOMContentLoaded", () => {
     progressText.textContent = "Select a PWID and date to view progress";
   }
 
+  // ✅ NEW: fetch pwids from backend
+  async function loadPWIDsFromBackend() {
+    // This endpoint is caregiver-only
+    const rows = await authApi(`/pwids?userType=user`, { method: "GET" });
+    pwids = Array.isArray(rows) ? rows : [];
+  }
+
+  // ✅ UPDATED: dropdown population from pwids array
   function populatePWIDs() {
     while (pwidSelect.options.length > 1) pwidSelect.remove(1);
 
-    Object.keys(pwids).forEach((key) => {
+    pwids.forEach((u) => {
       const opt = document.createElement("option");
-      opt.value = key;
-      opt.textContent = `${pwids[key].name} (ID: ${pwids[key].userId})`;
+      opt.value = String(u.id); // IMPORTANT: store numeric id as value
+      opt.textContent = `${u.name} (ID: ${u.id})`;
       pwidSelect.appendChild(opt);
     });
   }
@@ -166,17 +206,19 @@ document.addEventListener("DOMContentLoaded", () => {
     await refreshChart();
   });
 
+  // ✅ UPDATED: PWID selection is now numeric userId
   pwidSelect.addEventListener("change", async () => {
-    selectedPWIDKey = pwidSelect.value || null;
     selectedDate = null;
 
-    callPWIDBtn.disabled = !selectedPWIDKey;
+    const selectedId = pwidSelect.value ? Number(pwidSelect.value) : null;
+    selectedUserId = selectedId;
+
+    callPWIDBtn.disabled = !selectedUserId;
 
     taskList.innerHTML = "";
     taskDateTitle.textContent = "Tasks";
 
-    if (!selectedPWIDKey) {
-      selectedUserId = null;
+    if (!selectedUserId) {
       allTasks = [];
       tasksByDate = new Map();
       renderCalendar();
@@ -186,13 +228,11 @@ document.addEventListener("DOMContentLoaded", () => {
       return;
     }
 
-    selectedUserId = Number(pwids[selectedPWIDKey].userId);
-
     try {
       await loadPWIDTasks();
       renderCalendar();
 
-      // ✅ PWID selected but no date yet
+      // PWID selected but no date yet
       progressBar.style.width = "0%";
       progressText.textContent = "Select a date to view progress";
 
@@ -225,7 +265,7 @@ document.addEventListener("DOMContentLoaded", () => {
       await loadPWIDTasks();
       renderCalendar();
       renderTasks();
-      await updateProgress();   // ✅ refresh progress for selectedDate
+      await updateProgress();
       await refreshChart();
     } catch (err) {
       console.error(err);
@@ -233,10 +273,11 @@ document.addEventListener("DOMContentLoaded", () => {
     }
   });
 
+  // ✅ If you want phone calling later, you need phone in DB. For now just log the selected user.
   callPWIDBtn.addEventListener("click", () => {
-    if (!selectedPWIDKey) return;
-    const phone = pwids[selectedPWIDKey].phone;
-    console.log("Call PWID:", phone);
+    if (!selectedUserId) return;
+    const u = pwids.find((x) => Number(x.id) === Number(selectedUserId));
+    console.log("Selected PWID:", u || { id: selectedUserId });
   });
 
   // =======================
@@ -299,7 +340,7 @@ document.addEventListener("DOMContentLoaded", () => {
         selectedDate = date;
         renderCalendar();
         renderTasks();
-        await updateProgress(); // ✅ only compute progress after date selected
+        await updateProgress();
       });
 
       if (date === selectedDate) cell.classList.add("active");
@@ -315,7 +356,9 @@ document.addEventListener("DOMContentLoaded", () => {
     if (!selectedUserId || !selectedDate) return [];
 
     const daily = allTasks.filter((t) => Number(t.isDaily) === 1);
-    const dated = allTasks.filter((t) => toYMD(t.task_date) === selectedDate && Number(t.isDaily) !== 1);
+    const dated = allTasks.filter(
+      (t) => toYMD(t.task_date) === selectedDate && Number(t.isDaily) !== 1
+    );
 
     return [...daily, ...dated];
   }
@@ -370,7 +413,9 @@ document.addEventListener("DOMContentLoaded", () => {
     if (!selectedUserId || !taskId) return;
 
     try {
-      await api(`/tasks/${taskId}?userId=${encodeURIComponent(selectedUserId)}`, { method: "DELETE" });
+      await api(`/tasks/${taskId}?userId=${encodeURIComponent(selectedUserId)}`, {
+        method: "DELETE",
+      });
       await loadPWIDTasks();
       renderCalendar();
       renderTasks();
@@ -382,39 +427,41 @@ document.addEventListener("DOMContentLoaded", () => {
     }
   }
 
-async function completeTask(taskId) {
-  if (!selectedUserId || !taskId) return;
+  async function completeTask(taskId) {
+    if (!selectedUserId || !taskId) return;
 
-  if (!selectedDate) {
-    alert("Please select a date first.");
-    return;
-  }
-
-  try {
-    const resp = await api(
-      `/tasks/${taskId}/complete?userId=${encodeURIComponent(selectedUserId)}&date=${encodeURIComponent(selectedDate)}`,
-      {
-        method: "POST",
-        body: JSON.stringify({ method: "manual" }),
-      }
-    );
-
-    await updateProgress();  // now updates for selectedDate
-    await refreshChart();    // now chart will show the correct day
-
-    if (resp?.alreadyCompletedToday) {
-      alert("Already completed for this date.");
-    } else {
-      alert("Task marked as completed!");
+    if (!selectedDate) {
+      alert("Please select a date first.");
+      return;
     }
-  } catch (err) {
-    console.error(err);
-    alert(err.message || "Failed to complete task");
+
+    try {
+      const resp = await api(
+        `/tasks/${taskId}/complete?userId=${encodeURIComponent(
+          selectedUserId
+        )}&date=${encodeURIComponent(selectedDate)}`,
+        {
+          method: "POST",
+          body: JSON.stringify({ method: "manual" }),
+        }
+      );
+
+      await updateProgress();
+      await refreshChart();
+
+      if (resp?.alreadyCompletedToday) {
+        alert("Already completed for this date.");
+      } else {
+        alert("Task marked as completed!");
+      }
+    } catch (err) {
+      console.error(err);
+      alert(err.message || "Failed to complete task");
+    }
   }
-}
 
   // =======================
-  // ✅ PROGRESS (DATE-BASED)
+  // PROGRESS (DATE-BASED)
   // =======================
   async function updateProgress() {
     if (!selectedUserId || !selectedDate) {
@@ -425,7 +472,9 @@ async function completeTask(taskId) {
 
     try {
       const data = await api(
-        `/analytics/progress/day?userId=${encodeURIComponent(selectedUserId)}&date=${encodeURIComponent(selectedDate)}`,
+        `/analytics/progress/day?userId=${encodeURIComponent(
+          selectedUserId
+        )}&date=${encodeURIComponent(selectedDate)}`,
         { method: "GET" }
       );
 
@@ -460,11 +509,16 @@ async function completeTask(taskId) {
     const year = currentYear;
     const month1to12 = currentMonth + 1;
 
-    chartHint.textContent = `Showing daily completion rate for ${pwids[selectedPWIDKey].name} (${year}-${pad2(month1to12)})`;
+    const selectedUser = pwids.find((u) => Number(u.id) === Number(selectedUserId));
+    const who = selectedUser ? selectedUser.name : `User ${selectedUserId}`;
+
+    chartHint.textContent = `Showing daily completion rate for ${who} (${year}-${pad2(month1to12)})`;
 
     try {
       const rows = await api(
-        `/analytics/completion/daily?userId=${encodeURIComponent(selectedUserId)}&year=${encodeURIComponent(year)}&month=${encodeURIComponent(month1to12)}`,
+        `/analytics/completion/daily?userId=${encodeURIComponent(
+          selectedUserId
+        )}&year=${encodeURIComponent(year)}&month=${encodeURIComponent(month1to12)}`,
         { method: "GET" }
       );
 

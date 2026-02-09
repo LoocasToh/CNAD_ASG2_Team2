@@ -475,6 +475,21 @@ body {
   border-color: rgba(245, 101, 101, 0.3);
 }
 
+.task-badge {
+  display: inline-block;
+  padding: 2px 8px;
+  border-radius: 999px;
+  font-size: 12px;
+  font-weight: 600;
+  margin-left: 8px;
+}
+
+.task-badge-daily {
+  background: rgba(90, 108, 255, 0.15);
+  color: #5a6cff;
+}
+
+
 /* =========================
    TASK CARDS CONTAINER - Glass Morphism
    ========================= */

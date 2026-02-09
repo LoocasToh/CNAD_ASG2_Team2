@@ -11,14 +11,14 @@
     <!-- Top Navbar -->
    <header class="header-bar">
     <div class="logo">
-        <i class="fas fa-heartbeat"></i>
-        <span>Care Companion</span>
+         <i class="fas fa-hands-helping"></i>
+        <span>MyBuddy</span>
       </div>
 
     <div class="nav-links">
         <a href="index.html">Home</a>
         <a href="DailyTasks.html">Daily Tasks</a>
-        <a href="Emergencies.html">Emergencies</a>
+        <a href="Emergencies.html">Quick Help</a>
         <a href="profile.html">My Profile</a>
     </div>
 
@@ -247,21 +247,7 @@
             </div>
           </form>
         </div>
-        <!-- Accessibility Options -->
-        <div class="accessibility-options">
-          <button class="accessibility-btn" id="text-size-btn">
-            <i class="fas fa-text-height"></i>
-            <span>Adjust Text Size</span>
-          </button>
-          <button class="accessibility-btn" id="high-contrast-btn">
-            <i class="fas fa-adjust"></i>
-            <span>High Contrast</span>
-          </button>
-          <button class="accessibility-btn" id="read-aloud-btn">
-            <i class="fas fa-volume-up"></i>
-            <span>Read Aloud</span>
-          </button>
-        </div>
+       
       </div>
     </main>
 
@@ -273,36 +259,7 @@
       </div>
     </div>
 
-    <!-- Voice Guidance Modal -->
-    <div class="voice-modal" id="voice-modal">
-      <div class="voice-modal-content">
-        <div class="voice-modal-header">
-          <h3><i class="fas fa-assistive-listening-systems"></i> Voice Guidance</h3>
-          <button class="close-voice-modal" id="close-voice-modal">
-            <i class="fas fa-times"></i>
-          </button>
-        </div>
-        <div class="voice-modal-body">
-          <p>Voice guidance will read the page content aloud. This can help with navigation and form filling.</p>
-          <div class="voice-controls">
-            <button class="voice-control-btn" id="play-voice">
-              <i class="fas fa-play"></i> Start
-            </button>
-            <button class="voice-control-btn" id="pause-voice">
-              <i class="fas fa-pause"></i> Pause
-            </button>
-            <button class="voice-control-btn" id="stop-voice">
-              <i class="fas fa-stop"></i> Stop
-            </button>
-          </div>
-          <div class="voice-speed">
-            <label for="voice-speed">Speed:</label>
-            <input type="range" id="voice-speed" min="0.5" max="2" step="0.1" value="1">
-            <span id="speed-value">Normal</span>
-          </div>
-        </div>
-      </div>
-    </div>
+    
 
     <script src="../js/signup.js"></script>
     <script src="../js/auth.js"></script>
