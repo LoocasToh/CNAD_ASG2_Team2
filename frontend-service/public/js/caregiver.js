@@ -2,6 +2,85 @@ document.addEventListener("DOMContentLoaded", () => {
   console.log("Caregiver dashboard loaded (backend mode)");
 
   // =======================
+  // HEADER AUTH UI (NEW)
+  // =======================
+  const headerUserName = document.getElementById("headerUserName");
+  const loginLink = document.getElementById("login-link");
+  const logoutLink = document.getElementById("logout-link");
+
+  function applyHeaderAuthUI() {
+    const token =
+      (window.auth && window.auth.getToken && window.auth.getToken()) ||
+      localStorage.getItem("careCompanionToken") ||
+      "";
+
+    const user =
+      (window.auth && window.auth.getUser && window.auth.getUser()) ||
+      (() => {
+        try { return JSON.parse(localStorage.getItem("careCompanionUser")); }
+        catch { return null; }
+      })();
+
+    // if logged in
+    if (token && user && user.name) {
+      if (headerUserName) headerUserName.textContent = user.name;
+
+      if (loginLink) loginLink.style.display = "none";
+      if (logoutLink) logoutLink.style.display = "flex";
+    } else {
+      if (headerUserName) headerUserName.textContent = "Guest";
+
+      if (loginLink) loginLink.style.display = "flex";
+      if (logoutLink) logoutLink.style.display = "none";
+    }
+  }
+
+  // Optional: protect caregiver page
+  function requireLoginOrRedirect() {
+    const token =
+      (window.auth && window.auth.getToken && window.auth.getToken()) ||
+      localStorage.getItem("careCompanionToken") ||
+      "";
+
+    const user =
+      (window.auth && window.auth.getUser && window.auth.getUser()) ||
+      (() => {
+        try { return JSON.parse(localStorage.getItem("careCompanionUser")); }
+        catch { return null; }
+      })();
+
+    if (!token || !user) {
+      window.location.href = "LoginScreen.html";
+      return false;
+    }
+    return true;
+  }
+
+  // Hook logout click
+  if (logoutLink) {
+    logoutLink.addEventListener("click", (e) => {
+      e.preventDefault();
+      if (window.handleLogout) {
+        window.handleLogout(e);
+      } else if (window.auth && window.auth.clearAuth) {
+        window.auth.clearAuth();
+        window.location.href = "LoginScreen.html";
+      } else {
+        // fallback
+        localStorage.removeItem("careCompanionToken");
+        localStorage.removeItem("careCompanionUser");
+        window.location.href = "LoginScreen.html";
+      }
+    });
+  }
+
+  // Run once on load
+  applyHeaderAuthUI();
+
+  // Stop here if not logged in (recommended)
+  if (!requireLoginOrRedirect()) return;
+
+  // =======================
   // CONFIG
   // =======================
   const API_BASE = window.API_BASE_URL || "http://localhost:8081"; // task-service
@@ -9,6 +88,8 @@ document.addEventListener("DOMContentLoaded", () => {
   const TOKEN_KEY = "careCompanionToken";
 
   function getToken() {
+    // Prefer auth-shared if present
+    if (window.auth && window.auth.getToken) return window.auth.getToken();
     return localStorage.getItem(TOKEN_KEY) || "";
   }
 
@@ -37,7 +118,6 @@ document.addEventListener("DOMContentLoaded", () => {
     return data;
   }
 
-  // ✅ NEW: call auth-service endpoints (PWID list)
   async function authApi(path, options = {}) {
     const token = getToken();
     const headers = {
@@ -89,10 +169,7 @@ document.addEventListener("DOMContentLoaded", () => {
   let currentYear = 2026;
   let currentMonth = 1; // Feb (0-based)
 
-  // ✅ NEW: dynamic list from backend
-  // pwids = [{ id, name, email, userType }]
   let pwids = [];
-
   let selectedUserId = null;
   let selectedDate = null;
 
@@ -134,13 +211,11 @@ document.addEventListener("DOMContentLoaded", () => {
       populatePWIDs();
     } catch (e) {
       console.warn("Failed to load PWIDs:", e.message);
-      // still allow rest of page to work even if dropdown fails
     }
 
     populateMonthYear();
     renderCalendar();
 
-    // At start, no PWID/date selected
     setProgressHint();
     renderCompletionChart([]);
   }
@@ -150,20 +225,17 @@ document.addEventListener("DOMContentLoaded", () => {
     progressText.textContent = "Select a PWID and date to view progress";
   }
 
-  // ✅ NEW: fetch pwids from backend
   async function loadPWIDsFromBackend() {
-    // This endpoint is caregiver-only
     const rows = await authApi(`/pwids?userType=user`, { method: "GET" });
     pwids = Array.isArray(rows) ? rows : [];
   }
 
-  // ✅ UPDATED: dropdown population from pwids array
   function populatePWIDs() {
     while (pwidSelect.options.length > 1) pwidSelect.remove(1);
 
     pwids.forEach((u) => {
       const opt = document.createElement("option");
-      opt.value = String(u.id); // IMPORTANT: store numeric id as value
+      opt.value = String(u.id);
       opt.textContent = `${u.name} (ID: ${u.id})`;
       pwidSelect.appendChild(opt);
     });
@@ -206,7 +278,6 @@ document.addEventListener("DOMContentLoaded", () => {
     await refreshChart();
   });
 
-  // ✅ UPDATED: PWID selection is now numeric userId
   pwidSelect.addEventListener("change", async () => {
     selectedDate = null;
 
@@ -232,7 +303,6 @@ document.addEventListener("DOMContentLoaded", () => {
       await loadPWIDTasks();
       renderCalendar();
 
-      // PWID selected but no date yet
       progressBar.style.width = "0%";
       progressText.textContent = "Select a date to view progress";
 
@@ -273,7 +343,6 @@ document.addEventListener("DOMContentLoaded", () => {
     }
   });
 
-  // ✅ If you want phone calling later, you need phone in DB. For now just log the selected user.
   callPWIDBtn.addEventListener("click", () => {
     if (!selectedUserId) return;
     const u = pwids.find((x) => Number(x.id) === Number(selectedUserId));
@@ -461,7 +530,7 @@ document.addEventListener("DOMContentLoaded", () => {
   }
 
   // =======================
-  // PROGRESS (DATE-BASED)
+  // PROGRESS
   // =======================
   async function updateProgress() {
     if (!selectedUserId || !selectedDate) {
@@ -498,7 +567,7 @@ document.addEventListener("DOMContentLoaded", () => {
   }
 
   // =======================
-  // CHART (Monthly Completion Daily)
+  // CHART
   // =======================
   async function refreshChart() {
     if (!selectedUserId) {
