@@ -36,7 +36,7 @@ To validate system behaviour without relying on physical hardware, **sensor inte
 
 ### System Architecture Diagram
 
-![System Architecture Diagram](images/architecture-diagram.png)
+![System Architecture Diagram](archi-diagram.png)
 
 ---
 
