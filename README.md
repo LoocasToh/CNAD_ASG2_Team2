@@ -121,6 +121,7 @@ CNAD_ASG2_Team2/
 ├── frontend-service/
 ├── task-service/
 ├── infra/
+├── k8s/
 ├── docker-compose.yml
 ├── .gitignore
 └── README.md
@@ -187,3 +188,40 @@ Ensure Docker and Docker Compose are installed:
 
 ```bash
 docker-compose up --build
+
+kubernetes
+Deployment Steps
+
+Ensure you have kubectl and a Kubernetes cluster ready (e.g., Minikube, Kind, or cloud provider cluster).
+
+Apply ConfigMaps and Secrets:
+
+kubectl apply -f k8s/configmaps-secrets.yaml
+
+
+Deploy services:
+
+kubectl apply -f k8s/auth-deployment.yaml
+kubectl apply -f k8s/task-deployment.yaml
+kubectl apply -f k8s/frontend-deployment.yaml
+
+
+Expose services via Ingress:
+
+kubectl apply -f k8s/ingress.yaml
+
+
+Verify pods and services:
+
+kubectl get pods
+kubectl get svc
+
+Benefits of Kubernetes Deployment
+
+Scalability: Services can be scaled independently via replicas.
+
+High Availability: Kubernetes automatically restarts failed pods and distributes them across nodes.
+
+Configuration Management: Centralized ConfigMaps and Secrets for environment-specific variables.
+
+Cloud-Native Readiness: Easier to deploy in AWS EKS, GCP GKE, or Azure AKS with minimal changes.
