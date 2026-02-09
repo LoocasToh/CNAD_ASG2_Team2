@@ -12,7 +12,7 @@
   </head>
 
   <body>
-    <!-- Top Navbar - Consistent with other pages -->
+    <!-- Top Navbar -->
     <div class="header-bar" id="header-bar">
       <div class="logo">
         <i class="fas fa-hands-helping"></i>
@@ -78,18 +78,6 @@
               <span>Health Information</span>
             </a>
           </li>
-          <li>
-            <a href="#preferences" id="preferences-link">
-              <i class="fas fa-cog"></i>
-              <span>Preferences</span>
-            </a>
-          </li>
-          <li>
-            <a href="#accessibility" id="accessibility-link">
-              <i class="fas fa-universal-access"></i>
-              <span>Accessibility</span>
-            </a>
-          </li>
         </ul>
 
         <!-- Profile Summary -->
@@ -117,7 +105,7 @@
         <!-- Welcome Header -->
         <div class="welcome-header">
           <h1><i class="fas fa-user-circle"></i> My Profile</h1>
-          <p id="greeting-message">Manage your personal information and preferences</p>
+          <p id="greeting-message">Manage your personal information</p>
           <div class="date-display">
             <i class="fas fa-shield-alt"></i>
             <span>Your information is kept private and secure</span>
@@ -207,282 +195,12 @@
             <p class="section-description">People who will be contacted in case of emergency</p>
           </div>
 
-          <!-- Keep empty, JS renders -->
           <div class="contacts-container" id="contacts-container">
             <p id="contacts-loading" style="color:#718096; padding:12px;">Loading contacts...</p>
           </div>
         </section>
 
-        <!-- 3. HEALTH INFORMATION SECTION -->
-        <section id="health-info" class="profile-section">
-          <div class="section-header">
-            <div class="header-top">
-              <div class="header-left">
-                <h2>
-                  <i class="fas fa-heartbeat"></i>
-                  <span>Health Information</span>
-                </h2>
-              </div>
-              <div class="tasks-controls-row">
-                <button class="btn-edit" id="edit-health-btn">
-                  <i class="fas fa-edit"></i> Edit
-                </button>
-              </div>
-            </div>
-            <p class="section-description">Important medical information for caregivers</p>
-          </div>
-
-          <div class="health-container">
-            <!-- Medications (for now show list container, JS can fill later if you want) -->
-            <div class="health-card">
-              <h3><i class="fas fa-pills"></i> Current Medications</h3>
-              <div class="medication-list" id="medication-list">
-                <p style="color:#718096;">No medications saved yet.</p>
-              </div>
-            </div>
-
-            <!-- Allergies & Conditions -->
-            <div class="health-card">
-              <h3><i class="fas fa-allergies"></i> Allergies & Conditions</h3>
-              <div class="condition-list" id="condition-list">
-                <p style="color:#718096;">No allergies / conditions saved yet.</p>
-              </div>
-            </div>
-
-            <!-- Medical Notes -->
-            <div class="health-card">
-              <h3><i class="fas fa-file-medical"></i> Medical Notes</h3>
-              <div class="medical-notes" id="medical-notes">
-                <p><strong>Blood Type:</strong> <span id="blood-type">-</span></p>
-                <p><strong>Notes:</strong> <span id="medical-notes-text">-</span></p>
-              </div>
-            </div>
-          </div>
-        </section>
-
-        <!-- 4. PREFERENCES SECTION -->
-        <section id="preferences" class="profile-section">
-          <div class="section-header">
-            <div class="header-top">
-              <div class="header-left">
-                <h2>
-                  <i class="fas fa-cog"></i>
-                  <span>Preferences</span>
-                </h2>
-              </div>
-            </div>
-            <p class="section-description">Customize your MyBuddy experience</p>
-          </div>
-
-          <div class="preferences-container">
-            <div class="preference-card">
-              <h3><i class="fas fa-bell"></i> Notifications</h3>
-              <div class="preference-item">
-                <label class="toggle-label">
-                  <span class="toggle-text">Task Reminders</span>
-                  <input type="checkbox" class="toggle-switch" id="task-reminders" checked>
-                  <span class="toggle-slider"></span>
-                </label>
-                <p class="preference-description">Get reminders for daily tasks</p>
-              </div>
-              <div class="preference-item">
-                <label class="toggle-label">
-                  <span class="toggle-text">Medication Alerts</span>
-                  <input type="checkbox" class="toggle-switch" id="medication-alerts" checked>
-                  <span class="toggle-slider"></span>
-                </label>
-                <p class="preference-description">Reminders to take medications</p>
-              </div>
-              <div class="preference-item">
-                <label class="toggle-label">
-                  <span class="toggle-text">Appointment Reminders</span>
-                  <input type="checkbox" class="toggle-switch" id="appointment-reminders" checked>
-                  <span class="toggle-slider"></span>
-                </label>
-                <p class="preference-description">Remind about upcoming appointments</p>
-              </div>
-            </div>
-
-            <div class="preference-card">
-              <h3><i class="fas fa-eye"></i> Display Settings</h3>
-              <div class="preference-item">
-                <label class="radio-label">
-                  <input type="radio" name="text-size" id="text-normal" checked>
-                  <span class="radio-custom"></span>
-                  <span class="radio-text">Normal Text Size</span>
-                </label>
-              </div>
-              <div class="preference-item">
-                <label class="radio-label">
-                  <input type="radio" name="text-size" id="text-large">
-                  <span class="radio-custom"></span>
-                  <span class="radio-text">Large Text Size</span>
-                </label>
-              </div>
-              <div class="preference-item">
-                <label class="radio-label">
-                  <input type="radio" name="text-size" id="text-extra-large">
-                  <span class="radio-custom"></span>
-                  <span class="radio-text">Extra Large Text</span>
-                </label>
-              </div>
-              <div class="preference-item">
-                <label class="toggle-label">
-                  <span class="toggle-text">High Contrast Mode</span>
-                  <input type="checkbox" class="toggle-switch" id="high-contrast">
-                  <span class="toggle-slider"></span>
-                </label>
-                <p class="preference-description">Better visibility for low vision</p>
-              </div>
-            </div>
-
-            <div class="preference-card">
-              <h3><i class="fas fa-language"></i> Language & Communication</h3>
-              <div class="preference-item">
-                <label for="language-select">Preferred Language</label>
-                <select id="language-select" class="preference-select">
-                  <option value="en" selected>English</option>
-                  <option value="es">Spanish</option>
-                  <option value="fr">French</option>
-                  <option value="de">German</option>
-                  <option value="zh">Chinese</option>
-                </select>
-              </div>
-              <div class="preference-item">
-                <label class="toggle-label">
-                  <span class="toggle-text">Voice Instructions</span>
-                  <input type="checkbox" class="toggle-switch" id="voice-instructions" checked>
-                  <span class="toggle-slider"></span>
-                </label>
-                <p class="preference-description">Hear instructions read aloud</p>
-              </div>
-              <div class="preference-item">
-                <label class="toggle-label">
-                  <span class="toggle-text">Simple Language Mode</span>
-                  <input type="checkbox" class="toggle-switch" id="simple-language" checked>
-                  <span class="toggle-slider"></span>
-                </label>
-                <p class="preference-description">Use simple, clear language</p>
-              </div>
-            </div>
-          </div>
-        </section>
-
-        <!-- 5. ACCESSIBILITY SECTION -->
-        <section id="accessibility" class="profile-section">
-          <div class="section-header">
-            <div class="header-top">
-              <div class="header-left">
-                <h2>
-                  <i class="fas fa-universal-access"></i>
-                  <span>Accessibility Settings</span>
-                </h2>
-              </div>
-            </div>
-            <p class="section-description">Make MyBuddy easier to use</p>
-          </div>
-
-          <div class="accessibility-container">
-            <div class="accessibility-features">
-              <div class="feature-item">
-                <div class="feature-icon">
-                  <i class="fas fa-hand-pointer"></i>
-                </div>
-                <div class="feature-content">
-                  <h4>Large Touch Targets</h4>
-                  <p>Make buttons and icons easier to press</p>
-                  <div class="feature-control">
-                    <label class="toggle-label">
-                      <input type="checkbox" class="toggle-switch" id="large-touch" checked>
-                      <span class="toggle-slider"></span>
-                      <span class="toggle-text">Enable</span>
-                    </label>
-                  </div>
-                </div>
-              </div>
-
-              <div class="feature-item">
-                <div class="feature-icon">
-                  <i class="fas fa-volume-up"></i>
-                </div>
-                <div class="feature-content">
-                  <h4>Sound Feedback</h4>
-                  <p>Play sounds when pressing buttons</p>
-                  <div class="feature-control">
-                    <label class="toggle-label">
-                      <input type="checkbox" class="toggle-switch" id="sound-feedback" checked>
-                      <span class="toggle-slider"></span>
-                      <span class="toggle-text">Enable</span>
-                    </label>
-                  </div>
-                </div>
-              </div>
-
-              <div class="feature-item">
-                <div class="feature-icon">
-                  <i class="fas fa-vibrate"></i>
-                </div>
-                <div class="feature-content">
-                  <h4>Vibration Feedback</h4>
-                  <p>Vibrate when buttons are pressed (mobile only)</p>
-                  <div class="feature-control">
-                    <label class="checkbox-label">
-                      <input type="checkbox" id="vibration-feedback" checked>
-                      <span class="checkmark"></span>
-                      <span>Enable</span>
-                    </label>
-                  </div>
-                </div>
-              </div>
-
-              <div class="feature-item">
-                <div class="feature-icon">
-                  <i class="fas fa-magic"></i>
-                </div>
-                <div class="feature-content">
-                  <h4>Color Blind Mode</h4>
-                  <p>Adjust colors for different types of color blindness</p>
-                  <div class="feature-control">
-                    <select id="color-blind-mode" class="accessibility-select">
-                      <option value="none">No adjustment</option>
-                      <option value="protanopia">Protanopia (red-green)</option>
-                      <option value="deuteranopia">Deuteranopia (green-red)</option>
-                      <option value="tritanopia">Tritanopia (blue-yellow)</option>
-                      <option value="achromatopsia">Monochrome</option>
-                    </select>
-                  </div>
-                </div>
-              </div>
-            </div>
-
-            <div class="accessibility-actions">
-              <button class="btn-reset" id="reset-accessibility-btn">
-                <i class="fas fa-redo"></i> Reset to Default
-              </button>
-              <button class="btn-test" id="test-accessibility-btn">
-                <i class="fas fa-play-circle"></i> Test Settings
-              </button>
-            </div>
-          </div>
-        </section>
-
-        <!-- Save Changes Section -->
-        <div class="save-section">
-          <div class="save-notice">
-            <i class="fas fa-exclamation-circle"></i>
-            <p>Changes are saved automatically as you make them.</p>
-          </div>
-          <div class="save-actions">
-            <button class="btn-cancel" id="cancel-changes-btn">
-              <i class="fas fa-times"></i> Cancel
-            </button>
-            <button class="btn-save" id="save-all-btn">
-              <i class="fas fa-save"></i> Save All Changes
-            </button>
-          </div>
-        </div>
-      </main>
-    </div>
+        
 
     <!-- Edit Personal Info Modal -->
     <div class="modal-overlay" id="edit-personal-modal">
@@ -590,97 +308,7 @@
       </div>
     </div>
 
-    <!-- EDIT CONTACT MODAL (NEW) -->
-    <div class="modal-overlay" id="edit-contact-modal" style="display:none;">
-      <div class="profile-modal">
-        <div class="modal-header">
-          <h3><i class="fas fa-user-edit"></i> Edit Emergency Contact</h3>
-          <button class="btn-close-modal" id="close-edit-contact-modal">
-            <i class="fas fa-times"></i>
-          </button>
-        </div>
-        <div class="modal-body">
-          <form id="edit-contact-form">
-            <input type="hidden" id="edit-contact-id" />
-            <div class="form-group">
-              <label for="edit-contact-name"><i class="fas fa-user"></i> Full Name</label>
-              <input type="text" id="edit-contact-name" required />
-            </div>
-            <div class="form-group">
-              <label for="edit-contact-relationship"><i class="fas fa-users"></i> Relationship</label>
-              <select id="edit-contact-relationship">
-                <option value="family">Family Member</option>
-                <option value="caregiver">Caregiver</option>
-                <option value="doctor">Doctor</option>
-                <option value="friend">Friend</option>
-                <option value="neighbor">Neighbor</option>
-                <option value="other">Other</option>
-              </select>
-            </div>
-            <div class="form-group">
-              <label for="edit-contact-phone"><i class="fas fa-phone"></i> Phone Number</label>
-              <input type="tel" id="edit-contact-phone" required />
-            </div>
-            <div class="form-group">
-              <label for="edit-contact-notes"><i class="fas fa-sticky-note"></i> Notes</label>
-              <textarea id="edit-contact-notes" rows="3"></textarea>
-            </div>
-            <div class="form-group">
-              <label class="checkbox-label">
-                <input type="checkbox" id="edit-is-primary-contact">
-                <span class="checkmark"></span>
-                <span>Set as primary emergency contact</span>
-              </label>
-            </div>
-
-            <div class="modal-actions">
-              <button type="button" class="btn-cancel" id="cancel-edit-contact-btn">Cancel</button>
-              <button type="submit" class="btn-save">Save Contact</button>
-            </div>
-          </form>
-        </div>
-      </div>
-    </div>
-
-    <!-- HEALTH EDIT MODAL (NEW) -->
-    <div class="modal-overlay" id="edit-health-modal" style="display:none;">
-      <div class="profile-modal">
-        <div class="modal-header">
-          <h3><i class="fas fa-heartbeat"></i> Edit Health Information</h3>
-          <button class="btn-close-modal" id="close-health-modal">
-            <i class="fas fa-times"></i>
-          </button>
-        </div>
-        <div class="modal-body">
-          <form id="health-form">
-            <div class="form-grid">
-              <div class="form-group">
-                <label for="edit-blood-type"><i class="fas fa-tint"></i> Blood Type</label>
-                <input type="text" id="edit-blood-type" placeholder="e.g. O+" />
-              </div>
-              <div class="form-group full-width">
-                <label for="edit-allergies"><i class="fas fa-allergies"></i> Allergies</label>
-                <textarea id="edit-allergies" rows="2" placeholder="e.g. Penicillin"></textarea>
-              </div>
-              <div class="form-group full-width">
-                <label for="edit-conditions"><i class="fas fa-notes-medical"></i> Conditions</label>
-                <textarea id="edit-conditions" rows="2" placeholder="e.g. Hypertension"></textarea>
-              </div>
-              <div class="form-group full-width">
-                <label for="edit-medical-notes"><i class="fas fa-file-medical"></i> Medical Notes</label>
-                <textarea id="edit-medical-notes" rows="3" placeholder="Any special instructions..."></textarea>
-              </div>
-            </div>
-
-            <div class="modal-actions">
-              <button type="button" class="btn-cancel" id="cancel-health-btn">Cancel</button>
-              <button type="submit" class="btn-save">Save Health</button>
-            </div>
-          </form>
-        </div>
-      </div>
-    </div>
-
+    
     <!-- Notification Toast -->
     <div class="toast" id="toast">
       <div class="toast-content">
