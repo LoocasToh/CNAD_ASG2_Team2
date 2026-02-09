@@ -137,3 +137,59 @@ All services are containerized using Docker and orchestrated locally via Docker 
 
 This repository follows **Conventional Commits**:
 
+### Common Types
+- `feat` – New feature  
+- `fix` – Bug fix  
+- `docs` – Documentation changes  
+- `chore` – Maintenance tasks  
+- `refactor` – Code restructuring without behavior changes  
+- `ci` – CI/CD-related changes  
+
+### Examples
+- `feat(frontend): add login page`  
+- `fix(auth): resolve token validation bug`  
+- `docs(readme): add architecture documentation`  
+- `ci(actions): add SAST and DAST workflows`  
+
+---
+
+## 🚫 `.gitignore` Configuration
+
+The `.gitignore` file excludes:
+
+- `node_modules/`  
+- Environment files (`.env`)  
+- Build artifacts  
+- OS-specific files  
+
+This ensures:
+- Cleaner repository history  
+- No accidental commits of sensitive data  
+- Smaller and more secure repository  
+
+---
+
+## 🔐 DevOps & Security Practices
+
+The project incorporates:
+
+- Containerization using **Docker**  
+- Service orchestration with **Docker Compose**  
+- CI-based security scanning:
+  - SAST  
+  - DAST  
+  - SCA (via GitHub Actions)  
+- Strong separation of concerns across services  
+
+These practices align with **real-world cloud-native and DevSecOps standards**.
+
+---
+
+## ▶️ How to Run the Project
+
+Ensure Docker and Docker Compose are installed, then run:
+
+```bash
+docker-compose up --build
+
+
