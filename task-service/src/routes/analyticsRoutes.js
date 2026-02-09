@@ -7,6 +7,22 @@ const db = require("../db");
 
 router.use(verifyJWT);
 
+/**
+ * ✅ Permission rules:
+ * - caregiver can view analytics for ANY user
+ * - normal user can ONLY view their own analytics
+ */
+function canActOn(reqUser, targetUserId) {
+  const me = Number(reqUser?.userId);
+  const target = Number(targetUserId);
+
+  if (!Number.isFinite(target) || target <= 0) return false;
+
+  if (reqUser?.userType === "caregiver") return true;
+
+  return Number.isFinite(me) && me === target;
+}
+
 function pad2(n) {
   return String(n).padStart(2, "0");
 }
@@ -51,6 +67,11 @@ router.get("/progress/day", async (req, res) => {
       return res.status(400).json({ error: "userId and date required" });
     }
 
+    // ✅ permission check
+    if (!canActOn(req.user, userId)) {
+      return res.status(403).json({ error: "forbidden" });
+    }
+
     const [[expectedRow]] = await db.query(EXPECTED_SQL, [userId, dateStr, dateStr, dateStr]);
     const [[completedRow]] = await db.query(COMPLETED_SQL, [userId, dateStr]);
 
@@ -72,6 +93,11 @@ router.get("/progress/today", async (req, res) => {
   try {
     const userId = Number(req.query.userId);
     if (!userId) return res.status(400).json({ error: "userId required" });
+
+    // ✅ permission check
+    if (!canActOn(req.user, userId)) {
+      return res.status(403).json({ error: "forbidden" });
+    }
 
     const dateStr = todaySG();
 
@@ -100,6 +126,11 @@ router.get("/completion/daily", async (req, res) => {
 
     if (!userId || !year || !month) {
       return res.status(400).json({ error: "userId, year, month required" });
+    }
+
+    // ✅ permission check
+    if (!canActOn(req.user, userId)) {
+      return res.status(403).json({ error: "forbidden" });
     }
 
     const totalDays = daysInMonth(year, month);
