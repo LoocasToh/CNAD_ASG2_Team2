@@ -1,0 +1,8 @@
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: frontend-config
+data:
+  config.js: |
+    window.AUTH_BASE_URL = "http://auth-service:8080/auth";
+    window.TASK_BASE_URL = "http://task-service:8081/tasks";

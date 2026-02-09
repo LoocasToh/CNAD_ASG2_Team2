@@ -48,6 +48,9 @@ services:
       - appnet
     ports:
       - "80:80" # website accessible at http://localhost
+    environment:
+    - AUTH_BASE_URL=http://localhost:8080/auth
+    - TASK_BASE_URL=http://localhost:8081/tasks
     volumes:
       - ./frontend-service/public:/usr/share/nginx/html
       - /app/node_modules

@@ -1,3 +1,5 @@
+DROP DATABASE IF EXISTS taskdb;
+
 CREATE DATABASE IF NOT EXISTS taskdb;
 USE taskdb;
 
